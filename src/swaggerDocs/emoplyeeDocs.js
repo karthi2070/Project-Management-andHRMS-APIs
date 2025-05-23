@@ -28,6 +28,8 @@
  *           type: string
  *         phone:
  *           type: string
+ *         mail:
+ *           type: string
  *         dob:
  *           type: string
  *           format: date

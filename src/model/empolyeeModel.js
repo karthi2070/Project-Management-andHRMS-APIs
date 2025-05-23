@@ -4,7 +4,7 @@ const EmployeeModel = {
     async createEmployee(data) {
         try {
             const sql = `INSERT INTO employee_tbl (name, phone,mail, dob, doj, department, designation, salary, pan, aadhar, education, address)
-                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?)`;
             const [result] = await pool.query(sql, Object.values(data));
             return { id: result.insertId, ...data };
         } catch (error) {
