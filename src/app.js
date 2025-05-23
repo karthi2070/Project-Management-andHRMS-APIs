@@ -13,8 +13,10 @@ app.use(cors());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 const employeeRoutes = require('./routers/empolyeeRoute');
+const expense = require('./routers/expenceRoute');
 
 app.use('/api/v1', employeeRoutes); // Employee Routes
+app.use('/api/v1', expense); // Bank Details Routes
 
 
 
