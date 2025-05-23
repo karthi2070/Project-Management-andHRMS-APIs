@@ -36,9 +36,12 @@ const QuotationModel = {
 
     async updateQuotation(id, data) {
         try {
-            const sql = `UPDATE quotation_tbl SET employee_id=?, client_name=?, client_mail=?, project=?, amount=?, date=? 
-                         WHERE id = ? AND is_deleted = 0`;
-            await pool.query(sql, [...Object.values(data), id]);
+            const sql = `UPDATE quotation_tbl SET employee_id=?, client_name=?, client_mail=?, project=?, amount=?, date=? WHERE id = ? AND is_deleted = 0 `;
+
+            const amount=data.amount +  (data.amount*0.18) ;
+            console.log("amount",amount);
+            const values = [ data.employee_id, data.client_name, data.client_mail, data.project, amount, data.date,id]
+            await pool.query(sql, values);
             return { id, ...data };
         } catch (error) {
             throw error;
