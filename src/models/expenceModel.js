@@ -51,13 +51,13 @@ const ExpenseModel = {
         } catch (error) {
             throw error;
         }
-    },  async getFilteredExpenses(filters) {
-        try {
-            let sql = `SELECT * FROM expense_tbl WHERE is_deleted = 0`;
+    },  
+    async getFilteredExpenses(filters) {
+      let sql = `SELECT * FROM expense_tbl WHERE is_deleted = 0`;
             const queryParams = [];
 
             if (filters.category) {
-                sql += ` AND category = ?`;
+                sql += ` AND category LIKE ? `;;
                 queryParams.push(filters.category);
             }
             if (filters.startDate && filters.endDate) {
@@ -68,16 +68,10 @@ const ExpenseModel = {
                 sql += ` AND amount BETWEEN ? AND ?`;
                 queryParams.push(filters.minAmount, filters.maxAmount);
             }
-            if (filters.keyword) {
-                sql += ` AND description LIKE ?`;
-                queryParams.push(`%${filters.keyword}%`);
-            }
 
-            const [expenses] = await pool.query(sql, queryParams);
-            return expenses;
-        } catch (error) {
-            throw error;
-        }
+            const [result] = await pool.query(sql, queryParams);
+            return result;
+
     }
 };
 

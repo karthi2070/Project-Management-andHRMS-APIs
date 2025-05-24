@@ -44,7 +44,7 @@ const EmployeeModel = {
     },
         async getFiltereddepart(depart) {
         const sql = `SELECT * FROM employee_tbl WHERE is_deleted = 0 and department = ?`;
-        const [result]= pool.query(sql, [depart]);
+        const [result] = await pool.query(sql, [depart]);
         return result;
 
     },
