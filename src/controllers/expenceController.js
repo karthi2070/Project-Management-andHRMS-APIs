@@ -47,6 +47,17 @@ const ExpenseController = {
         } catch (error) {
             res.status(500).json({ message: 'Error deleting expense', error });
         }
+    },
+    async getFilteredExpenses(req, res) {
+        try {
+            const { category, startDate, endDate, minAmount, maxAmount, keyword } = req.query;
+            const filters = { category, startDate, endDate, minAmount, maxAmount, keyword };
+
+            const expenses = await ExpenseModel.getFilteredExpenses(filters);
+            res.status(200).json(expenses);
+        } catch (error) {
+            res.status(500).json({ message: 'Error filtering expenses', error });
+        }
     }
 };
 

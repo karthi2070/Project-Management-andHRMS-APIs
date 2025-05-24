@@ -8,5 +8,6 @@ router.get('/expense/get-expense-list', ExpenseController.getAllExpenses);
 router.get('/expense/get-expense-id/:id', ExpenseController.getExpenseById);
 router.put('/expense/update-expense/:id', ExpenseController.updateExpense);
 router.patch('/expense/delete-expense/:id', ExpenseController.softDeleteExpense);
+router.get('/expense/get-filtered-expenses', ExpenseController.getFilteredExpenses);
 
 module.exports = router;

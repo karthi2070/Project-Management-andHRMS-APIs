@@ -51,7 +51,35 @@ const ExpenseModel = {
         } catch (error) {
             throw error;
         }
+    },  async getFilteredExpenses(filters) {
+        try {
+            let sql = `SELECT * FROM expense_tbl WHERE is_deleted = 0`;
+            const queryParams = [];
+
+            if (filters.category) {
+                sql += ` AND category = ?`;
+                queryParams.push(filters.category);
+            }
+            if (filters.startDate && filters.endDate) {
+                sql += ` AND date BETWEEN ? AND ?`;
+                queryParams.push(filters.startDate, filters.endDate);
+            }
+            if (filters.minAmount && filters.maxAmount) {
+                sql += ` AND amount BETWEEN ? AND ?`;
+                queryParams.push(filters.minAmount, filters.maxAmount);
+            }
+            if (filters.keyword) {
+                sql += ` AND description LIKE ?`;
+                queryParams.push(`%${filters.keyword}%`);
+            }
+
+            const [expenses] = await pool.query(sql, queryParams);
+            return expenses;
+        } catch (error) {
+            throw error;
+        }
     }
 };
 
 module.exports = ExpenseModel;
+
