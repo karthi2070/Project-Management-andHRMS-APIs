@@ -18,10 +18,10 @@
  *         - dob
  *         - doj
  *         - department
- *         - desdination
+ *         - designation
  *         - salary
  *         - pan
- *         - aadgar
+ *         - aadhar
  *         - equcation
  *         - addres
  *       properties:
@@ -39,13 +39,13 @@
  *           format: date
  *         department:
  *           type: string
- *         desdination:
+ *         designation:
  *           type: string
  *         salary:
  *           type: number
  *         pan:
  *           type: string
- *         aadgar:
+ *         aadhar:
  *           type: string
  *         equcation:
  *           type: string
@@ -143,4 +143,36 @@
  */
 
 
+/**
+ * @swagger
+ * /api/v1/employees/get-filtered-department:
+ *   get:
+ *     summary: Get employees by department
+ *     tags: [Employee]
+ *     parameters:
+ *       - in: query
+ *         name: department
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: List of employees in the specified department
+ */
 
+/**
+ * @swagger
+ * /api/v1/employees/search-empolyee:
+ *   get:
+ *     summary: Search employees by name
+ *     tags: [Employee]
+ *     parameters:
+ *       - in: query
+ *         name: name
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: List of employees matching the search criteria
+ */

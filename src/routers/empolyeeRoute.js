@@ -9,6 +9,8 @@ router.get('/employees/get-empolyee-list', EmployeeController.getAllEmployees);
 router.get('/employees/get-empolyee-id/:id', EmployeeController.getEmployeeById);
 router.put('/employees/update-empolyee/:id', EmployeeController.updateEmployee);
 router.patch('/employees/delete-empolyee/:id', EmployeeController.softDeleteEmployee);
+router.get('/employees/get-filtered-department', EmployeeController.getFilteredDepartment);
+router.get('/employees/search-empolyee', EmployeeController.searchEmployee);
 
 // Bank Details Routes
 router.post('/bank/create-acc', EmployeeController.createBankDetails);

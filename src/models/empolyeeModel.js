@@ -2,109 +2,103 @@ const pool = require('../config/db');
 
 const EmployeeModel = {
     async createEmployee(data) {
-        try {
+     
             const sql = `INSERT INTO employee_tbl (name, phone,mail, dob, doj, department, designation, salary, pan, aadhar, education, address)
                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?)`;
             const [result] = await pool.query(sql, Object.values(data));
             return { id: result.insertId, ...data };
-        } catch (error) {
-            throw error;
-        }
+      
     },
 
     async getAllEmployees() {
-        try {
+       
             const sql = `SELECT * FROM employee_tbl WHERE is_deleted = 0`;
             const [employees] = await pool.query(sql);
             return employees;
-        } catch (error) {
-            throw error;
-        }
+
     },
 
     async getEmployeeById(id) {
-        try {
+   
             const sql = `SELECT * FROM employee_tbl WHERE id = ? AND is_deleted = 0`;
             const [employees] = await pool.query(sql, [id]);
             return employees[0] || null;
-        } catch (error) {
-            throw error;
-        }
+
     },
 
     async updateEmployee(id, data) {
-        try {
+    
             const sql = `UPDATE employee_tbl SET name=?, phone=?,mail=?, dob=?, doj=?, department=?, designation=?, salary=?, pan=?, aadhar=?, education=?, address=? 
                          WHERE id = ? AND is_deleted = 0`;
             await pool.query(sql, [...Object.values(data), id]);
             return { id, ...data };
-        } catch (error) {
-            throw error;
-        }
+
     },
 
     async softDeleteEmployee(id) {
-        try {
+   
             const sql = `UPDATE employee_tbl SET is_deleted = 1 WHERE id = ?`;
             await pool.query(sql, [id]);
             return { id, deleted: true };
-        } catch (error) {
-            throw error;
-        }
+     
+    },
+        async getFiltereddepart(depart) {
+        const sql = `SELECT * FROM employee_tbl WHERE is_deleted = 0 and department = ?`;
+        const [result]= pool.query(sql, [depart]);
+        return result;
+
+    },
+
+    async seachemployee (name) {
+        const sql = `SELECT * FROM employee_tbl WHERE is_deleted = 0 and name LIKE ?`;
+        const [result] = await pool.query(sql, [`%${name}%`]);
+        return result;
     },
 
     // Bank Details Methods
      async createBankDetails(data) {
-        try {
+      
             const sql = `INSERT INTO bank_details_tbl (employee_id, acc_holder_name,  account_number, ifsc_code, bank_name)
                          VALUES (?, ?, ?, ? , ?)`;
             const [result] = await pool.query(sql, Object.values(data));
             return { id: result.insertId, ...data };
-        } catch (error) {
-            throw error;
-        }
+    
     },
 
     async getAllBankDetails() {
-        try {
+        
             const sql = `SELECT * FROM bank_details_tbl WHERE is_deleted = 0`;
             const [banks] = await pool.query(sql);
             return banks;
-        } catch (error) {
-            throw error;
-        }
+ 
     },
 
     async getBankDetailsById(id) {
-        try {
+
             const sql = `SELECT * FROM bank_details_tbl WHERE id = ? AND is_deleted = 0`;
             const [banks] = await pool.query(sql, [id]);
             return banks[0] || null;
-        } catch (error) {
-            throw error;
-        }
+    
     },
 
     async updateBankDetails(id, data) {
-        try {
+
             const sql = `UPDATE bank_details_tbl SET acc_holder_name=?, account_number= ?,  ifsc_code= ?, bank_name=? 
                          WHERE id = ? AND is_deleted = 0`;
             await pool.query(sql, [...Object.values(data), id]);
             return { id, ...data };
-        } catch (error) {
-            throw error;
-        }
+
     },
 
     async softDeleteBankDetails(id) {
-        try {
+
             const sql = `UPDATE bank_details_tbl SET is_deleted = 1 WHERE id = ?`;
             await pool.query(sql, [id]);
             return { id, deleted: true };
-        } catch (error) {
-            throw error;
-        }
-    }
+
+    },
+
+
 };
 
 

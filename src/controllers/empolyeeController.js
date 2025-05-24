@@ -48,6 +48,23 @@ const EmployeeController = {
            next(error);        }
     },
 
+    async getFilteredDepartment(req, res, next) {
+        try {
+            const department = req.query.department;
+            const employees = await EmployeeModel.getFiltereddepart(department);
+            res.status(200).json(employees);
+        } catch (error) {
+           next(error);        }
+    },
+    async searchEmployee(req, res, next) {      
+        try {
+            const name = req.query.name;
+            const employees = await EmployeeModel.seachemployee(name);
+            res.status(200).json(employees);
+        } catch (error) {
+           next(error);        }
+    },
+
     // Bank Details Methods
     async createBankDetails(req, res, next) {
         try {
