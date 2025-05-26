@@ -43,6 +43,79 @@ const ClientController = {
         } catch (error) {
            next(error);
         }
+    },
+
+    // Invoice Methods
+    async createInvoice(req, res, next) {
+        try {
+            const invoiceId = await ClientModel.createInvoice(req.body);
+            res.status(201).json({ id: invoiceId });
+        } catch (error) {
+            next(error);
+        }
+    },
+    async findAllInvoices(req, res, next) {
+        try {
+            const invoices = await ClientModel.findAllincoice();
+            res.status(200).json(invoices);
+        } catch (error) {
+            next(error);
+        }
+    },
+    async findInvoiceById(req, res, next) {
+        try {
+            const invoice = await ClientModel.findById(req.params.id);
+            if (!invoice) {
+                return res.status(404).json({ message: 'Invoice not found' });
+            }
+            res.status(200).json(invoice);
+        } catch (error) {
+            next(error);
+        }
+    },
+    async findInvoiceNum(req, res, next) {
+        try {
+            const invoice = await ClientModel.findByInvoiseNum(req.params.invoice_number);
+            if (!invoice) {
+                return res.status(404).json({ message: 'Invoice not found' });
+            }
+            res.status(200).json(invoice);
+        } catch (error) {
+            next(error);
+        }
+    },
+    async findInvoiceByClientId(req, res, next) {
+        try {
+
+            const invoices = await ClientModel.findByInvoiseclintId(req.params.clientId);
+            res.status(200).json(invoices);
+        } catch (error) {
+            next(error);
+        }
+    },
+
+    async updateInvoice(req, res, next) {
+        try {
+            const affectedRows = await ClientModel.update(req.params.id, req.body);
+            if (affectedRows === 0) {
+                return res.status(404).json({ message: 'Invoice not found or no changes made' });
+            }
+            res.status(200).json({ message: 'Invoice updated successfully' });
+        } catch (error) {
+            next(error);
+        }
+    },
+
+    async softDeleteInvoice(req, res, next) {
+        try {
+            const affectedRows = await ClientModel.softDelete(req.params.id);
+            if (affectedRows === 0) {
+                return res.status(404).json({ message: 'Invoice not found' });
+            }
+            res.status(200).json({ message: 'Invoice deleted successfully' });
+        } catch (error) {
+            next(error);
+        }
     }
 };
 
