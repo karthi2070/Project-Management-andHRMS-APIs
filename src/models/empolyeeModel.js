@@ -3,8 +3,8 @@ const pool = require('../config/db');
 const EmployeeModel = {
     async createEmployee(data) {
      
-            const sql = `INSERT INTO employee_tbl (name, phone,mail, dob, doj, department, designation, salary, pan, aadhar, education, address)
-                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?)`;
+            const sql = `INSERT INTO employee_tbl (name, phone,mail, dob, doj, department, designation, salary, pan, aadhar, education, address, city , state ,pincode)
+                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?, ?)`;
             const [result] = await pool.query(sql, Object.values(data));
             return { id: result.insertId, ...data };
       
@@ -28,8 +28,8 @@ const EmployeeModel = {
 
     async updateEmployee(id, data) {
     
-            const sql = `UPDATE employee_tbl SET name=?, phone=?,mail=?, dob=?, doj=?, department=?, designation=?, salary=?, pan=?, aadhar=?, education=?, address=? 
-                         WHERE id = ? AND is_deleted = 0`;
+            const sql = `UPDATE employee_tbl SET name=?, phone=?,mail=?, dob=?, doj=?, department=?, designation=?, salary=?, pan=?, aadhar=?, education=?, address=? ,
+                         city =? , state =? ,pincode =? WHERE id = ? AND is_deleted = 0`;
             await pool.query(sql, [...Object.values(data), id]);
             return { id, ...data };
 

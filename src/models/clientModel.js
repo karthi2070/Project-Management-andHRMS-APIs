@@ -2,8 +2,9 @@ const pool = require('../config/db');
 
 const ClientModel = {
     async createClient(data) {
-        const sql = `INSERT INTO client_tbl (name, company_name, clientid, mail, phone1, phone2, phone3, gst_num, address) 
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        console.log("Creating client with data:", data);
+        const sql = `INSERT INTO client_tbl (name, company_name, clientid, mail, phone1, phone2, phone3, gst_num, address, city , state ,pincode) 
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?)`;
         const [result] = await pool.query(sql, Object.values(data));
         return { id: result.insertId, ...data };
     },
@@ -21,8 +22,9 @@ const ClientModel = {
     },
 
     async updateClient(id, data) {
-        const sql = `UPDATE client_tbl SET name=?, company_name=?, clientid=?, mail=?, phone1=?, phone2=?, phone3=?, gst_num=?, address=? 
-                     WHERE id = ? AND is_deleted = 0`;
+        console.log (data)
+        const sql = `UPDATE client_tbl SET name=?, company_name=?, clientid=?, mail=?, phone1=?, phone2=?, phone3=?, gst_num=?, address=? ,
+                    city =? , state = ? ,pincode= ? WHERE id = ? AND is_deleted = 0`;
         await pool.query(sql, [...Object.values(data), id]);
         return { id, ...data };
     },

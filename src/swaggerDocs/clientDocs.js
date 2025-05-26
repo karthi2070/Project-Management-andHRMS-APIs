@@ -43,6 +43,15 @@
  *         address:
  *           type: string
  *           description: Client's address
+ *         city:
+ *           type: string
+ *           description: Client's city 
+ *         state:
+ *           type: string
+ *           description: Client's state 
+ *         pincode:
+ *           type: string
+ *           description: Client's pincode
  */
 
 /**
