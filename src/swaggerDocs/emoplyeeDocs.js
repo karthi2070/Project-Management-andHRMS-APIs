@@ -23,7 +23,10 @@
  *         - pan
  *         - aadhar
  *         - equcation
- *         - addres
+ *         - address
+ *         - city
+ *         - state
+ *         - pincode
  *       properties:
  *         name:
  *           type: string
@@ -49,7 +52,13 @@
  *           type: string
  *         equcation:
  *           type: string
- *         addres:
+ *         address:
+ *           type: string
+ *         city:
+ *           type: string
+ *         state:
+ *           type: string
+ *         pincode:
  *           type: string
  */
 

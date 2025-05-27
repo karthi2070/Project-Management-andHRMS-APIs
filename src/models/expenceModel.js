@@ -13,23 +13,40 @@ const ExpenseModel = {
     },
 
     async getAllExpenses() {
-        try {
             const sql = `SELECT * FROM expense_tbl WHERE is_deleted = 0`;
             const [expenses] = await pool.query(sql);
-            return expenses;
-        } catch (error) {
-            throw error;
-        }
+
+        if (expenses.length === 0) return null;
+
+        const formatedresponce =(expenses).map((expense) => {
+
+        const dateObj = new Date(expense.date);
+        const day = String(dateObj.getDate()).padStart(2, '0');
+        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const year = dateObj.getFullYear();
+        expense.date = `${day}-${month}-${year}`;
+
+        return expense;
+        })  
+        return formatedresponce
     },
 
     async getExpenseById(id) {
-        try {
-            const sql = `SELECT * FROM expense_tbl WHERE id = ? AND is_deleted = 0`;
-            const [expenses] = await pool.query(sql, [id]);
-            return expenses[0] || null;
-        } catch (error) {
-            throw error;
-        }
+        const sql = `SELECT * FROM expense_tbl WHERE id = ? AND is_deleted = 0`;
+        const [expenses] = await pool.query(sql, [id]);
+
+        if (expenses.length === 0) return null;
+
+        const expense = expenses[0];
+
+        const dateObj = new Date(expense.date);
+        const day = String(dateObj.getDate()).padStart(2, '0');
+        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const year = dateObj.getFullYear();
+        expense.date = `${day}-${month}-${year}`;
+
+        return expense;
+
     },
 
     async updateExpense(id, data) {
@@ -51,33 +68,40 @@ const ExpenseModel = {
         } catch (error) {
             throw error;
         }
-    },  async getFilteredExpenses(filters) {
-        try {
-            let sql = `SELECT * FROM expense_tbl WHERE is_deleted = 0`;
-            const queryParams = [];
+    },
+    async getFilteredExpenses(filters) {
+        let sql = `SELECT * FROM expense_tbl WHERE is_deleted = 0`;
+        const queryParams = [];
 
-            if (filters.category) {
-                sql += ` AND category = ?`;
-                queryParams.push(filters.category);
-            }
-            if (filters.startDate && filters.endDate) {
-                sql += ` AND date BETWEEN ? AND ?`;
-                queryParams.push(filters.startDate, filters.endDate);
-            }
-            if (filters.minAmount && filters.maxAmount) {
-                sql += ` AND amount BETWEEN ? AND ?`;
-                queryParams.push(filters.minAmount, filters.maxAmount);
-            }
-            if (filters.keyword) {
-                sql += ` AND description LIKE ?`;
-                queryParams.push(`%${filters.keyword}%`);
-            }
-
-            const [expenses] = await pool.query(sql, queryParams);
-            return expenses;
-        } catch (error) {
-            throw error;
+        if (filters.category) {
+            sql += ` AND category LIKE ? `;;
+            queryParams.push(filters.category);
         }
+        if (filters.startDate && filters.endDate) {
+            sql += ` AND date BETWEEN ? AND ?`;
+            queryParams.push(filters.startDate, filters.endDate);
+        }
+        if (filters.minAmount && filters.maxAmount) {
+            sql += ` AND amount BETWEEN ? AND ?`;
+            queryParams.push(filters.minAmount, filters.maxAmount);
+        }
+
+        const [expenses] = await pool.query(sql, queryParams);
+        if (expenses.length === 0) return null;
+
+        const formatedresponce =(expenses).map((expense) => {
+
+        const dateObj = new Date(expense.date);
+        const day = String(dateObj.getDate()).padStart(2, '0');
+        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const year = dateObj.getFullYear();
+        expense.date = `${day}-${month}-${year}`;
+
+        return expense;
+        })  
+        return formatedresponce
+    
+
     }
 };
 

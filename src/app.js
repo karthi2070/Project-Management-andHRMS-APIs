@@ -17,11 +17,13 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 const employeeRoutes = require('./routers/empolyeeRoute');
 const expense = require('./routers/expenceRoute');
-const client = require('./routers/quotationRoute.js');
+const quotation = require('./routers/quotationRoute.js');
+const clientRoutes = require('./routers/clientRoute.js');
 
 app.use('/api/v1', employeeRoutes); // Employee Routes
 app.use('/api/v1', expense); // Bank Details Routes
-app.use('/api/v1', client)
+app.use('/api/v1', quotation);
+app.use('/api/v1', clientRoutes); // Client Routes
 
 
 
