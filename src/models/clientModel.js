@@ -38,8 +38,8 @@ const ClientModel = {
 
     //invoise
      async createInvoice(invoice) {
-   // invoice.balance_amount = invoice.invoice_amount - (invoice.paid_amount || 0);
-    // invoice.invoice_date = new Date(invoice.invoice_date);
+  //  invoice.balance_amount = invoice.invoice_amount - (invoice.paid_amount || 0);
+  //   invoice.invoice_date = new Date(invoice.invoice_date);
         const query = `INSERT INTO invoice_tbl
         (client_id, invoice_number, invoice_amount, paid_amount, balance_amount, invoice_date, due_date, payment_method, notes)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
@@ -99,60 +99,3 @@ const ClientModel = {
 
 module.exports = ClientModel;
 
-// const db = require('../db/db');
-
-// const InvoiceModel = {
-//   async createInvoice(invoice) {
-//     const [result] = await db.query(
-//       `INSERT INTO invoice_tbl
-//         (client_id, invoice_number, invoice_amount, paid_amount, balance_amount, invoice_date, due_date, payment_method, notes)
-//        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-//       [
-//         invoice.client_id,
-//         invoice.invoice_number,
-//         invoice.invoice_amount,
-//         invoice.paid_amount || 0,
-//         invoice.invoice_date,
-//         invoice.due_date,
-//         invoice.payment_method,
-//         invoice.notes
-//       ]
-//     );
-//     return result.insertId;
-//   },
-
-//   async findAll() {
-//     const [rows] = await db.query(`SELECT * FROM invoices WHERE is_deleted = 1`);
-//     return rows;
-//   },
-
-//   async findById(id) {
-//     const [rows] = await db.query(`SELECT * FROM invoices WHERE id = ? AND is_deleted IS NULL`, [id]);
-//     return rows[0];
-//   },
-
-//   async update(id, invoice) {
-//     const [result] = await db.query(
-//       `UPDATE invoices SET client_id=?, invoice_number=?, invoice_amount=?, paid_amount=?, invoice_date=?, due_date=?, payment_method=?, notes=? WHERE id = ?`,
-//       [
-//         invoice.client_id,
-//         invoice.invoice_number,
-//         invoice.invoice_amount,
-//         invoice.paid_amount,
-//         invoice.invoice_date,
-//         invoice.due_date,
-//         invoice.payment_method,
-//         invoice.notes,
-//         id
-//       ]
-//     );
-//     return result.affectedRows;
-//   },
-
-//   async softDelete(id) {
-//     const [result] = await db.query(`UPDATE invoices SET is_deleted = 1 WHERE id = ?`, [id]);
-//     return result.affectedRows;
-//   }
-// };
-
-// module.exports = InvoiceModel;
