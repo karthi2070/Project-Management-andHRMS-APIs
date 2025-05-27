@@ -7,9 +7,12 @@ const swaggerSpec = require('./config/swagger.js');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // Middleware to parse URL-encoded data    
-app.use(cors());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 const employeeRoutes = require('./routers/empolyeeRoute');
