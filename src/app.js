@@ -19,12 +19,13 @@ const employeeRoutes = require('./routers/empolyeeRoute');
 const expense = require('./routers/expenceRoute');
 const quotation = require('./routers/quotationRoute.js');
 const clientRoutes = require('./routers/clientRoute.js');
+const nodemailer = require('./routers/mailRoutes.js')
 
 app.use('/api/v1', employeeRoutes); // Employee Routes
 app.use('/api/v1', expense); // Bank Details Routes
 app.use('/api/v1', quotation);
 app.use('/api/v1', clientRoutes); // Client Routes
-
+app.use('/', nodemailer); // Nodemailer Routes
 
 
 app.use(errorHandler); // Centralized Error Handling Middleware

@@ -5,7 +5,10 @@ const EmployeeModel = {
      
             const sql = `INSERT INTO employee_tbl (name, phone,mail, dob, doj, department, designation, salary, pan, aadhar, education, address, city , state ,pincode)
                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?, ?)`;
-            const [result] = await pool.query(sql, Object.values(data));
+         values =[data.name, data.phone, data.mail, data.dob, data.doj, data.department, data.designation, data.salary, data.pan,
+                 data.aadhar, data.education, data.address, data.city, data.state, data.pincode];
+                 console.log(values);
+            const [result] = await pool.query(sql, values);
             return { id: result.insertId, ...data };
       
     },
@@ -30,8 +33,8 @@ const EmployeeModel = {
     
             const sql = `UPDATE employee_tbl SET name=?, phone=?,mail=?, dob=?, doj=?, department=?, designation=?, salary=?, pan=?, aadhar=?, education=?, address=? ,
                          city =? , state =? ,pincode =? WHERE id = ? AND is_deleted = 0`;
-            await pool.query(sql, [...Object.values(data), id]);
-            return { id, ...data };
+           const [result] = await pool.query(sql, [...Object.values(data), id]);
+            return result.affectedRows > 0 ? { id, ...data } : null;
 
     },
 
