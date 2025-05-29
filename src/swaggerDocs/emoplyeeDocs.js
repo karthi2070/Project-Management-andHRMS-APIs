@@ -185,3 +185,36 @@
  *       200:
  *         description: List of employees matching the search criteria
  */
+
+/**
+ * @swagger
+ * /api/v1/employees/update-empolyee-status/{id} :
+ *   patch:
+ *     summary: Update the status of an employee
+ *     description: Updates the status of an employee by their ID, only if the employee is not deleted.
+ *     tags: [Employee]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: integer
+ *                 description: The ID of the employee.
+ *                 example: 123
+ *               status:
+ *                 type: string
+ *                 description: The new status for the employee.
+ *                 example: "active"
+ *     responses:
+ *       200:
+ *         description: Employee status updated successfully.
+ *       400:
+ *         description: Invalid input data.
+ *       404:
+ *         description: Employee not found or already deleted.
+ *       500:
+ *         description: Internal server error.
+ */

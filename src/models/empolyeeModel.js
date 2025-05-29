@@ -52,6 +52,12 @@ const EmployeeModel = {
 
     },
 
+    async employeeStatus (id, status) {
+        const sql = `UPDATE employee_tbl SET status = ? WHERE id = ? AND is_deleted = 0`;
+       const [result] = await pool.query(sql, [status, id]);
+        return {id, status };
+    },
+
     async seachemployee (name) {
         const sql = `SELECT * FROM employee_tbl WHERE is_deleted = 0 and name LIKE ?`;
         const [result] = await pool.query(sql, [`%${name}%`]);

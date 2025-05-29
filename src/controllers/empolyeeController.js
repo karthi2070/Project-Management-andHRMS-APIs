@@ -56,6 +56,16 @@ const EmployeeController = {
         } catch (error) {
            next(error);        }
     },
+    async employeeStatus(req, res, next) {
+        try {   
+            const { id, status } = req.body;
+            const result = await EmployeeModel.employeeStatus(id, status);
+            res.status(200).json(result);
+        } catch (error) {
+           next(error);        
+        }
+    },
+
     async searchEmployee(req, res, next) {      
         try {
             const name = req.query.name;

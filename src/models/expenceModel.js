@@ -102,8 +102,55 @@ const ExpenseModel = {
         return formatedresponce
     
 
+    },
+
+    async getFilteredExpenses (startDate, endDate, category)  {
+
+  let filterQuery = `SELECT * FROM expense_tbl WHERE date BETWEEN ? AND ?`;
+  const params = [startDate, endDate];
+
+  if (category) {
+    filterQuery += ` AND category = ?`;
+    params.push(category);
+  }
+
+  const [expenses] = await pool.query(filterQuery, params);
+
+  // Total & average
+  const totalExpense = expenses.reduce((sum, exp) => sum + parseFloat(exp.amount), 0);
+  const averageExpense = expenses.length ? (totalExpense / expenses.length).toFixed(2) : 0;
+
+  let highestCategory = null;
+  let highestAmount = 0;
+
+  if (!category) {
+    // Group by category and find highest
+    const categoryTotals = {};
+    expenses.forEach(exp => {
+      categoryTotals[exp.category] = (categoryTotals[exp.category] || 0) + parseFloat(exp.amount);
+    });
+
+    for (const [cat, amt] of Object.entries(categoryTotals)) {
+      if (amt > highestAmount) {
+        highestCategory = cat;
+        highestAmount = amt;
+      }
     }
-};
+  } else {
+    // Category is provided, just return total amount of that category
+    highestCategory = category;
+    highestAmount = totalExpense;
+  }
+
+  return {
+    filtered_expenses: expenses,
+    total_expense: totalExpense,
+    average_expense: averageExpense,
+    highest_expense_category: highestCategory,
+    highest_expense_amount: highestAmount
+  };
+    }
+};  
 
 module.exports = ExpenseModel;
 

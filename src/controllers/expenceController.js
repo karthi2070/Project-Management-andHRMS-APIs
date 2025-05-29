@@ -58,6 +58,25 @@ const ExpenseController = {
         } catch (error) {
             res.status(500).json({ message: 'Error filtering expenses', error });
         }
+    },
+
+   async filterExpenses  (req, res) {
+  try {
+    const { startDate, endDate, category } = req.query;
+    //console.log("Filtering expenses with:", { startDate, endDate, category });
+
+
+    if (!startDate || !endDate) {
+      return res.status(400).json({ message: "start_date and end_date are required." });
+    }
+
+    const result = await ExpenseModel.getFilteredExpenses(startDate, endDate, category);
+    return res.status(200).json(result);
+
+  } catch (error) {
+    console.error("Error filtering expenses:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
     }
 };
 

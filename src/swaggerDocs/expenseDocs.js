@@ -160,3 +160,31 @@
  */
 
 
+
+/**
+ * @swagger
+ * /api/v1/expense/get-expens :
+ *   get:
+ *     summary: Get expenses filtered dynamically
+ *     tags: [Expense]
+ *     parameters:
+ *       - in: query
+ *         name: startDate
+ *         schema:
+ *           type: string
+ *           format: date
+ *       - in: query
+ *         name: endDate
+ *         schema:
+ *           type: string
+ *           format: date
+ *       - in: query
+ *         name: category
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Filtered expenses retrieved successfully
+ */
+
+
