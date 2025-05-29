@@ -65,6 +65,16 @@ const EmployeeController = {
            next(error);        
         }
     },
+    async getSortByEmployee(req, res, next) {
+        try {
+            const field = req.query.field;
+            if (!field) {
+                return res.status(400).json({ message: 'Field parameter is required' });}
+            const employees = await EmployeeModel.getSortByEmployee(field);
+            res.status(200).json(employees);
+        } catch (error) {
+           next(error);        }
+    },
 
     async searchEmployee(req, res, next) {      
         try {

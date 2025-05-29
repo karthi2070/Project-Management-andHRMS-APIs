@@ -12,6 +12,7 @@ router.patch('/employees/delete-empolyee/:id', EmployeeController.softDeleteEmpl
 router.get('/employees/get-filtered-department', EmployeeController.getFilteredDepartment);
 router.get('/employees/search-empolyee', EmployeeController.searchEmployee);
 router.patch('/employees/update-empolyee-status/:id', EmployeeController.employeeStatus);
+router.get('/employees/get-empolyee-sort', EmployeeController.getSortByEmployee);
 
 // Bank Details Routes
 router.post('/bank/create-acc', EmployeeController.createBankDetails);

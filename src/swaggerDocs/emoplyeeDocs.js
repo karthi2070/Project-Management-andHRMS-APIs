@@ -46,6 +46,12 @@
  *           type: string
  *         salary:
  *           type: number
+ *         status:
+ *           type: string
+ *         status_reson:
+ *           type: string
+ *         status_desc:
+ *           type: string
  *         pan:
  *           type: string
  *         aadhar:
@@ -184,6 +190,29 @@
  *     responses:
  *       200:
  *         description: List of employees matching the search criteria
+ */
+
+/**
+ * @swagger
+ * /api/v1/employees/get-empolyee-sort:
+ *   get:
+ *     summary: Retrieve a list of employees sorted by a specified field.
+ *     description: Returns all non-deleted employees sorted in ascending order by the given field.
+ *     tags: [Employee]
+ *     parameters:
+ *       - in: query
+ *         name: field
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The field name to sort employees by.
+ *     responses:
+ *       200:
+ *         description: A list of sorted employees.
+ *       400:
+ *         description: Invalid field parameter.
+ *       500:
+ *         description: Server error.
  */
 
 /**

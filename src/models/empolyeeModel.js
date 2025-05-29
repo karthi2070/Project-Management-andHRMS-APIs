@@ -3,10 +3,10 @@ const pool = require('../config/db');
 const EmployeeModel = {
     async createEmployee(data) {
      
-            const sql = `INSERT INTO employee_tbl (name, phone,mail, dob, doj, department, designation, salary, pan, aadhar, education, address, city , state ,pincode)
-                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?, ?)`;
-         values =[data.name, data.phone, data.mail, data.dob, data.doj, data.department, data.designation, data.salary, data.pan,
-                 data.aadhar, data.education, data.address, data.city, data.state, data.pincode];
+            const sql = `INSERT INTO employee_tbl (name, phone,mail, dob, doj, department, designation, salary, status, status_reson, status_desc,  pan, aadhar, education, address, city , state ,pincode)
+                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?, ?, ?, ?, ?)`;
+         values =[data.name, data.phone, data.mail, data.dob, data.doj, data.department, data.designation, data.salary,data.status,data.status_reson, data.status_desc,
+                 data.pan,data.aadhar, data.education, data.address, data.city, data.state, data.pincode];
                  console.log(values);
             const [result] = await pool.query(sql, values);
             return { id: result.insertId, ...data };
@@ -55,7 +55,7 @@ const EmployeeModel = {
     async employeeStatus (id, status) {
         const sql = `UPDATE employee_tbl SET status = ? WHERE id = ? AND is_deleted = 0`;
        const [result] = await pool.query(sql, [status, id]);
-        return {id, status };
+        return result.affectedRows > 0 ? { id, status } : null;
     },
 
     async seachemployee (name) {
@@ -63,6 +63,18 @@ const EmployeeModel = {
         const [result] = await pool.query(sql, [`%${name}%`]);
         return result;
     },
+
+    async getSortByEmployee(field) {
+    const allowedFields = ['name', 'salary', 'department','dob']; // Define allowed column names
+    if (!allowedFields.includes(field)) {
+        throw new Error('Invalid field for sorting');
+    }
+
+    const sql = `SELECT * FROM employee_tbl WHERE is_deleted = 0 ORDER BY ${field} ASC`;
+    const [result] = await pool.query(sql);
+    return result;
+},
+
 
     // Bank Details Methods
      async createBankDetails(data) {
