@@ -99,7 +99,7 @@ Thank you for your continued business.</p>
 <p>Warm regards,<br>
 Namuvi Accounts Team
 Namuvi Technologies Private Limited
-</p>`
+</p> `
   }
       
 };
