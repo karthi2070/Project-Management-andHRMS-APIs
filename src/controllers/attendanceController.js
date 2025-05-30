@@ -48,5 +48,26 @@ exports.getAttendanceByEmployeeId = async (req, res, next) => {
         res.status(200).json({ data: result });
     } catch (error) {
         next(error);
+    }};
+
+    exports.getAttendanceByDate = async (req, res,next) => {
+    try {
+        const { date } = req.query;
+
+        if (!date) {
+            return res.status(400).json({ message: 'Date query parameter is required' });
+        }
+
+        const records = await attendanceModel.getAttendanceByDate(date);
+
+        if (records.length === 0) {
+            return res.status(404).json({ message: 'No records found for this date' });
+        }
+
+        res.status(200).json({ data: records });
+    } catch (error) {
+        next(error);
     }
 };
+
+
