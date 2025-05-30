@@ -66,6 +66,14 @@
  *           type: string
  *         pincode:
  *           type: string
+ *         p_address:
+ *           type: string
+ *         p_city:
+ *           type: string
+ *         p_state:
+ *           type: string
+ *         P_pincode:
+ *           type: string
  */
 
 /**

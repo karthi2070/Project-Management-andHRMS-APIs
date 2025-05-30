@@ -60,7 +60,7 @@
 
 /**
  * @swagger
- * /api/v1/bank/get-acc-id/{id}:
+ * /api/v1/bank/get-acc-em-id/{id}:
  *   get:
  *     summary: Get bank details by ID
  *     tags: [BankDetails]
@@ -79,7 +79,7 @@
 
 /**
  * @swagger
- * /api/v1/bank/update-acc/{id}:
+ * /api/v1/bank/update-acc-em-id/{id}:
  *   put:
  *     summary: Update bank details
  *     tags: [BankDetails]
@@ -102,7 +102,7 @@
 
 /**
  * @swagger
- * /api/v1/bank/delete-acc/{id}:
+ * /api/v1/bank/delete-acc-em-id/{id}:
  *   patch:
  *     summary: Soft delete bank details
  *     tags: [BankDetails]
