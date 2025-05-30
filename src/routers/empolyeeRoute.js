@@ -17,7 +17,7 @@ router.get('/employees/get-empolyee-sort', EmployeeController.getSortByEmployee)
 // Bank Details Routes
 router.post('/bank/create-acc', EmployeeController.createBankDetails);
 router.get('/bank/get-acc-list', EmployeeController.getAllBankDetails);
-router.get('/bank/get-acc-id-em-id/:id', EmployeeController.getBankDetailsById);
+router.get('/bank/get-acc-em-id/:id', EmployeeController.getBankDetailsById);
 router.put('/bank/update-acc-em-id/:id', EmployeeController.updateBankDetails);
 router.patch('/bank/delete-acc-em-id/:id', EmployeeController.softDeleteBankDetails);
 
