@@ -21,6 +21,9 @@ const quotation = require('./routers/quotationRoute.js');
 const clientRoutes = require('./routers/clientRoute.js');
 const nodemailer = require('./routers/mailRoutes.js')
 const attendance= require('./routers/attendanceRoute.js');
+const task = require('./routers/taskRoute.js');
+const project= require('./routers/projectRoute.js'); // Project Routes
+const sprint = require('./routers/sprintRoute.js'); // Sprint Routes
 
 app.use('/api/v1', employeeRoutes); // Employee Routes
 app.use('/api/v1', expense); // Bank Details Routes
@@ -28,6 +31,9 @@ app.use('/api/v1', quotation);
 app.use('/api/v1', clientRoutes); // Client Routes
 app.use('/', nodemailer); // Nodemailer Routes
 app.use('/api/v1', attendance); // Attendance Routes
+app.use('/api/v1', task); // Task Routes
+app.use('/api/v1', project); // Project Routes
+app.use('/api/v1', sprint); // Sprint Routes
 
 
 app.use(errorHandler); // Centralized Error Handling Middleware
