@@ -25,6 +25,7 @@ const task = require('./routers/taskRoute.js');
 const project= require('./routers/projectRoute.js'); // Project Routes
 const sprint = require('./routers/sprintRoute.js'); // Sprint Routes
 const leave = require('./routers/leaveRoute.js'); // Leave Routes
+const login= require('./routers/loginRoute.js'); // Login Routes
 
 app.use('/api/v1', employeeRoutes); // Employee Routes
 app.use('/api/v1', expense); // Bank Details Routes
@@ -36,7 +37,7 @@ app.use('/api/v1', task); // Task Routes
 app.use('/api/v1', project); // Project Routes
 app.use('/api/v1', sprint); // Sprint Routes
 app.use('/api/v1', leave); // Leave Routes
-
+app.use('/api/v1', login); // Login Routes
 
 app.use(errorHandler); // Centralized Error Handling Middleware
 
