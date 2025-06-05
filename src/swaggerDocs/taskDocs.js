@@ -5,6 +5,7 @@
  *   name: Tasks
  *   description: Task management
  */
+
 /**
  * @swagger
  * components:
@@ -12,6 +13,10 @@
  *     Task:
  *       type: object
  *       properties:
+ *         sprint_id:
+ *           type: integer
+ *         project_code:
+ *           type: string
  *         title:
  *           type: string
  *         description:
@@ -20,21 +25,33 @@
  *           type: string
  *         label:
  *           type: string
+ *         start_date:
+ *           type: string
+ *           format: date
+ *         end_date:
+ *           type: string
+ *           format: date
  *         due_date:
  *           type: string
  *           format: date
+ *         team:
+ *           type: string
  *         assignee:
  *           type: string
- *         parent_task_id:
- *           type: integer
  *         rca:
- *           type: string 
+ *           type: string
+ *         issue_type:
+ *           type: string
  *         story_points:
  *           type: string
  *         attachments:
  *           type: string
- * 
+ *           example: ["https://example.com/attachment.png", "https://example.com/attachment2.png"]
+ *         parent_task_id:
+ *           type: integer
+
  */
+
 
 
 /**
@@ -52,9 +69,10 @@
  *     responses:
  *       201:
  *         description: Task created successfully
- *       500:
- *         description: Server error
+ *       400:
+ *         description: Invalid input
  */
+
 
 
 /**
@@ -88,6 +106,7 @@
  *       404:
  *         description: Task not found
  */
+
 /**
  * @swagger
  * /api/v1/task/update-task/{id}:
@@ -98,9 +117,9 @@
  *       - in: path
  *         name: id
  *         required: true
+ *         description: Task ID
  *         schema:
  *           type: integer
- *         description: Task ID
  *     requestBody:
  *       required: true
  *       content:
@@ -109,10 +128,11 @@
  *             $ref: '#/components/schemas/Task'
  *     responses:
  *       200:
- *         description: Task updated
+ *         description: Task updated successfully
  *       404:
  *         description: Task not found
  */
+
 
 /**
  * @swagger
