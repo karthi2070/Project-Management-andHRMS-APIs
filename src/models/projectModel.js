@@ -3,7 +3,7 @@ const pool = require("../config/db");
 const createProject = async (data) => {
 const { name, description, start_date, end_date, budget, status } = data;
 console.log("Creating project with data:", name, description, start_date, end_date, budget, status );
-        const query = `INSERT INTO project_tbl (name, description, start_date, end_date, budget, status) VALUES (?, ?, ?, ?, ?,? )`;
+        const query = `INSERT INTO project_tbl (name,project_code, description, start_date, end_date, budget, status) VALUES (?, ?, ?, ?, ?,? )`;
         const values = [name, description, start_date, end_date,budget,  status];
         const [result] = await pool.query(query, values);
         return result.insertId;
@@ -16,7 +16,7 @@ const updateProject = async (id, data) => {
 
         // const fields = Object.keys(data).map(key => `${key} = ?`).join(", ");
         // const values = [...Object.values(data), project_id];
-        const query = `UPDATE project_tbl SET name=?, description =?, start_date =?, end_date =?, budget =?, status =? WHERE id = ?`;
+        const query = `UPDATE project_tbl SET name=?,project_code=?, description =?, start_date =?, end_date =?, budget =?, status =? WHERE id = ?`;
         const values = [name, description, start_date, end_date,budget,  status,id];
 
        const [result]= await pool.query(query, values);
@@ -34,7 +34,7 @@ const getProjects = async () => {
 
 const getProjectById = async (project_id) => {
 
-        const query = `SELECT * FROM project_tbl WHERE project_id = ?`;
+        const query = `SELECT * FROM project_tbl WHERE id = ?`;
         const [rows] = await pool.execute(query, [project_id]);
         return rows[0];
 

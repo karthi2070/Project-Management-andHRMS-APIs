@@ -22,6 +22,8 @@
  *             properties:
  *               name:
  *                 type: string
+ *               project_code:
+ *                 type: string
  *               description:
  *                 type: string
  *               start_date:
@@ -62,6 +64,8 @@
  *             type: object
  *             properties:
  *               name:
+ *                 type: string
+ *               project_code:
  *                 type: string
  *               description:
  *                 type: string

@@ -86,6 +86,25 @@
  *         description: List of tasks
  */
 
+/**
+ * @swagger
+ * /api/v1/tasks/sprint-tasks/{id}:
+ *   get:
+ *     summary: Get a task by sprintId
+ *     tags: [Tasks]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Task ID
+ *     responses:
+ *       200:
+ *         description: Task details
+ *       404:
+ *         description: Task not found
+ */
 
 /**
  * @swagger

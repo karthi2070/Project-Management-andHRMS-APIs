@@ -5,8 +5,6 @@ const taskModel = {
     async createTask(taskData) {
         const { sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date, team, assignee, rca, issue_type,
             story_points, attachments, parent_task_id} = taskData;
-            console.log("Creating task with data:", sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date, team, assignee, rca, issue_type,
-            story_points, attachments, parent_task_id ? parent_task_id : null );
 
     const sql = `
         INSERT INTO task_tbl (
@@ -36,6 +34,12 @@ const taskModel = {
 
     async getSubTasks(parentId) {
         const [rows] = await db.execute(`SELECT * FROM task_tbl WHERE is_deleted = 0 AND parent_task_id = ?`, [parentId]);
+        return rows;
+    },
+    async getTasksBySprintId(id) {
+        console.log("Fetching tasks for sprint ID:", id);
+            const sql =`SELECT * FROM task_tbl WHERE sprint_id = ?`
+            const [rows] = await db.query(sql, [id]);
         return rows;
     },
 

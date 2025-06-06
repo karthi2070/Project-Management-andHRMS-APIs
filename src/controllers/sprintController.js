@@ -32,19 +32,23 @@ const SprintController = {
         }
     },
 
-    async getSprintById(req, res) {
-       // const id  = req.params;
-        console.log("Fetching sprint with ID:", req.params);
-        try {
-            const sprint = await Sprint.getSprintById(req.params);
-            // if (!sprint) {
-            //     return res.status(404).json({ message: "Sprint not found" });
-            // }
-            res.status(200).json(sprint);
-        } catch (error) {
-            res.status(500).json({ error: error.message });
+async getSprintById(req, res) {
+    const { id } = req.params;
+    console.log("Fetching sprint with ID:", id);
+
+    try {
+        const result = await Sprint.getSprintById(id);
+
+        if (!result) {
+            return res.status(404).json({ message: "Sprint not found" });
         }
-    },
+
+        res.status(200).json(result);
+    } catch (error) {
+        console.error("Error fetching sprint:", error);
+        res.status(500).json({ error: error.message });
+    }
+},
     async getSprintsByProjectId(req, res) {
         const { project_id } = req.params;
         try {

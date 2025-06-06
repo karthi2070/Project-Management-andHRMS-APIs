@@ -23,6 +23,22 @@ const taskController = {
     }
   },
 
+  async getTasksBySprintId(req, res, next) {
+    try {
+      const sprintId = req.params.id;
+      if (!sprintId) {
+        return res.status(400).json({ success: false, message: 'Sprint ID is required' });
+      }
+      const tasks = await taskModel.getTasksBySprintId(sprintId);
+      if (!tasks || tasks.length === 0) {
+        return res.status(404).json({ success: false, message: 'No tasks found for this sprint' });
+      }
+      res.status(200).json({ success: true, data: tasks });
+    } catch (error) {
+      next(error);  
+    }
+  },
+
   // Get Task by ID
   async getTaskById(req, res, next) {
     try {
