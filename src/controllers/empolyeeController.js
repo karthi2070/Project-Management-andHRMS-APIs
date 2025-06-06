@@ -1,13 +1,29 @@
 const EmployeeModel = require('../models/empolyeeModel');
 
 const EmployeeController = {
-    async createEmployee(req, res,next) {
+
+    async createEmployee(req, res, next) {
         try {
-            const employee = await EmployeeModel.createEmployee(req.body);
-            res.status(201).json(employee);
+            const {
+                name, phone, mail, dob, doj, department, designation, salary, status,
+                status_reson, status_desc, pan, aadhar, education, address, city, state,
+                pincode, p_address, p_city, p_state, p_pincode
+            } = req.body;
+
+            // Get count from DB instead of list (to avoid memory load and concurrency issue)
+            const count = await EmployeeModel.getEmployeeCount();
+            const employee_id = `EMP00${count + 1}`;
+
+            const employeeData = {
+                name, employee_id, phone, mail, dob, doj, department, designation, salary, status,
+                status_reson, status_desc, pan, aadhar, education, address, city, state,
+                pincode, p_address, p_city, p_state, p_pincode
+            };
+
+            const result = await EmployeeModel.createEmployee(employeeData);
+            res.status(201).json({ message: 'Employee created successfully', data: result });
         } catch (error) {
             next(error);
-            
         }
     },
 

@@ -1,69 +1,77 @@
-const pool = require('../config/db'); // adjust path to your DB connection
+const pool = require('../config/db');
+ 
+ const EmployeeModel = {
+    async getEmployeeCount() {
+        const sql = `SELECT COUNT(*) AS count FROM employee_tbl`;
+        const [rows] = await query.query(sql);
+        return rows[0].count;
+    },
 
-const taskModel = {
-  // Create Task
-  async createTask(data) {
-    const sql = `
-      INSERT INTO tasks (title, description, priority, label, due_date, assignee, parent_id)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `;
-    const values =[data.title, data.description, data.priority, data.label, data.due_date, data.assignee, data.parent_id || null];
+    async createEmployee(data) {
+        const {
+            name, employee_id, phone, mail, dob, doj, department, designation, salary, status,
+            status_reson, status_desc, pan, aadhar, education, address, city, state,
+            pincode, p_address, p_city, p_state, p_pincode
+        } = data;
 
-    const [result] = await pool.query(sql, values);
-    return { id: result.insertId, ...data };
-  },
+        const sql = `
+            INSERT INTO employee_tbl (
+                name, employee_id, phone, mail, dob, doj, department, designation, salary, status,
+                status_reson, status_desc, pan, aadhar, education, address, city, state,
+                pincode, p_address, p_city, p_state, p_pincode
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `;
 
-  // Get Task by ID
-  async getTaskById(id) {
-    const sql = `SELECT * FROM tasks WHERE id = ? AND is_deleted = 0`;
-    const [rows] = await pool.query(sql, id);
-    return rows[0] || null;
-  },
+        const values = [
+            name, employee_id, phone, mail, dob, doj, department, designation, salary, status,
+            status_reson, status_desc, pan, aadhar, education, address, city, state,
+            pincode, p_address, p_city, p_state, p_pincode
+        ];
 
-  // Get All Tasks (with optional parent_id)
-  async getAllTasks(parentId = null) {
-    const sql = `SELECT * FROM tasks WHERE parent_id ${parentId === null ? 'IS NULL' : '= ?'} AND is_deleted = 0`;
-    const values = parentId === null ? [] : [parentId];
-    const [rows] = await pool.query(sql, values);
-    return rows;
-  },
-
-  // Update Task
-  async updateTask(id, data) {
-    const sql = `
-      UPDATE tasks 
-      SET title = ?, description = ?, priority = ?, label = ?, due_date = ?, assignee = ?, parent_id = ?
-      WHERE id = ? AND is_deleted = 0
-    `;
-    const values = [
-      data.title,
-      data.description,
-      data.priority,
-      data.label,
-      data.due_date,
-      data.assignee,
-      data.parent_id || null,
-      id
-    ];
-    const [result] = await pool.query(sql, values);
-    return result.affectedRows > 0;
-  },
-
-  async getSubTasks(parentId) {
-    const sql = `SELECT * FROM tasks WHERE parent_id = ? AND is_deleted = 0`;
-    const values = [parentId];
-    const [rows] = await pool.query(sql, values);
-    return rows;
-  },
-
-
-  // Soft Delete Task
-  async deleteTask(id) {
-    const sql = `UPDATE tasks SET is_deleted = 1 WHERE id = ?`;
-    const values = [id];
-    const [result] = await pool.query(sql, values);
-    return result.affectedRows > 0;
-  }
-};
-
-module.exports = taskModel;
+        const [result] = await pool.query(sql, values);
+        return { id: result.insertId, ...data };
+    },
+//id, name, employee_id, phone, mail, dob, doj, department, designation, salary, status, status_reson, status_desc, pan, aadhar, education, address, city, state, pincode, p_address, p_city, p_state, p_pincode, is_deleted, created_at, updated_at
+     async getAllEmployees() {
+         try {
+             const sql = `SELECT * FROM employee_tbl WHERE is_deleted = 0`;
+             const [employees] = await pool.query(sql);
+             return employees;
+         } catch (error) {
+             throw error;
+         }
+     },
+ 
+     async getEmployeeById(id) {
+         try {
+             const sql = `SELECT * FROM employee_tbl WHERE id = ? AND is_deleted = 0`;
+             const [employees] = await pool.query(sql, [id]);
+             return employees[0] || null;
+         } catch (error) {
+             throw error;
+         }
+     },
+ 
+     async updateEmployee(id, data) {
+         try {
+             const sql = `UPDATE employee_tbl SET name=?, phone=?,mail=?, dob=?, doj=?, department=?, designation=?, salary=?, pan=?, aadhar=?, education=?, address=? 
+                          WHERE id = ? AND is_deleted = 0`;
+             await pool.query(sql, [...Object.values(data), id]);
+             return { id, ...data };
+         } catch (error) {
+             throw error;
+         }
+     },
+ 
+     async softDeleteEmployee(id) {
+         try {
+             const sql = `UPDATE employee_tbl SET is_deleted = 1 WHERE id = ?`;
+             await pool.query(sql, [id]);
+             return { id, deleted: true };
+         } catch (error) {
+             throw error;
+         }
+     }
+ };
+ 
+ module.exports = EmployeeModel;

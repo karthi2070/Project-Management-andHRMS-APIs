@@ -13,7 +13,20 @@ const options = {
       {
         url: 'http://localhost:3002',
       },
-    ],
+    ],      components: {
+      securitySchemes: {
+          BearerAuth: {
+              type: 'http',
+              scheme: 'bearer',
+              bearerFormat: 'JWT',
+          },
+      },
+  },
+  security: [
+      {
+          BearerAuth: [],
+      },
+  ],
   },
   apis: [' src/swaggerDocs/*js'], // path to your route files
 };

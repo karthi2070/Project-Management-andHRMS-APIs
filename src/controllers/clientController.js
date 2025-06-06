@@ -3,6 +3,7 @@ const ClientModel = require('../models/clientModel');
 const ClientController = {
     async createClient(req, res ,next) {
         try {
+            
             const client = await ClientModel.createClient(req.body);
             res.status(201).json(client);
         } catch (error) {

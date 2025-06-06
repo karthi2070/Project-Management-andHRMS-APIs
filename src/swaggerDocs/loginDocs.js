@@ -21,22 +21,13 @@
  *             properties:
  *               mail:
  *                 type: string
- *                 example: karthi@gmail.com
+ *                 example: singam@gmail.com
  *               password:
  *                 type: string
- *                 example: 098765
+ *                 example: 90singam
  *     responses:
  *       200:
  *         description: Login successful
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 token:
- *                   type: string
- *                 user:
- *                   $ref: '#/components/schemas/User'
  *       401:
  *         description: Invalid email or password
  */
@@ -48,6 +39,8 @@
  *     summary: Get user by email
  *     tags: [login]
  *     description: Returns a user object by email.
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: mail
@@ -57,11 +50,6 @@
  *         description: User's email address
  *     responses:
  *       200:
- *         description: User found
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/User'
  *       404:
  *         description: User not found
  */
@@ -92,10 +80,7 @@
  *     responses:
  *       201:
  *         description: User registered successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/User'
+
  */
 
 
@@ -106,6 +91,8 @@
  *     summary: Get user by ID
  *     tags: [login]
  *     description: Returns a user object by user ID.
+ *     security:
+ *      - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -115,11 +102,7 @@
  *         description: User's ID
  *     responses:
  *       200:
- *         description: User found
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/User'
+ *         description: User details retrieved successfully
  *       404:
  *         description: User not found
  */
@@ -132,13 +115,9 @@
  *     summary: Get all users
  *     tags: [login]
  *     description: Returns a list of all users.
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: A list of users
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/User'
  */
