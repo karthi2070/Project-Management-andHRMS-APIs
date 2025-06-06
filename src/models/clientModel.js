@@ -1,9 +1,16 @@
 const pool = require('../config/db');
 
 const ClientModel = {
+    
+      async getClientCount() {
+        const sql = `SELECT COUNT(*) AS count FROM client_tbl`;
+        const [rows] = await pool.query(sql);
+        console.log(rows[0].count)
+        return rows[0].count;
+    },
     async createClient(data) {
         console.log("Creating client with data:", data);
-        const sql = `INSERT INTO client_tbl (name, company_name, clientid, mail, phone1, phone2, phone3, gst_num, address, city , state ,pincode) 
+        const sql = `INSERT INTO client_tbl (name, company_name, client_id, mail, phone1, phone2, phone3, gst_num, address, city , state ,pincode) 
                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?)`;
         const [result] = await pool.query(sql, Object.values(data));
         return { id: result.insertId, ...data };
@@ -23,7 +30,7 @@ const ClientModel = {
 
     async updateClient(id, data) {
         console.log (data)
-        const sql = `UPDATE client_tbl SET name=?, company_name=?, clientid=?, mail=?, phone1=?, phone2=?, phone3=?, gst_num=?, address=? ,
+        const sql = `UPDATE client_tbl SET name=?, company_name=?, client_id=?, mail=?, phone1=?, phone2=?, phone3=?, gst_num=?, address=? ,
                     city =? , state = ? ,pincode= ? WHERE id = ? AND is_deleted = 0`;
         await pool.query(sql, [...Object.values(data), id]);
         return { id, ...data };

@@ -26,6 +26,23 @@ const EmployeeController = {
             next(error);
         }
     },
+    async getEmployeeByEmpId(req, res,next) {
+        try {
+            const { employee_id } = req.params;
+            console.log("Fetching employee with employee_id:", employee_id);
+
+            const result = await EmployeeModel.getEmployeeByEmpId(employee_id);
+
+            if (!result) {
+                return res.status(404).json({ message: "Employee not found" });
+            }
+
+            res.status(200).json(result);
+        } catch (error) {
+            next()
+        }
+    },
+
 
     async getAllEmployees(req, res,next) {
         try {

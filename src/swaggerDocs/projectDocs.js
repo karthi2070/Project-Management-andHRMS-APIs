@@ -26,12 +26,17 @@
  *                 type: string
  *               description:
  *                 type: string
+ *               due_date:
+ *                 type: string
+ *                 format: date
  *               start_date:
  *                 type: string
  *                 format: date
  *               end_date:
  *                 type: string
  *                 format: date
+ *               sprints_count:
+ *                 type: numer
  *               budget:
  *                 type: number
  *               status:
@@ -69,12 +74,16 @@
  *                 type: string
  *               description:
  *                 type: string
+ *               due_date:
+ *                 type: string
  *               start_date:
  *                 type: string
  *                 format: date
  *               end_date:
  *                 type: string
  *                 format: date
+ *               sprints_count:
+ *                type: number
  *               budget:
  *                 type: number
  *               status:

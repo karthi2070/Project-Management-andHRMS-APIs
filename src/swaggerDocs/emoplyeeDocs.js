@@ -132,7 +132,31 @@
 
 /**
  * @swagger
- * /api/v1/employees/get-empolyee-id/{id}:
+ * /api/v1/employee/get-by-empid/{employee_id}:
+ *   get:
+ *     summary: Get an employee by employee_id
+ *     tags:
+ *       - Employee
+ *     parameters:
+ *       - in: path
+ *         name: employee_id
+ *         required: true
+ *         description: The unique employee ID (e.g., EMP0001)
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the employee data
+ *       404:
+ *         description: Employee not found
+ *       500:
+ *         description: Internal server error
+ */
+
+
+/**
+ * @swagger
+ * /api/v1/employees/get-empolyee-pkid/{id}:
  *   get:
  *     summary: Get employee by ID
  *     tags: [Employee]

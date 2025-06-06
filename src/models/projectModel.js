@@ -1,26 +1,22 @@
 const pool = require("../config/db");
 
 const createProject = async (data) => {
-const { name, description, start_date, end_date, budget, status } = data;
-console.log("Creating project with data:", name, description, start_date, end_date, budget, status );
-        const query = `INSERT INTO project_tbl (name,project_code, description, start_date, end_date, budget, status) VALUES (?, ?, ?, ?, ?,? )`;
-        const values = [name, description, start_date, end_date,budget,  status];
+const { name,project_code ,description,due_date, start_date, end_date,sprints_count, budget, status } = data;
+        const query = `INSERT INTO project_tbl (name,project_code, description,due_date, start_date, end_date, sprints_count, budget, status) VALUES (?, ?, ?, ?, ?,?,?,?,?)`;
+        const values = [name,project_code, description,due_date, start_date, end_date,sprints_count,budget,  status];
         const [result] = await pool.query(query, values);
         return result.insertId;
 
 };
 
 const updateProject = async (id, data) => {
-    const { name, description, start_date, end_date, budget, status } = data;
-    console.log("Updating project with ID:", id, "and data:", name, description, start_date, end_date, budget, status);
+    const { name,project_code, description,due_date, start_date, end_date,sprints_count, budget, status} = data;
 
-        // const fields = Object.keys(data).map(key => `${key} = ?`).join(", ");
-        // const values = [...Object.values(data), project_id];
-        const query = `UPDATE project_tbl SET name=?,project_code=?, description =?, start_date =?, end_date =?, budget =?, status =? WHERE id = ?`;
-        const values = [name, description, start_date, end_date,budget,  status,id];
+        const query = `UPDATE project_tbl SET name=?,project_code=?, description =?, due_date=?,start_date =?, end_date =?,sprints_count=?, budget =?, status =? WHERE id = ?`;
+        const values = [name, project_code,description,due_date, start_date, end_date,sprints_count, budget, status,id];
 
        const [result]= await pool.query(query, values);
-        return result.affectedRows 
+        return result
 
 };
 

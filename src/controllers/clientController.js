@@ -3,8 +3,13 @@ const ClientModel = require('../models/clientModel');
 const ClientController = {
     async createClient(req, res ,next) {
         try {
-            
-            const client = await ClientModel.createClient(req.body);
+            const {name, company_name, mail, phone1, phone2, phone3, gst_num, address, city, state, pincode}=req.body
+
+            const count = await ClientModel.getClientCount()
+            console.log(count)
+            const client_id =`CLI000${count+1}`
+            const client_data= {name, company_name,client_id, mail, phone1, phone2, phone3, gst_num, address, city, state, pincode}
+            const client = await ClientModel.createClient(client_data);
             res.status(201).json(client);
         } catch (error) {
            next(error);        }
@@ -28,6 +33,7 @@ const ClientController = {
         } catch (error) {
            next(error);        }
     },
+    
 
     async updateClient(req, res ,next) {
         try {

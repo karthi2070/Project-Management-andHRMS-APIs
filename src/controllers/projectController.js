@@ -12,11 +12,12 @@ const createProject = async (req, res) => {
 
 const updateProject = async (req, res) => {
     try {
-        const { id } = req.params;
+        const  {id}  = req.params;
+        console.log(id)
         const updateData = req.body;
         console.log("Updating project with ID:", id, "and data:", updateData);
-        await Project.updateProject(id, updateData);
-        res.status(200).json({ message: "Project updated successfully" });
+        const result= await Project.updateProject(id, updateData);
+        res.status(200).json({ message: "Project updated successfully" ,result});
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

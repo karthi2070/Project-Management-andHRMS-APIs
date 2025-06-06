@@ -3,7 +3,7 @@ const pool = require('../config/db');
  const EmployeeModel = {
     async getEmployeeCount() {
         const sql = `SELECT COUNT(*) AS count FROM employee_tbl`;
-        const [rows] = await query.query(sql);
+        const [rows] = await pool.query(sql);
         return rows[0].count;
     },
 
@@ -41,7 +41,12 @@ const pool = require('../config/db');
              throw error;
          }
      },
- 
+    async getEmployeeByEmpId(employee_id) {
+        const query = `SELECT * FROM employee_tbl WHERE is_deleted = 0 AND employee_id = ?`;
+        const [rows] = await pool.query(query, [employee_id]);
+        return rows[0] || null; // returns single object or null
+    },
+
      async getEmployeeById(id) {
          try {
              const sql = `SELECT * FROM employee_tbl WHERE id = ? AND is_deleted = 0`;
