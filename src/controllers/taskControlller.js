@@ -16,7 +16,7 @@ const taskController = {
   // Get All Root Tasks (no parent)
   async getAllTasks(req, res, next) {
     try {
-      const tasks = await taskModel.getAllTasks(null);
+      const tasks = await taskModel.getAllTasks();
       res.status(200).json({ success: true, data: tasks });
     } catch (error) {
       next(error);

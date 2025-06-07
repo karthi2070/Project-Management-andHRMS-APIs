@@ -34,6 +34,8 @@
  *         due_date:
  *           type: string
  *           format: date
+ *         status:
+ *           type: string
  *         team:
  *           type: string
  *         assignee:
