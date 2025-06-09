@@ -2,7 +2,7 @@
 /**
  * @swagger
  * tags:
- *   name: Tasks
+ *   name: Sub Tasks
  *   description: Task management
  */
 
@@ -49,8 +49,8 @@
  *         attachments:
  *           type: string
  *           example: ["https://example.com/attachment.png", "https://example.com/attachment2.png"]
-//  *         parent_task_id:
-//  *           type: integer
+ *         parent_task_id:
+ *           type: integer
 
  */
 
@@ -58,10 +58,10 @@
 
 /**
  * @swagger
- * /api/v1/tasks/create-task:
+ * /api/v1/sub-tasks/create-task:
  *   post:
  *     summary: Create a new task
- *     tags: [Tasks]
+ *     tags: [Sub Tasks]
  *     requestBody:
  *       required: true
  *       content:
@@ -79,10 +79,10 @@
 
 /**
  * @swagger
- * /api/v1/tasks/get-all-tasks:
+ * /api/v1/sub-tasks/get-all-tasks:
  *   get:
  *     summary: Get all root tasks (no parent)
- *     tags: [Tasks]
+ *     tags: [Sub Tasks]
  *     responses:
  *       200:
  *         description: List of tasks
@@ -90,10 +90,10 @@
 
 /**
  * @swagger
- * /api/v1/tasks/sprint-tasks/{id}:
+ * /api/v1/sub-tasks/sprint-tasks/{id}:
  *   get:
  *     summary: Get a task by sprintId
- *     tags: [Tasks]
+ *     tags: [Sub Tasks]
  *     parameters:
  *       - in: path
  *         name: id
@@ -110,10 +110,10 @@
 
 /**
  * @swagger
- * /api/v1/tasks/get-by-id/{id}:
+ * /api/v1/sub-tasks/get-by-id/{id}:
  *   get:
  *     summary: Get a task by ID
- *     tags: [Tasks]
+ *     tags: [Sub Tasks]
  *     parameters:
  *       - in: path
  *         name: id
@@ -130,10 +130,10 @@
 
 /**
  * @swagger
- * /api/v1/task/update-task/{id}:
+ * /api/v1/sub-tasks/update-task/{id}:
  *   put:
  *     summary: Update a task by ID
- *     tags: [Tasks]
+ *     tags: [Sub Tasks]
  *     parameters:
  *       - in: path
  *         name: id
@@ -157,10 +157,10 @@
 
 /**
  * @swagger
- * /api/v1/task/delete-task/{id}:
+ * /api/v1/sub-tasks/delete-task/{id}:
  *   patch:
  *     summary: Soft delete a task by ID
- *     tags: [Tasks]
+ *     tags: [Sub Tasks]
  *     parameters:
  *       - in: path
  *         name: id
@@ -178,10 +178,10 @@
 
 /**
  * @swagger
- * /api/v1/tasks/{id}/sub-tasks:
+ * /api/v1/sub-tasks/{id}/getby-task-under-sub-tasks:
  *   get:
  *     summary: Get sub-tasks for a parent task
- *     tags: [Tasks]
+ *     tags: [Sub Tasks]
  *     parameters:
  *       - in: path
  *         name: id
