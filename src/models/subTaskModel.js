@@ -24,10 +24,10 @@ const  subTaskModel  = {
         const [rows] = await db.execute(`SELECT * FROM sub_task_tbl WHERE is_deleted = 0 AND parent_task_id = ?`, [parentId]);
         return rows;
     },
-    async getTaskById(parentId,id) {
+    async getTaskById(parent_id,id) {
        
-            const sql =`SELECT * FROM sub_task_tbl WHERE is_deleted = 0 AND parent_task_id = ? id = ? `
-             const [rows] = await db.execute(sql, [parentId,id]);
+            const sql =`SELECT * FROM sub_task_tbl WHERE is_deleted = 0 AND parent_task_id = ? AND id = ? `
+             const [rows] = await db.execute(sql, [parent_id,id]);
         return rows[0];
     },
 

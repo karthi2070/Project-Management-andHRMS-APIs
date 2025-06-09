@@ -11,8 +11,7 @@ const taskModel = {
             sprint_id, project_code, title, description, priority, label, 
             start_date, end_date, due_date,status, team, assignee, rca,acceptance, issue_type,
             story_points, attachments, parent_task_id
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)
-    `;
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?) `;
 
      const values =[sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,
          acceptance,issue_type,story_points, JSON.stringify(attachments), parent_task_id ? parent_task_id : null ]
@@ -22,7 +21,7 @@ const taskModel = {
     },
      async getAllTasksBySprintId(sprint_id) {
         
-           const sql =`SELECT * FROM task_tbl WHERE sprint_id =? is_deleted = 0 `
+           const sql =`SELECT * FROM task_tbl WHERE sprint_id =? AND is_deleted = 0 `
         const [rows] = await db.execute(sql,[sprint_id]);
         return rows;
     },
@@ -33,10 +32,10 @@ const taskModel = {
             const [rows] = await db.execute(sql,[sprint_id,id]);
         return rows[0];
     },
-    async getSubTasks(parentId) {
+    async getSubTasks(id) {
         
             const sql =`SELECT * FROM task_tbl WHERE is_deleted = 0 AND parent_task_id = ?`
-            const [rows] = await db.execute(sql, [parentId]);
+            const [rows] = await db.execute(sql, [id]);
         return rows;
     },
 

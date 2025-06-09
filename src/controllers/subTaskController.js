@@ -13,11 +13,11 @@ const subTaskController = {
   },
   async getAllSubTasks(req, res, next) {
     try {
-      const {parentId} = req.params.id;
-      if (!sprintId) {
+      const {id} = req.params;
+      if (!id) {
         return res.status(400).json({ success: false, message: 'Sprint ID is required' });
       }
-      const tasks = await subTaskModel.getAllSubTasks(parentId);
+      const tasks = await subTaskModel.getAllSubTasks(id);
       if (!tasks || tasks.length === 0) {
         return res.status(404).json({ success: false, message: 'No tasks found for this sprint' });
       }
@@ -30,8 +30,8 @@ const subTaskController = {
   // Get Task by ID
   async getTaskById(req, res, next) {
     try {
-      const {parentId,task_id} = req.params.id;
-      const task = await subTaskModel.getTaskById(parentId,task_id);
+      const {parent_id,id} = req.params;
+      const task = await subTaskModel.getTaskById(parent_id,id);
       if (!task) {
         return res.status(404).json({ success: false, message: 'Task not found' });
       }
