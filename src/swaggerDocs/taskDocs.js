@@ -15,45 +15,61 @@
  *       properties:
  *         sprint_id:
  *           type: integer
+ *           example: 2
  *         project_code:
  *           type: string
+ *           example: "PRJ001"
  *         title:
  *           type: string
+ *           example: "Implement login"
  *         description:
  *           type: string
+ *           example: "Create login page and backend"
  *         priority:
  *           type: string
+ *           example: "High"
  *         label:
  *           type: string
+ *           example: "Frontend"
  *         start_date:
  *           type: string
  *           format: date
+ *           example: "2024-06-01"
  *         end_date:
  *           type: string
  *           format: date
+ *           example: "2024-06-10"
  *         due_date:
  *           type: string
  *           format: date
+ *           example: "2024-06-09"
  *         status:
  *           type: string
+ *           example: "In Progress"
  *         team:
  *           type: string
+ *           example: "Alpha"
  *         assignee:
  *           type: string
+ *           example: "john.doe"
  *         rca:
  *           type: string
+ *           example: "N/A"
+ *         acceptance:
+ *           type: string
+ *           example: "Acceptance criteria here"
  *         issue_type:
  *           type: string
+ *           example: "Story"
  *         story_points:
- *           type: string
+ *           type: integer
+ *           example: 5
  *         attachments:
- *           type: string
- *           example: ["https://example.com/attachment.png", "https://example.com/attachment2.png"]
-//  *         parent_task_id:
-//  *           type: integer
-
+ *           type: array
+ *           items:
+ *             type: string
+ *           example: ["file1.png", "file2.pdf"]
  */
-
 
 
 /**
@@ -70,19 +86,22 @@
  *             $ref: '#/components/schemas/Task'
  *     responses:
  *       201:
- *         description: Task created successfully
- *       400:
- *         description: Invalid input
+ *         description: Task created
  */
-
-
 
 /**
  * @swagger
- * /api/v1/tasks/get-all-tasks:
+ * /api/v1/tasks/sprint-tasks/{sprint_id}:
  *   get:
- *     summary: Get all root tasks (no parent)
+ *     summary: Get all tasks by sprint ID
  *     tags: [Tasks]
+ *     parameters:
+ *       - in: path
+ *         name: sprint_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         example: 2
  *     responses:
  *       200:
  *         description: List of tasks
@@ -90,40 +109,26 @@
 
 /**
  * @swagger
- * /api/v1/tasks/sprint-tasks/{id}:
+ * /api/v1/tasks/get-by-id/{sprint_id}/{id}:
  *   get:
- *     summary: Get a task by sprintId
+ *     summary: Get a task by sprint ID and task ID
  *     tags: [Tasks]
  *     parameters:
+ *       - in: path
+ *         name: sprint_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         example: 2
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: integer
- *         description: Task ID
+ *         example: 1
  *     responses:
  *       200:
- *         description: Task details
- *       404:
- *         description: Task not found
- */
-
-/**
- * @swagger
- * /api/v1/tasks/get-by-id/{id}:
- *   get:
- *     summary: Get a task by ID
- *     tags: [Tasks]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: Task ID
- *     responses:
- *       200:
- *         description: Task details
+ *         description: Task found
  *       404:
  *         description: Task not found
  */
@@ -132,15 +137,15 @@
  * @swagger
  * /api/v1/task/update-task/{id}:
  *   put:
- *     summary: Update a task by ID
+ *     summary: Update a task
  *     tags: [Tasks]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: Task ID
  *         schema:
  *           type: integer
+ *         example: 1
  *     requestBody:
  *       required: true
  *       content:
@@ -149,17 +154,16 @@
  *             $ref: '#/components/schemas/Task'
  *     responses:
  *       200:
- *         description: Task updated successfully
+ *         description: Task updated
  *       404:
  *         description: Task not found
  */
-
 
 /**
  * @swagger
  * /api/v1/task/delete-task/{id}:
  *   patch:
- *     summary: Soft delete a task by ID
+ *     summary: Delete a task (soft delete)
  *     tags: [Tasks]
  *     parameters:
  *       - in: path
@@ -167,29 +171,8 @@
  *         required: true
  *         schema:
  *           type: integer
- *         description: Task ID
+ *         example: 1
  *     responses:
  *       200:
  *         description: Task deleted
- *       404:
- *         description: Task not found
- */
-
-
-/**
- * @swagger
- * /api/v1/tasks/{id}/sub-tasks:
- *   get:
- *     summary: Get sub-tasks for a parent task
- *     tags: [Tasks]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: Parent Task ID
- *     responses:
- *       200:
- *         description: List of sub-tasks
  */

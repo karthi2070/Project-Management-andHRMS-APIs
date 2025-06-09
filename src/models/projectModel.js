@@ -1,19 +1,19 @@
 const pool = require("../config/db");
 
 const createProject = async (data) => {
-const { name,project_code ,description,due_date, start_date, end_date,sprints_count, budget, status } = data;
-        const query = `INSERT INTO project_tbl (name,project_code, description,due_date, start_date, end_date, sprints_count, budget, status) VALUES (?, ?, ?, ?, ?,?,?,?,?)`;
-        const values = [name,project_code, description,due_date, start_date, end_date,sprints_count,budget,  status];
+const { name,project_code ,description,due_date, start_date, end_date,sprints_count, status } = data;
+        const query = `INSERT INTO project_tbl (name,project_code, description,due_date, start_date, end_date, sprints_count, status) VALUES ( ?, ?, ?, ?,?,?,?,?)`;
+        const values = [name,project_code, description,due_date, start_date, end_date,sprints_count,  status];
         const [result] = await pool.query(query, values);
         return result.insertId;
 
 };
 
 const updateProject = async (id, data) => {
-    const { name,project_code, description,due_date, start_date, end_date,sprints_count, budget, status} = data;
+    const { name,project_code, description,due_date, start_date, end_date,sprints_count, status} = data;
 
-        const query = `UPDATE project_tbl SET name=?,project_code=?, description =?, due_date=?,start_date =?, end_date =?,sprints_count=?, budget =?, status =? WHERE id = ?`;
-        const values = [name, project_code,description,due_date, start_date, end_date,sprints_count, budget, status,id];
+        const query = `UPDATE project_tbl SET name=?,project_code=?, description =?, due_date=?,start_date =?, end_date =?,sprints_count=?,  status =? WHERE id = ?`;
+        const values = [name, project_code,description,due_date, start_date, end_date,sprints_count || null, status,id];
 
        const [result]= await pool.query(query, values);
         return result
@@ -35,5 +35,11 @@ const getProjectById = async (project_id) => {
         return rows[0];
 
 };
+
+const deleteProject =async(id)=>{
+        const query = `UPDATE FROM project_tbl SET is_deleted = 1 WHERE id = ?`;
+        const [rows] = await pool.execute(query, [project_id]);
+        return rows[0];      
+}
 
 module.exports = { createProject, updateProject, getProjects, getProjectById };

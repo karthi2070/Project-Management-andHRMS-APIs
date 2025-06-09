@@ -20,28 +20,18 @@ const  subTaskModel  = {
            const [result] = await db.query(sql, values);
         return { id: result.insertId, ...taskData };
     },
- 
-
-    async getTaskById(id) {
-       
-            const sql =`SELECT * FROM sub_task_tbl WHERE is_deleted = 0 AND id = ? `
-             const [rows] = await db.execute(sql, [id]);
-        return rows[0];
-    },
-
-    async getAllTasks() {
-        
-            const sql =`SELECT * FROM sub_task_tbl WHERE is_deleted = 0 `
-        const [rows] = await db.execute(sql);
-        return rows;
-    },
-
-    async getSubTasks(parentId) {
+    async getAllSubTasks(parentId) {
         const [rows] = await db.execute(`SELECT * FROM sub_task_tbl WHERE is_deleted = 0 AND parent_task_id = ?`, [parentId]);
         return rows;
     },
+    async getTaskById(parentId,id) {
+       
+            const sql =`SELECT * FROM sub_task_tbl WHERE is_deleted = 0 AND parent_task_id = ? id = ? `
+             const [rows] = await db.execute(sql, [parentId,id]);
+        return rows[0];
+    },
+
     async getTasksBySprintId(id) {
-        console.log("Fetching tasks for sprint ID:", id);
             const sql =`SELECT * FROM sub_task_tbl WHERE sprint_id = ?`
             const [rows] = await db.query(sql, [id]);
         return rows;

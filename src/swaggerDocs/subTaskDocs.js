@@ -75,17 +75,43 @@
  *         description: Invalid input
  */
 
+/**
+ * @swagger
+ * /api/v1/sub-tasks/get-subtasks-id/{id}:
+ *   get:
+ *     summary: Get sub-tasks for a parent task
+ *     tags: [Sub Tasks]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Parent Task ID
+ *     responses:
+ *       200:
+ *         description: List of sub-tasks
+ */
 
 
 /**
  * @swagger
- * /api/v1/sub-tasks/get-all-tasks:
+ * /api/v1/sub-tasks/get-subtasks-id/{parentId}/{id}:
  *   get:
- *     summary: Get all root tasks (no parent)
+ *     summary: Get a task by ID
  *     tags: [Sub Tasks]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Task ID
  *     responses:
  *       200:
- *         description: List of tasks
+ *         description: Task details
+ *       404:
+ *         description: Task not found
  */
 
 /**
@@ -107,27 +133,6 @@
  *       404:
  *         description: Task not found
  */
-
-/**
- * @swagger
- * /api/v1/sub-tasks/get-by-id/{id}:
- *   get:
- *     summary: Get a task by ID
- *     tags: [Sub Tasks]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: Task ID
- *     responses:
- *       200:
- *         description: Task details
- *       404:
- *         description: Task not found
- */
-
 /**
  * @swagger
  * /api/v1/sub-tasks/update-task/{id}:
@@ -175,21 +180,3 @@
  *         description: Task not found
  */
 
-
-/**
- * @swagger
- * /api/v1/sub-tasks/{id}/getby-task-under-sub-tasks:
- *   get:
- *     summary: Get sub-tasks for a parent task
- *     tags: [Sub Tasks]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: Parent Task ID
- *     responses:
- *       200:
- *         description: List of sub-tasks
- */

@@ -1,55 +1,45 @@
 const Sprint = require("../models/sprintModel");
 
 const SprintController = {
-    async createSprint(req, res) {
-        const data= req.body;
+    async createSprint(req, res, next) {
+        const data = req.body;
 
         try {
             const sprintId = await Sprint.createSprint(data);
             res.status(201).json({ message: "Sprint created successfully", sprint_id: sprintId });
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            next(error)
         }
     },
 
-    async updateSprint(req, res) {
-        const { sprint_id } = req.params;
-        const updateData = req.body;
-        try {
-            await Sprint.updateSprint(sprint_id, updateData);
-            res.status(200).json({ message: "Sprint updated successfully" });
-        } catch (error) {
-            res.status(500).json({ error: error.message });
-        }
-    },
+   async updateSprint(req, res, next) {
+    try {
+      const { id } = req.params;
+      const updateData = req.body;
 
-    async getSprints(req, res) {
+      console.log("Updating sprint with ID:", id, "and data:", updateData);
+
+      const affectedRows = await Sprint.updateSprint(id, updateData);
+      if (affectedRows === 0) {
+        return res.status(404).json({ message: "Sprint not found or already deleted" });
+      }
+
+      res.status(200).json({ message: "Sprint updated successfully" });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+    async getSprints(req, res, next) {
         try {
             const sprints = await Sprint.getSprints();
             res.status(200).json(sprints);
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            next(error)
         }
     },
 
-async getSprintById(req, res) {
-    const { id } = req.params;
-    console.log("Fetching sprint with ID:", id);
-
-    try {
-        const result = await Sprint.getSprintById(id);
-
-        if (!result) {
-            return res.status(404).json({ message: "Sprint not found" });
-        }
-
-        res.status(200).json(result);
-    } catch (error) {
-        console.error("Error fetching sprint:", error);
-        res.status(500).json({ error: error.message });
-    }
-},
-    async getSprintsByProjectId(req, res) {
+    async getSprintsByProjectId(req, res, next) {
         const { project_id } = req.params;
         try {
             const sprints = await Sprint.getSprintsByProjectId(project_id);
@@ -58,17 +48,35 @@ async getSprintById(req, res) {
             }
             res.status(200).json(sprints);
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            next(error)
         }
     },
 
-    async deleteSprint(req, res) {
-        // const { sprint_id } = req.params;
+    async getSprintById(req, res, next) {
+        const { project_id, id } = req.params;
         try {
-            await Sprint.deleteSprint(req.params);
-            res.status(200).json({ message: "Sprint deleted successfully" });
+            const result = await Sprint.getSprintById(project_id, id);
+
+            if (!result) {
+                return res.status(404).json({ message: "Sprint not found" });
+            }
+
+            res.status(200).json(result);
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            next(error)
+        }
+    },
+
+    async deleteSprint(req, res, next) {
+        try {
+            const {id}=req.params
+            if (!id ){
+                res.status(400).json({message: "Sprint id not found"})
+            }
+            const result=await Sprint.deleteSprint(id);
+            res.status(200).json({ message: "Sprint deleted successfully",result:result });
+        } catch (error) {
+            next(error)
         }
     }
 };

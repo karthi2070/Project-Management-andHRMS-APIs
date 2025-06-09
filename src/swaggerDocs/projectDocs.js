@@ -35,10 +35,6 @@
  *               end_date:
  *                 type: string
  *                 format: date
- *               sprints_count:
- *                 type: numer
- *               budget:
- *                 type: number
  *               status:
  *                 type: string
  *     responses:
@@ -82,10 +78,6 @@
  *               end_date:
  *                 type: string
  *                 format: date
- *               sprints_count:
- *                type: number
- *               budget:
- *                 type: number
  *               status:
  *                 type: string
  *     responses:

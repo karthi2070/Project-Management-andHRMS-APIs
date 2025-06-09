@@ -12,40 +12,40 @@ const taskController = {
     }
   },
 
-  async getAllTasks(req, res, next) {
+  async getAllTasksBySprintId(req, res, next) {
     try {
-      const tasks = await taskModel.getAllTasks();
+      const {sprint_id} = req.params.id;
+      if (!sprint_id) {
+        return res.status(400).json({ success: false, message: 'Sprint ID is required' });
+      }
+      const tasks = await taskModel.getAllTasksBySprintId(sprint_id);
+      if (!tasks || tasks.length === 0) {
+        return res.status(404).json({ success: false, message: 'No tasks found for this sprint' });
+      }
       res.status(200).json({ success: true, data: tasks });
     } catch (error) {
       next(error);
     }
   },
 
-  async getTasksBySprintId(req, res, next) {
-    try {
-      const sprintId = req.params.id;
-      if (!sprintId) {
-        return res.status(400).json({ success: false, message: 'Sprint ID is required' });
-      }
-      const tasks = await taskModel.getTasksBySprintId(sprintId);
-      if (!tasks || tasks.length === 0) {
-        return res.status(404).json({ success: false, message: 'No tasks found for this sprint' });
-      }
-      res.status(200).json({ success: true, data: tasks });
-    } catch (error) {
-      next(error);  
-    }
-  },
-
   // Get Task by ID
   async getTaskById(req, res, next) {
     try {
-      const id = req.params.id;
-      const task = await taskModel.getTaskById(id);
+      const {sprint_id,id} = req.params.id;
+      const task = await taskModel.getTaskById(sprint_id,id);
       if (!task) {
         return res.status(404).json({ success: false, message: 'Task not found' });
       }
       res.status(200).json({ success: true, data: task });
+    } catch (error) {
+      next(error);
+    }
+  },
+    async getSubTasks(req, res, next) {
+    try {
+      const parentId = req.params.id;
+      const subTasks = await taskModel.getSubTasks(parentId);
+      res.status(200).json({ success: true, data: subTasks });
     } catch (error) {
       next(error);
     }
@@ -74,17 +74,6 @@ const taskController = {
         return res.status(404).json({ success: false, message: 'Task not found or not deleted' });
       }
       res.status(200).json({ success: true, message: 'Task deleted successfully' });
-    } catch (error) {
-      next(error);
-    }
-  },
-
-  // Get Sub Tasks by Task ID
-  async getSubTasks(req, res, next) {
-    try {
-      const parentId = req.params.id;
-      const subTasks = await taskModel.getSubTasks(parentId);
-      res.status(200).json({ success: true, data: subTasks });
     } catch (error) {
       next(error);
     }
