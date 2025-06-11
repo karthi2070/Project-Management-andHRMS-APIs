@@ -12,7 +12,7 @@ const createProject = async (req, res) => {
 
 const updateProject = async (req, res) => {
     try {
-        const  {id}  = req.params;
+        const  { id }  = req.params;
         console.log(id)
         const updateData = req.body;
         console.log("Updating project with ID:", id, "and data:", updateData);

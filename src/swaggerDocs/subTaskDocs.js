@@ -6,54 +6,73 @@
   */
  
  /**
-  * @swagger
-  * components:
-  *   schemas:
-  *     Task:
-  *       type: object
-  *       properties:
-  *         sprint_id:
-  *           type: integer
-  *         project_code:
-  *           type: string
-  *         title:
-  *           type: string
-  *         description:
-  *           type: string
-  *         priority:
-  *           type: string
-  *         label:
-  *           type: string
-  *         start_date:
-  *           type: string
-  *           format: date
-  *         end_date:
-  *           type: string
-  *           format: date
-  *         due_date:
-  *           type: string
-  *           format: date
-  *         status:
-  *           type: string
-  *         team:
-  *           type: string
-  *         assignee:
-  *           type: string
-  *         rca:
-  *           type: string
-  *         acceptance:
-  *           type: string
-  *         issue_type:
-  *           type: string
-  *         story_points:
-  *           type: string
-  *         attachments:
-  *           type: string
-  *           example: ["https://example.com/attachment.png", "https://example.com/attachment2.png"]
-  *         parent_task_id:
-  *           type: integer
- 
-  */
+ * @swagger
+ * components:
+ *   schemas:
+ *     SubTask:
+ *       type: object
+ *       properties:
+ *         sprint_id:
+ *           type: integer
+ *           example: 101
+ *         project_code:
+ *           type: string
+ *           example: TVK-26
+ *         title:
+ *           type: string
+ *           example: Update Swagger Docs
+ *         description:
+ *           type: string
+ *           example: Fix the swagger doc for sub task update API
+ *         priority:
+ *           type: string
+ *           example: High
+ *         label:
+ *           type: string
+ *           example: Backend
+ *         start_date:
+ *           type: string
+ *           format: date
+ *           example: 2025-06-10
+ *         end_date:
+ *           type: string
+ *           format: date
+ *           example: 2025-06-15
+ *         due_date:
+ *           type: string
+ *           format: date
+ *           example: 2025-06-20
+ *         status:
+ *           type: string
+ *           example: In Progress
+ *         team:
+ *           type: string
+ *           example: Team A
+ *         assignee:
+ *           type: string
+ *           example: emp001
+ *         rca:
+ *           type: string
+ *           example: "Bug in API"
+ *         acceptance:
+ *           type: string
+ *           example: "Works on staging"
+ *         issue_type:
+ *           type: string
+ *           example: Bug
+ *         story_points:
+ *           type: string
+ *           example: "3"
+ *         attachments:
+ *           type: array
+ *           items:
+ *             type: string
+ *           example: ["https://example.com/attachment.png", "https://example.com/attachment2.png"]
+ *         parent_task_id:
+ *           type: integer
+ *           example: 55
+ */
+
  
  
  
@@ -68,7 +87,7 @@
   *       content:
   *         application/json:
   *           schema:
-  *             $ref: '#/components/schemas/Task'
+  *             $ref: '#/components/schemas/SubTask'
   *     responses:
   *       201:
   *         description: Task created successfully
@@ -157,7 +176,7 @@
   *       content:
   *         application/json:
   *           schema:
-  *             $ref: '#/components/schemas/Task'
+  *             $ref: '#/components/schemas/SubTask'
   *     responses:
   *       200:
   *         description: Task updated successfully

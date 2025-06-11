@@ -42,13 +42,13 @@ const  subTaskModel  = {
             story_points, attachments, parent_task_id} = taskData;
 
           const sql=  `UPDATE sub_task_tbl SET sprint_id = ?, project_code = ?, title = ?, description = ?, priority = ?, label = ?, 
-            start_date = ?, end_date = ?, status=?,due_date = ?, team = ?, assignee = ?, rca = ?, issue_type = ?,
+            start_date = ?, end_date = ?,due_date = ?, status=?, team = ?, assignee = ?, rca = ?, issue_type = ?,
             story_points = ?, attachments = ?, parent_task_id = ? WHERE is_deleted = 0 AND id = ?`
     
         const values =[sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca, issue_type,
               story_points, JSON.stringify(attachments), parent_task_id, id]
               const [result]=await db.query( sql, values);
-        return { id: result.insertId, ...taskData };
+        return { id: result.affectedRows  };
     },
 
     async deleteTask(id) {

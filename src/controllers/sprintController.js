@@ -17,8 +17,6 @@ const SprintController = {
       const { id } = req.params;
       const updateData = req.body;
 
-      console.log("Updating sprint with ID:", id, "and data:", updateData);
-
       const affectedRows = await Sprint.updateSprint(id, updateData);
       if (affectedRows === 0) {
         return res.status(404).json({ message: "Sprint not found or already deleted" });

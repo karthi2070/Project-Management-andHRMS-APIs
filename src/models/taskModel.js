@@ -4,17 +4,17 @@ const db = require('../config/db');
 const taskModel = {
     async createTask(taskData) {
         const { sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,
-            acceptance, issue_type,story_points, attachments, parent_task_id} = taskData;
+            acceptance, issue_type,story_points, attachments} = taskData;
 
     const sql = `
         INSERT INTO task_tbl (
             sprint_id, project_code, title, description, priority, label, 
             start_date, end_date, due_date,status, team, assignee, rca,acceptance, issue_type,
-            story_points, attachments, parent_task_id
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?) `;
+            story_points, attachments
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?) `;
 
      const values =[sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,
-         acceptance,issue_type,story_points, JSON.stringify(attachments), parent_task_id ? parent_task_id : null ]
+         acceptance,issue_type,story_points, JSON.stringify(attachments) ]
 
            const [result] = await db.query(sql, values);
         return { id: result.insertId, ...taskData };
@@ -40,17 +40,29 @@ const taskModel = {
     },
 
     async updateTask(id, taskData) {
-        const { sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,acceptance, issue_type,
-            story_points, attachments, parent_task_id} = taskData;
+        const {
+            sprint_id, project_code, title, description, priority, label,
+            start_date, end_date, due_date, status, team, assignee, rca,
+            acceptance, issue_type, story_points, attachments
+        } = taskData;
 
-          const sql=  `UPDATE task_tbl SET sprint_id = ?, project_code = ?, title = ?, description = ?, priority = ?, label = ?, 
-            start_date = ?, end_date = ?, status=?,due_date = ?, team = ?, assignee = ?, rca = ?,acceptance=?, issue_type = ?,
-            story_points = ?, attachments = ?, parent_task_id = ? WHERE is_deleted = 0 AND id = ?`
-    
-        const values =[sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,
-             acceptance,issue_type,story_points, JSON.stringify(attachments), parent_task_id, id]
-              const [result]=await db.query( sql, values);
-        return { id: result.insertId, ...taskData };
+        const sql = `
+            UPDATE task_tbl SET
+                sprint_id = ?, project_code = ?, title = ?, description = ?, priority = ?, label = ?,
+                start_date = ?, end_date = ?, due_date = ?, status = ?, team = ?, assignee = ?, rca = ?,
+                acceptance = ?, issue_type = ?, story_points = ?, attachments = ?
+            WHERE id = ?
+        `;
+
+        const values = [
+            sprint_id, project_code, title, description, priority, label,
+            start_date, end_date, due_date, status, team, assignee, rca,
+            acceptance, issue_type, story_points, JSON.stringify(attachments),
+            id
+        ];
+
+        const [result] = await db.query(sql, values);
+        return result;
     },
 
     async deleteTask(id) {

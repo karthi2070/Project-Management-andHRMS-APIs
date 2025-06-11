@@ -9,6 +9,7 @@ const subTaskController = {
       const task = await subTaskModel.createTask(data);
       res.status(201).json({ success: true, data: task });
     } catch (error) {
+      next(error)
     }
   },
   async getAllSubTasks(req, res, next) {
@@ -53,12 +54,13 @@ const subTaskController = {
   // Update Task
   async updateTask(req, res, next) {
     try {
-      const id = req.params.id;
+      const {id} = req.params;
+console.log(id,req.body)
       const updated = await subTaskModel.updateTask(id, req.body);
       if (!updated) {
         return res.status(404).json({ success: false, message: 'Task not found or not updated' });
       }
-      res.status(200).json({ success: true, message: 'Task updated successfully' });
+      res.status(200).json({  message: 'Task updated successfully',updated :updated});
     } catch (error) {
       next(error);
     }

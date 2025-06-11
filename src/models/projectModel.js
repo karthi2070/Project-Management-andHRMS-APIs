@@ -11,12 +11,13 @@ const { name,project_code ,description,due_date, start_date, end_date,sprints_co
 
 const updateProject = async (id, data) => {
     const { name,project_code, description,due_date, start_date, end_date,sprints_count, status} = data;
+    console.log(name,project_code, description,due_date, start_date, end_date,sprints_count, status)
 
         const query = `UPDATE project_tbl SET name=?,project_code=?, description =?, due_date=?,start_date =?, end_date =?,sprints_count=?,  status =? WHERE id = ?`;
-        const values = [name, project_code,description,due_date, start_date, end_date,sprints_count || null, status,id];
+        const values = [name, project_code,description,due_date, start_date, end_date,sprints_count || null, status, id];
 
        const [result]= await pool.query(query, values);
-        return result
+        return {id: result.insertId, ...result }
 
 };
 

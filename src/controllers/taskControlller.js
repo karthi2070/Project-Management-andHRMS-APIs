@@ -53,19 +53,23 @@ const taskController = {
     }
   },
 
-  // Update Task
-  async updateTask(req, res, next) {
-    try {
-      const id = req.params;
-      const updated = await taskModel.updateTask(id, req.body);
-      if (!updated) {
-        return res.status(404).json({ success: false, message: 'Task not found or not updated' });
-      }
-      res.status(200).json({ success: true, message: 'Task updated successfully' });
-    } catch (error) {
-      next(error);
-    }
-  },
+    async updateTask(req, res, next) {
+        try {
+            const { id } = req.params;
+            const taskData = req.body;
+
+            const result = await taskModel.updateTask(id, taskData);
+
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ message: 'Task not found or no changes made' });
+            }
+
+            res.status(200).json({ message: 'Task updated successfully', taskId: id });
+        } catch (error) {
+            next(error);
+        }
+    },
+
 
   // Delete Task (Soft Delete)
   async deleteTask(req, res, next) {

@@ -26,7 +26,6 @@ Namuvi Technologies Private Limited </p>
 
 
      <p> Congratulations on successfully completing your internship with Namuvi Technologies Private Limited from ${startDate} to ${endDate}.
-
 <p>We appreciate your contributions and dedication throughout the program. Please find your internship completion certificate attached.</p>
 
 <p>Should you require further assistance or references, feel free to contact us at +91 9962744380.</p>

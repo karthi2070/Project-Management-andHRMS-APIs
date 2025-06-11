@@ -24,6 +24,8 @@
  *                 type: integer
  *               name:
  *                 type: string
+ *               description:
+ *                 type: string
  *               start_date:
  *                 type: string
  *                 format: date
@@ -63,6 +65,8 @@
  *               project_id:
  *                 type: integer
  *               name:
+ *                 type: string
+ *               description:
  *                 type: string
  *               start_date:
  *                 type: string

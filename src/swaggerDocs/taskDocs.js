@@ -94,27 +94,81 @@
  * @swagger
  * /api/v1/task/update-task/{id}:
  *   put:
- *     summary: Update a task
+ *     summary: Update a task by its ID
+ *     description: Updates all fields of a task in the task_tbl using the provided task data.
  *     tags: [Tasks]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
+ *         description: Task ID to update
  *         schema:
  *           type: integer
- *         example: 1
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Tasks'
+ *             type: object
+ *             properties:
+ *               sprint_id:
+ *                 type: number
+ *               project_code:
+ *                 type: string
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               priority:
+ *                 type: string
+ *               label:
+ *                 type: string
+ *               start_date:
+ *                 type: string
+ *                 format: date
+ *               end_date:
+ *                 type: string
+ *                 format: date
+ *               due_date:
+ *                 type: string
+ *                 format: date
+ *               status:
+ *                 type: string
+ *               team:
+ *                 type: string
+ *               assignee:
+ *                 type: string
+ *               rca:
+ *                 type: string
+ *               acceptance:
+ *                 type: string
+ *               issue_type:
+ *                 type: string
+ *               story_points:
+ *                 type: number
+ *               attachments:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: ["file1.png", "file2.pdf"]
  *     responses:
  *       200:
- *         description: Task updated
+ *         description: Task updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 taskId:
+ *                   type: string
  *       404:
  *         description: Task not found
+ *       500:
+ *         description: Internal server error
  */
+
 
 /**
  * @swagger
