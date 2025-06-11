@@ -29,6 +29,7 @@ const loginController = {
             if (!isMatch) {
                 return res.status(401).json({ success: false, message: 'Invalid credentials' });
             }
+            
             const token = jwt.sign({id:user.id, mail:user.mail}, process.env.JWT_SECRET, { expiresIn: '1h' });
             res.status(200).json({ success: true, token: token, user: { id: user.id, email: user.email } });
         }
