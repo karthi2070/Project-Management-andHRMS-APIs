@@ -10,7 +10,7 @@
  * @swagger
  * components:
  *   schemas:
- *     Task:
+ *     Tasks:
  *       type: object
  *       properties:
  *         sprint_id:
@@ -83,10 +83,37 @@
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Task'
+ *             $ref: '#/components/schemas/Tasks'
  *     responses:
  *       201:
  *         description: Task created
+ */
+
+
+/**
+ * @swagger
+ * /api/v1/task/update-task/{id}:
+ *   put:
+ *     summary: Update a task
+ *     tags: [Tasks]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         example: 1
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Tasks'
+ *     responses:
+ *       200:
+ *         description: Task updated
+ *       404:
+ *         description: Task not found
  */
 
 /**
@@ -133,31 +160,6 @@
  *         description: Task not found
  */
 
-/**
- * @swagger
- * /api/v1/task/update-task/{id}:
- *   put:
- *     summary: Update a task
- *     tags: [Tasks]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         example: 1
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Task'
- *     responses:
- *       200:
- *         description: Task updated
- *       404:
- *         description: Task not found
- */
 
 /**
  * @swagger

@@ -2,16 +2,13 @@ const express = require('express');
 const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger.js');
-
-
+require('../src/config/passport.js');
 const errorHandler = require('./middleware/errorHandler');
-
+const passport = require('passport');
 const app = express();
-app.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true
-}));
+app.use(cors({ origin: 'http://localhost:5173',credentials: true}));
 app.use(express.json());
+app.use(passport.initialize());
 app.use(express.urlencoded({ extended: true })); // Middleware to parse URL-encoded data    
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
@@ -29,6 +26,14 @@ const leave = require('./routers/leaveRoute.js'); // Leave Routes
 const login= require('./routers/loginRoute.js'); // Login Routes
 const holiday = require('./routers/holidayRoute.js'); // Holiday Routes
 
+
+const authRoutes = require('./routers/authRoute');
+const adminRoutes = require('./routers/adminRoute');
+const attendanceRoutes = require('./routers/attendRoute');
+const authMiddleware = require('./middleware/authMiddleware');
+const adminMiddleware = require('./middleware/adminMiddleware.js');
+const checkModuleAccess = require('./middleware/rbacMiddleware');
+
 app.use('/api/v1', employeeRoutes); // Employee Routes
 app.use('/api/v1', expense); // Bank Details Routes
 app.use('/api/v1', quotation); // Quotation Routes
@@ -42,6 +47,10 @@ app.use('/api/v1', subTask); // Task Routes
 app.use('/api/v1', leave); // Leave Routes
 app.use('/api/v1', login); // Login Routes
 app.use('/api/v1', holiday); // Holiday Routes
+app.use('/auth', authRoutes);
+app.use('/admin', adminRoutes);
+//app.use('/admin', authMiddleware, adminMiddleware, adminRoutes);
+app.use('/attendance', authMiddleware, checkModuleAccess('attendance'), attendanceRoutes);
 
 app.use(errorHandler); // Centralized Error Handling Middleware
 
