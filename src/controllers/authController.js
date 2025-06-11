@@ -43,9 +43,15 @@ module.exports = {
   googleAuth: passport.authenticate('google', { scope: ['profile', 'email'] }),
   googleCallback: passport.authenticate('google', { session: false }),
   issueSSOToken: async (req, res, next) => {
-    try {
-      const user = await User.createOrGetSSOUser(req.user.email);
-      const token = jwt.sign({ id: user.id, role_id: user.role_id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    try { const { email } = req.user; // email from Google SSO
+    const { role_id } = req.body; // role_id from request body
+
+    console.log("email:", email);
+    console.log("role_id:", role_id);
+      const user = await User.createOrGetSSOUser(email,role_id);
+      console.log(user)
+      const payload ={ id: user.id, role_id: user.role_id, email: user.email }
+      const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
       res.json({
         success: true,
         token,
@@ -57,24 +63,7 @@ module.exports = {
       next({ status: 500, message: 'Internal Server Error', error: error.message });
     }
   },
-  createUser: async (req, res, next) => {
-    try {
-      const { email, password,role_id } = req.body;
-      if (email && password&&role_id) {
-        return res.status(400).json({ success: false, message: 'user details requried  email, password,role_id' });
-      }
-      // const user = await User.getUserByEmail(email);
-      // if (!user) {
-            const hashedpassword =await bcrypt.hash(password,10);
-            const userData= {email:email, hashedpassword:hashedpassword, role_id :role_id};
-            const user = await User.createUser(userData);
-
-            res.status(201).json({ success: true, data: user });
-          // }
-    } catch (error) {
-      next({ status: 500, message: 'Internal Server Error', error: error.message });
-    }
-  },updatePassword: async (req, res, next) => {
+   updatePassword: async (req, res, next) => {
     try {
       const { currentPassword, newPassword } = req.body;
       if (!currentPassword || !newPassword) {
@@ -97,6 +86,7 @@ module.exports = {
   createUser: async (req, res, next) => {
     try {
       const { email, password, role_id } = req.body;
+      console.log(email, password, role_id)
       if (!email || !password || !role_id) {
         return res.status(400).json({ success: false, message: 'Email, password, and role_id required' });
       }
@@ -105,6 +95,7 @@ module.exports = {
         return res.status(409).json({ success: false, message: 'Email already exists' });
       }
       const userId = await User.createUser(email, password, role_id);
+      console.log(userId)
       res.status(201).json({
         success: true,
         userId,

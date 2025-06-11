@@ -2,15 +2,26 @@ const User = require('../models/userModel');
 const Permission = require('../models/permissionModel');
 
 const adminController = {
-  createUserAdmin: async (req, res, next) => {
+createUserAdmin: async (req, res, next) => {
     try {
       const { email, role_id } = req.body;
+      console.log('Admin create user:', { email, role_id });
       if (!email || !role_id) {
         return res.status(400).json({ success: false, message: 'Email and role_id required' });
       }
-      const userId = await User.createUser(email, role_id);
-      res.json({ success: true, data: { id: userId, email, role_id } });
+      const existingUser = await User.getUserByEmail(email);
+      if (existingUser) {
+        return res.status(409).json({ success: false, message: 'Email already exists' });
+      }
+      const userId = await User.createUser(email, null, role_id); // Explicitly pass null for password
+      console.log('Created user ID:', userId);
+      res.status(201).json({
+        success: true,
+        data: { id: userId, email, role_id },
+        message: 'User created successfully'
+      });
     } catch (error) {
+      console.error('Create user error:', error.message);
       next({ status: 500, message: 'Internal Server Error', error: error.message });
     }
   },

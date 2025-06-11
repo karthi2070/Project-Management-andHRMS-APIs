@@ -132,6 +132,63 @@
 
 /**
  * @swagger
+ * /admin/users:
+ *   post:
+ *     summary: Create a new user
+ *     description: Creates a new user in the system. Requires admin privileges and JWT authentication.
+ *     tags: [User Management]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - role_id
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: user@example.com
+ *               role_id:
+ *                 type: integer
+ *                 example: 2
+ *     responses:
+ *       200:
+ *         description: User created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User created successfully
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                     email:
+ *                       type: string
+ *                     role_id:
+ *                       type: integer
+ *       400:
+ *         description: Invalid input
+ *       401:
+ *         description: Unauthorized (invalid or missing token)
+ *       403:
+ *         description: Forbidden (non-admin user)
+ *       500:
+ *         description: Internal server error
+ */
+
+
+/**
+ * @swagger
  * /auth/update-user:
  *   put:
  *     summary: Update user information
