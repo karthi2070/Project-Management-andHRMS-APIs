@@ -3,25 +3,26 @@ const db = require('../config/db'); // assume db is your MySQL pool or connectio
 
 const  subTaskModel  = {
     async createTask(taskData) {
-        const { sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca, issue_type,
-            story_points, attachments, parent_task_id} = taskData;
+        const { sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,
+            acceptance, issue_type,story_points, attachments, parent_task_id} = taskData;
 
     const sql = `
         INSERT INTO sub_task_tbl (
             sprint_id, project_code, title, description, priority, label, 
-            start_date, end_date, due_date,status, team, assignee, rca, issue_type,
+            start_date, end_date, due_date,status, team, assignee, rca,acceptance, issue_type,
             story_points, attachments, parent_task_id
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?)
     `;
 
-     const values =[sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca, issue_type,
-              story_points, JSON.stringify(attachments), parent_task_id ? parent_task_id : null ]
+     const values =[sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,
+        acceptance, issue_type,story_points, JSON.stringify(attachments), parent_task_id  ]
 
            const [result] = await db.query(sql, values);
         return { id: result.insertId, ...taskData };
     },
     async getAllSubTasks(parentId) {
-        const [rows] = await db.execute(`SELECT * FROM sub_task_tbl WHERE is_deleted = 0 AND parent_task_id = ?`, [parentId]);
+            const sql = `SELECT * FROM sub_task_tbl WHERE is_deleted = 0 AND parent_task_id = ?`
+            await db.execute(sql, [parentId]);
         return rows;
     },
     async getTaskById(parent_id,id) {
@@ -38,21 +39,23 @@ const  subTaskModel  = {
     },
 
     async updateTask(id, taskData) {
-        const { sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca, issue_type,
+        const { sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,acceptance, issue_type,
             story_points, attachments, parent_task_id} = taskData;
 
           const sql=  `UPDATE sub_task_tbl SET sprint_id = ?, project_code = ?, title = ?, description = ?, priority = ?, label = ?, 
-            start_date = ?, end_date = ?,due_date = ?, status=?, team = ?, assignee = ?, rca = ?, issue_type = ?,
+            start_date = ?, end_date = ?,due_date = ?, status=?, team = ?, assignee = ?, rca = ?,acceptance=?, issue_type = ?,
             story_points = ?, attachments = ?, parent_task_id = ? WHERE is_deleted = 0 AND id = ?`
     
-        const values =[sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca, issue_type,
+        const values =[sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,acceptance, issue_type,
               story_points, JSON.stringify(attachments), parent_task_id, id]
               const [result]=await db.query( sql, values);
         return { id: result.affectedRows  };
     },
 
     async deleteTask(id) {
-        await db.execute(`UPDATE  sub_task_tbl set is_deleted = 1 WHERE id = ?`, [id]);
+        
+             const sql =`UPDATE  sub_task_tbl set is_deleted = 1 WHERE id = ?`
+             await db.execute(sql, [id]);
         return { id };
     }
 };

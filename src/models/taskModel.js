@@ -25,11 +25,17 @@ const taskModel = {
         const [rows] = await db.execute(sql,[sprint_id]);
         return rows;
     },
+     async getAllTasksByProjectId(Project_id) {
+        
+           const sql =`SELECT * FROM task_tbl WHERE Project_id =? AND is_deleted = 0 `
+        const [rows] = await db.execute(sql,[Project_id]);
+        return rows;
+    },
 
-    async getTaskById(sprint_id,id) {
+    async getTaskById(sprint_id,task_id) {
         
             const sql =`SELECT * FROM task_tbl WHERE is_deleted = 0 AND sprint_id= ? AND id = ? `
-            const [rows] = await db.execute(sql,[sprint_id,id]);
+            const [rows] = await db.execute(sql,[sprint_id,task_id]);
         return rows[0];
     },
     async getSubTasks(id) {

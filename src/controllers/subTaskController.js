@@ -55,7 +55,6 @@ const subTaskController = {
   async updateTask(req, res, next) {
     try {
       const {id} = req.params;
-console.log(id,req.body)
       const updated = await subTaskModel.updateTask(id, req.body);
       if (!updated) {
         return res.status(404).json({ success: false, message: 'Task not found or not updated' });

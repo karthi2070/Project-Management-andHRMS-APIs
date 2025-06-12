@@ -190,13 +190,31 @@
 
 /**
  * @swagger
- * /api/v1/tasks/get-by-id/{sprint_id}/{id}:
+ * /api/v1/tasks/sprint-tasks/{project_id}:
+ *   get:
+ *     summary: Get all tasks by project_id 
+ *     tags: [Tasks]
+ *     parameters:
+ *       - in: path
+ *         name: project_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         example: 2
+ *     responses:
+ *       200:
+ *         description: List of tasks
+ */
+
+/**
+ * @swagger
+ * /api/v1/tasks/get-by-id/{sprint_id}/{task_id}:
  *   get:
  *     summary: Get a task by sprint ID and task ID
  *     tags: [Tasks]
  *     parameters:
  *       - in: path
- *         name: sprint_id
+ *         name: task_id
  *         required: true
  *         schema:
  *           type: integer

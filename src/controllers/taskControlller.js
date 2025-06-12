@@ -29,12 +29,27 @@ const taskController = {
       next(error);
     }
   },
+    async getAllTasksByProjectId(req, res, next) {
+    try {
+      const {project_id} = req.params;
+      if (!project_id) {
+        return res.status(400).json({ success: false, message: 'Sprint ID is required' });
+      }
+      const tasks = await taskModel.getAllTasksByProjectId(project_id);
+      if (!tasks || tasks.length === 0) {
+        return res.status(404).json({ success: false, message: 'No tasks found for this sprint' });
+      }
+      res.status(200).json({ success: true, data: tasks });
+    } catch (error) {
+      next(error);
+    }
+  },
 
   // Get Task by ID
   async getTaskById(req, res, next) {
     try {
-      const {sprint_id,id} = req.params;
-      const task = await taskModel.getTaskById(sprint_id,id);
+      const {sprint_id,task_id} = req.params;
+      const task = await taskModel.getTaskById(sprint_id,task_id);
       if (!task) {
         return res.status(404).json({ success: false, message: 'Task not found' });
       }
