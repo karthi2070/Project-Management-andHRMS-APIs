@@ -19,11 +19,7 @@
  *         company_name:
  *           type: string
  *           description: Client's company name
- *         clientid:
- *           type: string
- *           unique: true
- *           description: Unique client ID
- *         mail:
+ *         mail: 
  *           type: string
  *           format: email
  *           unique: true
