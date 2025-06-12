@@ -15,29 +15,6 @@ const User = {
   );
   return result.insertId;
 },
-issueSSOToken: async (req, res, next) => {
-    try { const { email } = req.user; // email from Google SSO
-    const { role_id } = req.body; // role_id from request body
-
-    console.log("email:", email);
-    console.log("role_id:", role_id);
-      const user = await User.createOrGetSSOUser(email,role_id);
-      console.log(user)
-      const payload ={ id: user.id, role_id: user.role_id, email: user.email }
-      const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
-      res.json({
-        success: true,
-        token,
-        userId: user.id,
-        roleId: user.role_id,
-        loginMethod: 'google'
-      });
-    } catch (error) {
-      next({ status: 500, message: 'Internal Server Error', error: error.message });
-    }
-
-  return existingUser;
-},
 
 updatePassword: async (userId, newPassword) => {
     const hashedPassword = await bcrypt.hash(newPassword, 10);

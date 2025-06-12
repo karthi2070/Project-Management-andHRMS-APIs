@@ -1,9 +1,9 @@
 const router = require('express').Router();
-const { googleAuth, googleCallback, issueSSOToken,login, createUser,updatePassword,updateUser,getUserByEmail } = require('../controllers/authController');
+const { googleAuth, googleCallback, issueToken,login, createUser,updatePassword,updateUser,getUserByEmail } = require('../controllers/authController');
 //const authMiddleware = require('../middleware/authMiddleware');
 router.post('/login',login);
 router.get('/google', googleAuth);
-router.get('/google/callback', googleCallback, issueSSOToken);
+router.get('/google/callback', googleCallback, issueToken);
 router.post('/create', createUser);
 router.get('/user/:email', getUserByEmail);
 router.put('/update-user',  updateUser);

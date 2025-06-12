@@ -13,16 +13,15 @@ module.exports = {
         return res.status(400).json({ success: false, message: 'Email and password required' });
       }
       const user = await User.getUserByEmail(email);
-
       if (!user) {
         return res.status(401).json({ success: false, message: 'Invalid credentials' });
       }
       if (!user.password) {
+
         return res.status(401).json({ success: false, message: 'Invalid credentials or use SSO' });
       }
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
-        console.log('Invalid password for email:', email);
         return res.status(401).json({ success: false, message: 'Invalid credentials' });
       }
       const payload = { id: user.id, email: user.email, role_id: user.role_id };
@@ -42,15 +41,12 @@ module.exports = {
   },
   googleAuth: passport.authenticate('google', { scope: ['profile', 'email'] }),
   googleCallback: passport.authenticate('google', { session: false }),
-  issueSSOToken: async (req, res, next) => {
-    try { const { email } = req.user; // email from Google SSO
-    const { role_id } = req.body; // role_id from request body
-
-    console.log("email:", email);
-    console.log("role_id:", role_id);
-      const user = await User.createOrGetSSOUser(email,role_id);
-      console.log(user)
-      const payload ={ id: user.id, role_id: user.role_id, email: user.email }
+   issueToken: async (req, res, next) => {
+     try {
+       const user = await User.getUserByEmail(req.user.email); // Use req.user.email from Passport
+       if (user) {
+        console.log(user)
+    const payload ={ id: user.id, role_id: user.role_id, email: user.email }
       const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
       res.json({
         success: true,
@@ -58,11 +54,36 @@ module.exports = {
         userId: user.id,
         roleId: user.role_id,
         loginMethod: 'google'
-      });
-    } catch (error) {
-      next({ status: 500, message: 'Internal Server Error', error: error.message });
-    }
-  },
+     });
+       } else {
+         res.status(401).json({ success: false, message: 'User not found. Contact admin.' });
+       }
+     } catch (error) {
+       next({ status: 500, message: 'Internal Server Error', error: error.message });
+     }
+	   },
+  // issueSSOToken: async (req, res, next) => {
+  //    try {
+  //    //const { email } = req.user; // email from Google SSO
+  //   // // const { role_id } = req.body; // role_id from request body
+
+  //   // console.log("email:", email);
+  //   // console.log("role_id:", role_id);
+  //     const user = await User.createOrGetSSOUser(req.user.email);
+  //     console.log(user)
+  //     const payload ={ id: user.id, role_id: user.role_id, email: user.email }
+  //     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+  //     res.json({
+  //       success: true,
+  //       token,
+  //       userId: user.id,
+  //       roleId: user.role_id,
+  //       loginMethod: 'google'
+  //     });
+  //   } catch (error) {
+  //     next(error,{ status: 500, message: 'Internal Server Error', error: error.message });
+  //   }
+  // },
    updatePassword: async (req, res, next) => {
     try {
       const { currentPassword, newPassword } = req.body;
