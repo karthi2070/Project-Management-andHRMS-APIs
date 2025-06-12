@@ -205,22 +205,22 @@
  *       200:
  *         description: List of tasks
  */
-
+// /tasks/get-by-task/:sprint_id/:task_id
 /**
  * @swagger
- * /api/v1/tasks/get-by-id/{sprint_id}/{task_id}:
+ * /api/v1/tasks/get-by-task/{sprint_id}/{task_id}:
  *   get:
  *     summary: Get a task by sprint ID and task ID
  *     tags: [Tasks]
  *     parameters:
  *       - in: path
- *         name: task_id
+ *         name: sprint_id
  *         required: true
  *         schema:
  *           type: integer
  *         example: 2
  *       - in: path
- *         name: id
+ *         name: task_id
  *         required: true
  *         schema:
  *           type: integer
