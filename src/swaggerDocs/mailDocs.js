@@ -11,26 +11,14 @@
  *           schema:
  *             type: object
  *             required:
- *               - name
  *               - mail
- *               - type
  *             properties:
- *               name:
- *                 type: string
- *                 description: Recipient's name
  *               mail:
  *                 type: string
- *                 description: Recipient's email address
  *               subject:
  *                 type: string
- *                 description: Optional email subject (overrides template subject)
  *               message:
  *                 type: string
- *                 description: Optional email body (overrides template body)
- *               type:
- *                 type: string
- *                 enum: [internship, internship_complete, invoice, quotation]
- *                 description: Email template type
  *               pdfFile:
  *                 type: string
  *                 format: binary
