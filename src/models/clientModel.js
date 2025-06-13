@@ -77,9 +77,9 @@ const ClientModel = {
     return rows;
   },
 
-   async findById(id) {
-    const query = `SELECT * FROM invoice_tbl WHERE id = ? AND is_deleted = 0 `
-    const [rows] = await pool.query(query, [id]);
+   async findById(client_id,invoice_id) {
+    const query = `SELECT * FROM invoice_tbl WHERE client_id = ? AND id = ? AND is_deleted = 0 `
+    const [rows] = await pool.query(query, [client_id,invoice_id]);
     return rows[0];
   },
 

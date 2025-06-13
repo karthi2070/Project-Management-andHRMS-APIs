@@ -71,7 +71,8 @@ const ClientController = {
     },
     async findInvoiceById(req, res, next) {
         try {
-            const invoice = await ClientModel.findById(req.params.id);
+            const {client_id,invoice_id} =req.params
+            const invoice = await ClientModel.findById(client_id,invoice_id);
             if (!invoice) {
                 return res.status(404).json({ message: 'Invoice not found' });
             }

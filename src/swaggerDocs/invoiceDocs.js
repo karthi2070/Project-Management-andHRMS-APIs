@@ -81,13 +81,19 @@
 
 /**
  * @swagger
- * /api/v1/invoice/get-invoice/{id}:
+ * /api/v1/invoice/get-invoice/{client_id}/{invoice_id}:
  *   get:
  *     summary: Get invoice by ID
  *     tags: [Invoice]
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: client_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Client Id
+ *       - in: path
+ *         name: invoice_id
  *         required: true
  *         schema:
  *           type: string

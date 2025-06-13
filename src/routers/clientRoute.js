@@ -12,7 +12,7 @@ router.patch('/client/delete-client/:id', ClientController.softDeleteClient);
 // Invoice Routes
 router.post('/invoice/create-invoice', ClientController.createInvoice);
 router.get('/invoice/get-invoices', ClientController.findAllInvoices);
-router.get('/invoice/get-invoice/:id', ClientController.findInvoiceById); 
+router.get('/invoice/get-invoice/:client_id/:invoice_id', ClientController.findInvoiceById); 
 router.get('/invoice/get-invoice-by-client/:clientId', ClientController.findInvoiceByClientId);
 router.get('/invoice/get-invoice-by-number/:invoiceNumber', ClientController.findInvoiceNum);  
 router.put('/invoice/update-invoice/:id', ClientController.updateInvoice);
