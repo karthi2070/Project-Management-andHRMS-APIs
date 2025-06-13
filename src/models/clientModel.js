@@ -45,6 +45,15 @@ const ClientModel = {
 
     //invoise
      async createInvoice(invoice) {
+
+  // "invoice_number": "string",
+  // "invoice_amount": "120000.00",
+  // "paid_amount": "2000.00",
+  // "balance_amount": "10000.00",
+  // "invoice_date": "2025-06-11T18:30:00.000Z",
+  // "due_date": "2025-06-11T18:30:00.000Z",
+  // "payment_method": "UPI",
+  // "notes": "string",
   //  invoice.balance_amount = invoice.invoice_amount - (invoice.paid_amount || 0);
   //   invoice.invoice_date = new Date(invoice.invoice_date);
         const query = `INSERT INTO invoice_tbl
@@ -90,9 +99,9 @@ const ClientModel = {
   },
 
   async findByInvoiseclintId(clientId) {
-
-    const query = `select * FROM invoice_tbl as i
-     join client_tbl as c on i.client_id =c.id WHERE i.client_id = ? AND i.is_deleted = 0 `
+    const query = `select * FROM invoice_tbl WHERE client_id=? AND is_deleted = 0 `
+    // const query = select * FROM invoice_tbl as i
+    //  join client_tbl as c on i.client_id =c.id WHERE i.client_id = ? AND i.is_deleted = 0 `
     const [rows] = await pool.query(query, [clientId]);
     return rows;
   },
