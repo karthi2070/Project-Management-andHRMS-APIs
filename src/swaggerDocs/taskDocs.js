@@ -5,7 +5,6 @@
  *   name: Tasks
  *   description: Task management
  */
-//project_id,user_id,
 /**
  * @swagger
  * components:
@@ -193,10 +192,9 @@
  *       200:
  *         description: List of tasks
  */
-
 /**
  * @swagger
- * /api/v1/tasks/sprint-tasks/{project_id}:
+ * /api/v1/tasks/get-all-task-by-project/{project_id}:
  *   get:
  *     summary: Get all tasks by project_id 
  *     tags: [Tasks]

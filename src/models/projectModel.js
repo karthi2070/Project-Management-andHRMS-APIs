@@ -33,7 +33,7 @@ const getProjectById = async (project_id) => {
 
         const query = `SELECT * FROM project_tbl WHERE id = ?`;
         const [rows] = await pool.execute(query, [project_id]);
-        return rows[0];
+        return rows[0] ;
 
 };
 
