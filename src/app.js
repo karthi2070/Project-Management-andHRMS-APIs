@@ -25,6 +25,7 @@ const subTask = require('./routers/subTaskRoute.js')
 const leave = require('./routers/leaveRoute.js'); // Leave Routes
 const login= require('./routers/loginRoute.js'); // Login Routes
 const holiday = require('./routers/holidayRoute.js'); // Holiday Routes
+const activityLog =require('./routers/activityLogRoutes.js')
 
 
 const authRoutes = require('./routers/authRoute');
@@ -47,6 +48,7 @@ app.use('/api/v1', subTask); // Task Routes
 app.use('/api/v1', leave); // Leave Routes
 app.use('/api/v1', login); // Login Routes
 app.use('/api/v1', holiday); // Holiday Routes
+app.use('/api/v1',activityLog)
 app.use('/auth', authRoutes);
 app.use('/admin', adminRoutes);
 //app.use('/admin', authMiddleware, adminMiddleware, adminRoutes);

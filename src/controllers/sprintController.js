@@ -39,6 +39,7 @@ const SprintController = {
 
     async getSprintsByProjectId(req, res, next) {
         const { project_id } = req.params;
+        console.log(project_id)
         try {
             const sprints = await Sprint.getSprintsByProjectId(project_id);
             if (sprints.length === 0) {

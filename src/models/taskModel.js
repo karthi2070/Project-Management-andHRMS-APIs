@@ -3,21 +3,27 @@ const db = require('../config/db');
 
 const taskModel = {
     async createTask(taskData) {
-        const { sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,
+        const { sprint_id,project_id,user_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,
             acceptance, issue_type,story_points, attachments} = taskData;
 
     const sql = `
         INSERT INTO task_tbl (
-            sprint_id, project_code, title, description, priority, label, 
+            sprint_id,project_id,user_id, project_code, title, description, priority, label, 
             start_date, end_date, due_date,status, team, assignee, rca,acceptance, issue_type,
-            story_points, attachments
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?) `;
+            story_points, attachments ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?) `;
 
-     const values =[sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,
+     const values =[sprint_id,project_id,user_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,
          acceptance,issue_type,story_points, JSON.stringify(attachments) ]
 
-           const [result] = await db.query(sql, values);
-        return { id: result.insertId, ...taskData };
+           const [taskResult] = await db.query(sql, values);
+           const taskId = taskResult.insertId;
+
+    // Log task creation in activity_logs_tbl
+    const logQuery = `
+        INSERT INTO activity_logs_tbl (task_id, user_id, action_type, old_value, new_value, comments, created_at)
+        VALUES (?, ?, 'Task_created', NULL, 'Task initialized', 'Task created by user${id}', NOW()) `;
+    await db.execute(logQuery, [taskId, user_id]);
+        return { id: taskResult.insertId, ...taskResult };
     },
      async getAllTasksBySprintId(sprint_id) {
         
@@ -46,28 +52,44 @@ const taskModel = {
     },
 
     async updateTask(id, taskData) {
-        const {
-            sprint_id, project_code, title, description, priority, label,
+        const { sprint_id,project_id,user_id, project_code, title, description, priority, label,
             start_date, end_date, due_date, status, team, assignee, rca,
-            acceptance, issue_type, story_points, attachments
-        } = taskData;
+            acceptance, issue_type, story_points, attachments  } = taskData;
 
-        const sql = `
-            UPDATE task_tbl SET
-                sprint_id = ?, project_code = ?, title = ?, description = ?, priority = ?, label = ?,
+    // Fetch current task details
+    const [task_data] = await db.execute(`SELECT status, assignee FROM task_tbl WHERE id = ?`, [id]);
+    if (task_data.length === 0) return res.status(404).json({ message: 'Task not found' });
+
+    const oldStatus = task_data[0].status;
+    const oldAssignee = task_data[0].assignee;
+
+        const sql = `UPDATE task_tbl SET
+                sprint_id = ?,project_id=? ,user_id=?, project_code = ?, title = ?, description = ?, priority = ?, label = ?,
                 start_date = ?, end_date = ?, due_date = ?, status = ?, team = ?, assignee = ?, rca = ?,
                 acceptance = ?, issue_type = ?, story_points = ?, attachments = ?
-            WHERE id = ?
-        `;
+            WHERE id = ? `;
 
-        const values = [
-            sprint_id, project_code, title, description, priority, label,
+        const values = [ sprint_id,project_id,user_id, project_code, title, description, priority, label,
             start_date, end_date, due_date, status, team, assignee, rca,
-            acceptance, issue_type, story_points, JSON.stringify(attachments),
-            id
-        ];
+            acceptance, issue_type, story_points, JSON.stringify(attachments),id];
 
         const [result] = await db.query(sql, values);
+
+         if (oldStatus !== status) {
+        const logQuery = `
+            INSERT INTO activity_logs_tbl (task_id, user_id, action_type, old_value, new_value, comments, created_at)
+            VALUES (?, ?, 'Status_changed', ?, ?, ?, NOW())
+        `;
+        await db.query(logQuery, [id, user_id, oldStatus, status, `user ${id} change Status changed from ${oldStatus} to ${status}`]);
+    }
+
+    // Log assignee change
+    if (oldAssignee !== assignee) {
+        const logQuery = `
+            INSERT INTO activity_logs_tbl (task_id, user_id, action_type, old_value, new_value, comments, created_at)
+            VALUES (?, ?, 'assignee_changed', ?, ?, ?, NOW()) `;
+        await db.query(logQuery, [id, user_id, oldAssignee, assignee, `Assignee changed from ${oldAssignee}  to ${assignee}`]);
+    }
         return result;
     },
 

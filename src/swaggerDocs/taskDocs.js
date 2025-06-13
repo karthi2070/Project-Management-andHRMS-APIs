@@ -5,7 +5,7 @@
  *   name: Tasks
  *   description: Task management
  */
-
+//project_id,user_id,
 /**
  * @swagger
  * components:
@@ -14,6 +14,12 @@
  *       type: object
  *       properties:
  *         sprint_id:
+ *           type: integer
+ *           example: 2
+ *         project_id:
+ *           type: integer
+ *           example: 2 
+ *         user_id:
  *           type: integer
  *           example: 2
  *         project_code:
@@ -68,7 +74,7 @@
  *           type: array
  *           items:
  *             type: string
- *           example: ["file1.png", "file2.pdf"]
+ *           example: ["https://example.com/attachment.png", "https://example.com/attachment2.png"]
  */
 
 
