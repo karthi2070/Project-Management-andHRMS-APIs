@@ -21,7 +21,7 @@ const taskModel = {
     // Log task creation in activity_logs_tbl
     const logQuery = `
         INSERT INTO activity_logs_tbl (task_id, user_id, action_type, old_value, new_value, comments, created_at)
-        VALUES (?, ?, 'Task_created', NULL, 'Task initialized', 'Task created by user${id}', NOW()) `;
+        VALUES (?, ?, 'Task_created', NULL, 'Task initialized', 'Task created by user${user_id}', NOW()) `;
     await db.execute(logQuery, [taskId, user_id]);
         return { id: taskResult.insertId, ...taskResult };
     },
