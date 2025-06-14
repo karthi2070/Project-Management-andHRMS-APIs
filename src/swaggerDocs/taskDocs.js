@@ -1,4 +1,3 @@
-
 /**
  * @swagger
  * tags:
@@ -17,7 +16,7 @@
  *           example: 2
  *         project_id:
  *           type: integer
- *           example: 2 
+ *           example: 2
  *         user_id:
  *           type: integer
  *           example: 2
@@ -76,7 +75,6 @@
  *           example: ["https://example.com/attachment.png", "https://example.com/attachment2.png"]
  */
 
-
 /**
  * @swagger
  * /api/v1/tasks/create-task:
@@ -93,7 +91,6 @@
  *       201:
  *         description: Task created
  */
-
 
 /**
  * @swagger
@@ -120,6 +117,8 @@
  *                 type: number
  *               project_code:
  *                 type: string
+ *               user_id:
+ *                 type: number
  *               title:
  *                 type: string
  *               description:
@@ -174,7 +173,6 @@
  *         description: Internal server error
  */
 
-
 /**
  * @swagger
  * /api/v1/tasks/sprint-tasks/{sprint_id}:
@@ -196,7 +194,7 @@
  * @swagger
  * /api/v1/tasks/get-all-task-by-project/{project_id}:
  *   get:
- *     summary: Get all tasks by project_id 
+ *     summary: Get all tasks by project_id
  *     tags: [Tasks]
  *     parameters:
  *       - in: path
@@ -235,7 +233,6 @@
  *       404:
  *         description: Task not found
  */
-
 
 /**
  * @swagger
