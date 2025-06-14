@@ -12,6 +12,7 @@
  *     Employee:
  *       type: object
  *       required:
+ *         - user_id
  *         - name
  *         - phone
  *         - mail
@@ -28,6 +29,8 @@
  *         - state
  *         - pincode
  *       properties:
+ *         user_id:
+ *           type: number
  *         name:
  *           type: string
  *         phone:
@@ -117,7 +120,6 @@
  *         description: Employee updated
  */
 
-
 /**
  * @swagger
  * /api/v1/employees/get-empolyee-list :
@@ -128,7 +130,6 @@
  *       200:
  *         description: List of employees
  */
-
 
 /**
  * @swagger
@@ -171,6 +172,22 @@
  *         description: Employee data
  */
 
+/**
+ * @swagger
+ * /api/v1/employees/get-empolyee-user-id/{user_id}:
+ *   get:
+ *     summary: Get employee by user ID
+ *     tags: [Employee]
+ *     parameters:
+ *       - in: path
+ *         name: user_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Employee data
+ */
 
 /**
  * @swagger

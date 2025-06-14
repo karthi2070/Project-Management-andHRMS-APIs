@@ -9,21 +9,21 @@ const pool = require('../config/db');
 
     async createEmployee(data) {
         const {
-            name, employee_id, phone, mail, dob, doj, department, designation, salary, status,
+            user_id,name, employee_id, phone, mail, dob, doj, department, designation, salary, status,
             status_reson, status_desc, pan, aadhar, education, address, city, state,
             pincode, p_address, p_city, p_state, p_pincode
         } = data;
 
         const sql = `
             INSERT INTO employee_tbl (
-                name, employee_id, phone, mail, dob, doj, department, designation, salary, status,
+                user_id,name, employee_id, phone, mail, dob, doj, department, designation, salary, status,
                 status_reson, status_desc, pan, aadhar, education, address, city, state,
                 pincode, p_address, p_city, p_state, p_pincode
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
         const values = [
-            name, employee_id, phone, mail, dob, doj, department, designation, salary, status,
+            user_id,name, employee_id, phone, mail, dob, doj, department, designation, salary, status,
             status_reson, status_desc, pan, aadhar, education, address, city, state,
             pincode, p_address, p_city, p_state, p_pincode
         ];
@@ -46,7 +46,11 @@ const pool = require('../config/db');
         const [rows] = await pool.query(query, [employee_id]);
         return rows[0] || null; // returns single object or null
     },
-
+    async getEmployeeByUserId(user_id) {
+        const query = `SELECT * FROM employee_tbl WHERE is_deleted = 0 AND user_id = ?`;
+        const [rows] = await pool.query(query, [user_id]);
+        return rows[0] || null; // returns single object or null
+    },
      async getEmployeeById(id) {
          try {
              const sql = `SELECT * FROM employee_tbl WHERE id = ? AND is_deleted = 0`;
@@ -59,7 +63,7 @@ const pool = require('../config/db');
  
      async updateEmployee(id, data) {
          try {
-             const sql = `UPDATE employee_tbl SET name=?, phone=?,mail=?, dob=?, doj=?, department=?, designation=?, salary=?, pan=?, aadhar=?, education=?, address=? 
+             const sql = `UPDATE employee_tbl SET user_id=?, name=?, phone=?,mail=?, dob=?, doj=?, department=?, designation=?, salary=?, pan=?, aadhar=?, education=?, address=? 
                           WHERE id = ? AND is_deleted = 0`;
              await pool.query(sql, [...Object.values(data), id]);
              return { id, ...data };

@@ -1,6 +1,7 @@
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
+const Employee =require('../models/empolyeeModel')
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 require('../config/passport'); // Load Passport config
@@ -24,6 +25,7 @@ module.exports = {
       if (!isMatch) {
         return res.status(401).json({ success: false, message: 'Invalid credentials' });
       }
+      const employee = await Employee.getEmployeeByUserId(user.id);
       const payload = { id: user.id, email: user.email, role_id: user.role_id };
       const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
 
@@ -31,6 +33,8 @@ module.exports = {
         success: true,
         token,
         userId: user.id,
+        user_name: employee.name,
+        employee_id:employee.employee_id,
         roleId: user.role_id,
         loginMethod: 'local'
       });
@@ -45,13 +49,15 @@ module.exports = {
      try {
        const user = await User.getUserByEmail(req.user.email); // Use req.user.email from Passport
        if (user) {
-        console.log(user)
+        const employee = await Employee.getEmployeeByUserId(user.id);
     const payload ={ id: user.id, role_id: user.role_id, email: user.email }
       const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
       res.json({
         success: true,
         token,
         userId: user.id,
+        user_name: employee.name,
+        employee_id:employee.employee_id,
         roleId: user.role_id,
         loginMethod: 'google'
      });
@@ -62,28 +68,6 @@ module.exports = {
        next({ status: 500, message: 'Internal Server Error', error: error.message });
      }
 	   },
-  // issueSSOToken: async (req, res, next) => {
-  //    try {
-  //    //const { email } = req.user; // email from Google SSO
-  //   // // const { role_id } = req.body; // role_id from request body
-
-  //   // console.log("email:", email);
-  //   // console.log("role_id:", role_id);
-  //     const user = await User.createOrGetSSOUser(req.user.email);
-  //     console.log(user)
-  //     const payload ={ id: user.id, role_id: user.role_id, email: user.email }
-  //     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
-  //     res.json({
-  //       success: true,
-  //       token,
-  //       userId: user.id,
-  //       roleId: user.role_id,
-  //       loginMethod: 'google'
-  //     });
-  //   } catch (error) {
-  //     next(error,{ status: 500, message: 'Internal Server Error', error: error.message });
-  //   }
-  // },
    updatePassword: async (req, res, next) => {
     try {
       const { currentPassword, newPassword } = req.body;
