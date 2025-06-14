@@ -18,6 +18,10 @@ router.get('/invoice/get-invoice-by-number/:invoiceNumber', ClientController.fin
 router.put('/invoice/update-invoice/:id', ClientController.updateInvoice);
 router.patch('/invoice/delete-invoice/:id', ClientController.softDeleteInvoice);
 
+//insert emi payment
+
+router.post('/invoices/emi-payment/:invoice_id',ClientController. recordEMIPayment);
+
 
 
 

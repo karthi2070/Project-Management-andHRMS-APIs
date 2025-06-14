@@ -80,7 +80,7 @@ const taskModel = {
             INSERT INTO activity_logs_tbl (task_id, user_id, action_type, old_value, new_value, comments, created_at)
             VALUES (?, ?, 'Status_changed', ?, ?, ?, NOW())
         `;
-        await db.query(logQuery, [id, user_id, oldStatus, status, `user ${id} change Status changed from ${oldStatus} to ${status}`]);
+        await db.query(logQuery, [id, user_id, oldStatus, status, `user ${user_id} status from ${oldStatus} to ${status}`]);
     }
 
     // Log assignee change

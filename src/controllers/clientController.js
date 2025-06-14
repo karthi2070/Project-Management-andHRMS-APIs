@@ -124,7 +124,67 @@ const ClientController = {
         } catch (error) {
             next(error);
         }
+    },
+
+
+async recordEMIPayment   (req, res, next)  {
+  try {
+    const invoice_id = parseInt(req.params.invoice_id);
+    const { client_id, payment_amount,payment_date, payment_method, payment_status, notes } = req.body;
+
+    // Step 1: Fetch invoice
+    const invoice = await ClientModel.getInvoiceById(invoice_id);
+    console.log(invoice)
+    if (!invoice) {
+      return res.status(404).json({ message: 'Invoice not found' });
     }
+//client_id, invoice_number, invoice_amount, paid_amount, balance_amount,status_id, invoice_date, due_date, payment_method, notes
+    const invoiceAmount = Number(invoice.invoice_amount);
+    const currentPaid = Number(invoice.paid_amount);
+    const newTotalPaid = currentPaid + Number(payment_amount);
+    let balanceAmount = invoiceAmount - newTotalPaid;
+
+    let extra_amount = 0;
+    if (balanceAmount < 0) {
+      extra_amount = Math.abs(balanceAmount);
+      balanceAmount = 0;
+    }
+
+    // Step 2: Insert payment
+    await ClientModel.insertPayment({
+      client_id,
+      invoice_id,
+      payment_amount,
+      payment_date,
+      payment_method,
+      payment_status,
+      notes,
+      extra_amount
+    });
+
+    // Step 3: Update invoice only if payment is successful (e.g., 1 = success)
+    if (Number(payment_status) === 1) {
+      const newStatusId = newTotalPaid >= invoiceAmount ? 2 : 3; // 2 = partial, 3 = paid
+
+    const  updateInvoiseData={paid_amount: newTotalPaid,balance_amount: balanceAmount,extra_amount:extra_amount,status_id: newStatusId,id :invoice_id}
+      await ClientModel.updateInvoiceTotals(updateInvoiseData);
+    }
+
+    return res.status(200).json({
+      message: 'Payment recorded',
+      paid_amount: newTotalPaid,
+      balance_amount: balanceAmount,
+      payment_date,
+      extra_amount,
+      payment_status
+    });
+
+  } catch (err) {
+    next(err); 
+  }
+
+}
+
 };
 
 module.exports = ClientController;

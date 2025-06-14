@@ -27,6 +27,8 @@
  *         balance_amount:
  *           type: number
  *           description: Remaining balance amount
+ *         extra_amount:
+ *           type: number
  *         invoice_date:
  *           type: string
  *           format: date
@@ -49,24 +51,85 @@
  *         - due_date
  */
 
+
 /**
  * @swagger
  * /api/v1/invoice/create-invoice:
  *   post:
  *     summary: Create a new invoice
+ *     description: Creates a new invoice with optional advance/initial payment. Calculates balance and extra amount.
  *     tags: [Invoice]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Invoice'
+ *             type: object
+ *             required:
+ *               - client_id
+ *               - invoice_number
+ *               - invoice_amount
+ *               - invoice_date
+ *               - due_date
+ *             properties:
+ *               client_id:
+ *                 type: integer
+ *                 example: 1
+ *               invoice_number:
+ *                 type: string
+ *                 example: "INV-1001"
+ *               invoice_amount:
+ *                 type: number
+ *                 format: float
+ *                 example: 12000.00
+ *               paid_amount:
+ *                 type: number
+ *                 format: float
+ *                 example: 2000.00
+ *                 description: Optional. Advance or first payment. Default is 0.00
+ *               balance_amount:
+ *                 type: number
+ *                 format: float
+ *                 example: 10000.00
+ *                 description: Optional. Calculated as invoice_amount - paid_amount
+ *               extra_amount:
+ *                 type: number
+ *                 format: float
+ *                 example: 0.00
+ *               invoice_date:
+ *                 type: string
+ *                 format: date
+ *                 example: "2025-06-11"
+ *               due_date:
+ *                 type: string
+ *                 format: date
+ *                 example: "2025-07-11"
+ *               payment_method:
+ *                 type: string
+ *                 example: "UPI"
+ *               notes:
+ *                 type: string
+ *                 example: "First installment paid"
  *     responses:
  *       201:
  *         description: Invoice created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Invoice created successfully
+ *                 invoice_id:
+ *                   type: integer
+ *                   example: 101
  *       400:
- *         description: Invalid input
+ *         description: Missing or invalid input
+ *       500:
+ *         description: Internal server error
  */
+
 
 /**
  * @swagger
@@ -194,5 +257,82 @@
  */
 
 
-
+/**
+ * @swagger
+ * /api/v1/invoices/emi-payment/{invoice_id}:
+ *   post:
+ *     summary: Record an EMI payment for an invoice
+ *     description: Adds a new EMI payment entry for a specific invoice. Updates invoice totals only if payment is marked as successful.
+ *     tags: [Invoice]
+ *     parameters:
+ *       - in: path
+ *         name: invoice_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID of the invoice for which EMI payment is being made
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - client_id
+ *               - payment_amount
+ *               - payment_method
+ *               - payment_status
+ *             properties:
+ *               client_id:
+ *                 type: integer
+ *                 example: 45
+ *               payment_amount:
+ *                 type: number
+ *                 format: float
+ *                 example: 2000.00
+ *               payment_date:
+ *                 type: string
+ *                 format: date
+ *                 example: "2025-06-11"
+ *               payment_method:
+ *                 type: string
+ *                 example: "UPI"
+ *               payment_status:
+ *                 type: integer
+ *                 example: 1
+ *                 description: |
+ *                   0 = Pending  
+ *                   1 = Success  
+ *                   2 = Failed
+ *               notes:
+ *                 type: string
+ *                 example: "EMI payment for June"
+ *     responses:
+ *       200:
+ *         description: EMI payment recorded successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Payment recorded
+ *                 paid_amount:
+ *                   type: number
+ *                   example: 6000.00
+ *                 balance_amount:
+ *                   type: number
+ *                   example: 4000.00
+ *                 extra_amount:
+ *                   type: number
+ *                   example: 0
+ *                 payment_status:
+ *                   type: integer
+ *                   example: 1
+ *       404:
+ *         description: Invoice not found
+ *       500:
+ *         description: Internal server error
+ */
 
