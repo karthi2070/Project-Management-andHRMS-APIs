@@ -20,6 +20,8 @@
  *           schema:
  *             type: object
  *             properties:
+ *               user_id:
+ *                 type: integer
  *               project_id:
  *                 type: integer
  *               name:

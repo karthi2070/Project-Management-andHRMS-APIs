@@ -12,9 +12,11 @@
  *     SubTask:
  *       type: object
  *       properties:
+ *         user_id:
+ *           type: integer
  *         sprint_id:
  *           type: integer
- *           example: 101
+ *           example: 2
  *         project_code:
  *           type: string
  *           example: TVK-26

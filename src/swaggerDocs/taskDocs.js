@@ -115,6 +115,10 @@
  *             properties:
  *               sprint_id:
  *                 type: number
+ *               project_id:
+ *                 type: number
+ *               user_id:
+ *                 type: number
  *               project_code:
  *                 type: string
  *               user_id:

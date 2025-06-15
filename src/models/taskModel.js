@@ -1,4 +1,5 @@
 const db = require('../config/db'); 
+const EmployeeModel =require('../models/empolyeeModel')
 
 
 const taskModel = {
@@ -17,12 +18,14 @@ const taskModel = {
 
            const [taskResult] = await db.query(sql, values);
            const taskId = taskResult.insertId;
+        const employee =await EmployeeModel.getEmployeeByUserId(user_id);
+
 
     // Log task creation in activity_logs_tbl
     const logQuery = `
-        INSERT INTO activity_logs_tbl (task_id, user_id, action_type, old_value, new_value, comments, created_at)
-        VALUES (?, ?, 'Task_created', NULL, 'Task initialized', 'Task created by user${user_id}', NOW()) `;
-    await db.execute(logQuery, [taskId, user_id]);
+        INSERT INTO activity_logs_tbl (task_id,sub_task_id, user_id,user_name, action_type, old_value, new_value, updated_by, created_at)
+        VALUES (?,NULL, ?,?, 'Task_created', NULL, 'Task initialized', 'Task created by ${employee.name}', NOW()) `;
+    await db.execute(logQuery, [taskId, user_id,employee.name]);
         return { id: taskResult.insertId, ...taskResult };
     },
      async getAllTasksBySprintId(sprint_id) {
@@ -57,12 +60,13 @@ const taskModel = {
             acceptance, issue_type, story_points, attachments  } = taskData;
 
     // Fetch current task details
-    const [task_data] = await db.execute(`SELECT status, assignee FROM task_tbl WHERE id = ?`, [id]);
-    if (task_data.length === 0) return res.status(404).json({ message: 'Task not found' });
+    const [task_data] = await db.execute(`SELECT status, assignee,due_date FROM task_tbl WHERE id = ?`, [id]);
+    if (task_data.length === 0) 
+        return json({ message: 'Task not found' });
 
     const oldStatus = task_data[0].status;
     const oldAssignee = task_data[0].assignee;
-
+    const oldDueDate = task_data[0].due_date
         const sql = `UPDATE task_tbl SET
                 sprint_id = ?,project_id=? ,user_id=?, project_code = ?, title = ?, description = ?, priority = ?, label = ?,
                 start_date = ?, end_date = ?, due_date = ?, status = ?, team = ?, assignee = ?, rca = ?,
@@ -74,21 +78,28 @@ const taskModel = {
             acceptance, issue_type, story_points, JSON.stringify(attachments),id];
 
         const [result] = await db.query(sql, values);
-
+        const employee =await EmployeeModel.getEmployeeByUserId(user_id);
+        const employeeName =employee.name
          if (oldStatus !== status) {
         const logQuery = `
-            INSERT INTO activity_logs_tbl (task_id, user_id, action_type, old_value, new_value, comments, created_at)
-            VALUES (?, ?, 'Status_changed', ?, ?, ?, NOW())
+            INSERT INTO activity_logs_tbl (task_id,sub_task_id ,user_id,user_name, action_type, old_value, new_value, updated_by, created_at)
+            VALUES (?,NULL, ?,?, 'Status_changed', ?, ?, ?, NOW())
         `;
-        await db.query(logQuery, [id, user_id, oldStatus, status, `user ${user_id} status from ${oldStatus} to ${status}`]);
+        await db.query(logQuery, [id, user_id,employeeName, oldStatus, status, `${employeeName} changed status from ${oldStatus} to ${status}`]);
     }
 
     // Log assignee change
     if (oldAssignee !== assignee) {
         const logQuery = `
-            INSERT INTO activity_logs_tbl (task_id, user_id, action_type, old_value, new_value, comments, created_at)
-            VALUES (?, ?, 'assignee_changed', ?, ?, ?, NOW()) `;
-        await db.query(logQuery, [id, user_id, oldAssignee, assignee, `Assignee changed from ${oldAssignee}  to ${assignee}`]);
+            INSERT INTO activity_logs_tbl (task_id, sub_task_id ,user_id,user_name, action_type, old_value, new_value, updated_by, created_at)
+            VALUES (?,NULL, ?,?, 'assignee_changed', ?, ?, ?, NOW()) `;
+        await db.query(logQuery, [id, user_id,employeeName, oldAssignee, assignee, `${employeeName}  changed Assignee from ${oldAssignee} to ${assignee}`]);
+    }
+    if (oldDueDate !== due_date) {
+        const logQuery = `
+            INSERT INTO activity_logs_tbl (task_id,sub_task_id , user_id, user_name, action_type, old_value, new_value, updated_by, created_at)
+            VALUES (?, NULL,?,?, 'due_date_changed', ?, ?, ?, NOW()) `;
+        await db.query(logQuery, [id, user_id,employeeName, oldDueDate, due_date, `${employeeName} changed due date from ${oldDueDate}  to ${due_date}`]);
     }
         return result;
     },

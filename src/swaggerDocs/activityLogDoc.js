@@ -21,7 +21,22 @@
  *         description: List of activity logs
  */
 
-
+/**
+ * @swagger
+ * /api/v1/activity-log/{subTaskId}:
+ *   get:
+ *     summary: Get activity logs for sub task
+ *     tags: [activity logs]
+ *     parameters:
+ *       - name: subTaskId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: List of activity logs
+ */
 /**
  * @swagger
  * /api/v1/activity-log/{logId}/comments:

@@ -2,10 +2,20 @@ const ActivityLog = require('../models/activityLogModel');
 
 // Fetch activity logs by task ID
 const ActivityLogs ={
-   getActivityLogs : async (req, res,  next) => {
+   getActivityLogsTask : async (req, res,  next) => {
     try {
         const { taskId } = req.params;
-        const logs = await ActivityLog.getActivityLogs(taskId);
+        const logs = await ActivityLog.getActivityLogsTask(taskId);
+        res.status(200).json(logs);
+    } catch (error) {
+next(error)
+    }
+},
+   getActivityLogsSubTask : async (req, res,  next) => {
+    try {
+        const { subTaskId } = req.params;
+        console.log(subTaskId)
+        const logs = await ActivityLog.getActivityLogsSubTask(subTaskId);
         res.status(200).json(logs);
     } catch (error) {
 next(error)

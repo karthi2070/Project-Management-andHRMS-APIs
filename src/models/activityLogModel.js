@@ -2,13 +2,24 @@ const db = require('../config/db'); // Import database connection
 
 const ActivityLog = {
     // Fetch activity logs by task ID
-    async getActivityLogs(taskId) {
+    async getActivityLogsTask(taskId) {
+    
         const query = `
             SELECT * FROM activity_logs_tbl
             WHERE task_id = ?
-            ORDER BY created_at ASC
+            ORDER BY created_at DESC
         `;
         const [logs] = await db.execute(query, [taskId]);
+        return logs;
+    },
+        async getActivityLogsSubTask(subTaskId) {
+    console.log(subTaskId)
+        const query = `
+            SELECT * FROM activity_logs_tbl
+            WHERE sub_task_id = ?
+            ORDER BY created_at DESC
+        `;
+        const [logs] = await db.execute(query, [subTaskId]);
         return logs;
     },
 
