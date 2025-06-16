@@ -16,8 +16,7 @@ You will be working on real-time projects under the guidance of our experienced 
 <p>Best regards,<br/>
 Namuvi HR Team
 Namuvi Technologies Private Limited </p>
-
-    `
+ `
   },
   internship_complete: {
     subject: ' nternship Completion Confirmation – Namuvi Technologies ',
