@@ -19,8 +19,6 @@ const taskModel = {
            const [taskResult] = await db.query(sql, values);
            const taskId = taskResult.insertId;
         const employee =await EmployeeModel.getEmployeeByUserId(user_id);
-
-
     // Log task creation in activity_logs_tbl
     const logQuery = `
         INSERT INTO activity_logs_tbl (task_id,sub_task_id, user_id,user_name, action_type, old_value, new_value, updated_by, created_at)

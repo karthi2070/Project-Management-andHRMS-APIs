@@ -1,8 +1,8 @@
 const db = require('../config/db');
+const EmployeeModel =require('./empolyeeModel')
 
 const Comments = {
-  createComment: async (data) => {
-    const { task_id, sub_task_id, user_id, parent_comment_id, comment, attachments } = data;
+   createComment: async ({ task_id, sub_task_id, user_id, parent_comment_id, comment, attachments }) => {
     const sql = `
       INSERT INTO comments_tbl (task_id, sub_task_id, user_id, parent_comment_id, comment, attachments)
       VALUES (?, ?, ?, ?, ?, ?)`;
@@ -11,8 +11,11 @@ const Comments = {
     return result.insertId;
   },
 
-  editComment: async ({ comment, attachments, id }) => {
-    const sql = `UPDATE comments_tbl SET comment = ?, attachments = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND is_deleted = 0`;
+  editComment: async ({ id, comment, attachments }) => {
+    const sql = `
+      UPDATE comments_tbl 
+      SET comment = ?, attachments = ?, updated_at = CURRENT_TIMESTAMP 
+      WHERE id = ? AND is_deleted = 0`;
     const [result] = await db.query(sql, [comment, JSON.stringify(attachments), id]);
     return result.affectedRows;
   },

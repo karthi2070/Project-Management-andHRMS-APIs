@@ -28,8 +28,6 @@
  *                 type: integer
  *               user_id:
  *                 type: integer
- *               user_name:
- *                 type: string
  *               parent_comment_id:
  *                 type: integer
  *               comment:
@@ -66,6 +64,8 @@
  *             required:
  *               - comment
  *             properties:
+ *               user_id:
+ *                 type: integer
  *               comment:
  *                 type: string
  *               attachments:

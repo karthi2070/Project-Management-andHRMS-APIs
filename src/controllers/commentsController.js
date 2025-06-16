@@ -1,10 +1,28 @@
 const Comments = require('../models/commentsModel');
+const activityLogger=require('../helper/actvitylog')
 
 const CommentsController = {
   createComment: async (req, res, next) => {
     try {
-      const { task_id, sub_task_id, user_id, user_name, parent_comment_id, comment, attachments } = req.body;
-      const commentId = await Comments.createComment({ task_id, sub_task_id, user_id, parent_comment_id, comment, attachments });
+      const {
+        task_id,
+        sub_task_id,
+        user_id,
+        parent_comment_id,
+        comment,
+        attachments
+      } = req.body;
+console.log(req.body)
+      const commentId = await Comments.createComment({task_id,sub_task_id, user_id,parent_comment_id, comment,attachments});
+
+      await activityLogger.addCommentLog({
+        task_id,
+        sub_task_id,
+        user_id,
+        comment,
+        action_type: parent_comment_id ? 'comment_replied' : 'comment_added'
+      });
+
       res.status(201).json({ message: 'Comment added', comment_id: commentId });
     } catch (err) {
       next(err);
@@ -13,16 +31,27 @@ const CommentsController = {
 
   editComment: async (req, res, next) => {
     try {
-      const { comment, attachments } = req.body;
       const { id } = req.params;
-      const updated = await Comments.editComment({ comment, attachments, id });
-      if (!updated) return res.status(404).json({ message: 'Comment not found or already deleted' });
+      const { comment, attachments, user_id } = req.body;
+
+      const existing = await Comments.getCommentById(id);
+      if (!existing) return res.status(404).json({ message: 'Comment not found' });
+
+      await Comments.editComment({ id, comment, attachments });
+
+      await activityLogger.addCommentEditLog({
+        task_id: existing.task_id,
+        sub_task_id: existing.sub_task_id,
+        user_id,
+        old_comment: existing.comment,
+        new_comment: comment
+      });
+
       res.status(200).json({ message: 'Comment updated' });
     } catch (err) {
       next(err);
     }
   },
-
   getAllComments: async (req, res, next) => {
     try {
       const comments = await Comments.getAllComments();
