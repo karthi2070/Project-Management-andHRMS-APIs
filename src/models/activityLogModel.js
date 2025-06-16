@@ -9,17 +9,16 @@ const ActivityLog = {
             WHERE task_id = ?
             ORDER BY created_at DESC
         `;
-        const [logs] = await db.execute(query, [taskId]);
+        const [logs] = await db.query(query, [taskId]);
         return logs;
     },
-        async getActivityLogsSubTask(subTaskId) {
-    console.log(subTaskId)
+        async getActivityLogsSubTask(id) {
         const query = `
             SELECT * FROM activity_logs_tbl
             WHERE sub_task_id = ?
             ORDER BY created_at DESC
         `;
-        const [logs] = await db.execute(query, [subTaskId]);
+        const [logs] = await db.query(query, [id]);
         return logs;
     },
 
@@ -29,7 +28,7 @@ const ActivityLog = {
             UPDATE activity_logs_tbl SET comments = ?, updated_at = NOW()
             WHERE id = ?
         `;
-        await db.execute(query, [comments, logId]);
+        await db.query(query, [comments, logId]);
         return { message: 'Comments updated successfully' };
     }
 };

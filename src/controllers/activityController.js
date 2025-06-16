@@ -13,9 +13,9 @@ next(error)
 },
    getActivityLogsSubTask : async (req, res,  next) => {
     try {
-        const { subTaskId } = req.params;
-        console.log(subTaskId)
-        const logs = await ActivityLog.getActivityLogsSubTask(subTaskId);
+        const { id } = req.params;
+
+        const logs = await ActivityLog.getActivityLogsSubTask(id);
         res.status(200).json(logs);
     } catch (error) {
 next(error)

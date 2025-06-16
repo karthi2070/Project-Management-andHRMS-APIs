@@ -6,7 +6,7 @@
  */
 /**
  * @swagger
- * /api/v1/activity-log/{taskId}:
+ * /api/v1/activity-log/task/{taskId}:
  *   get:
  *     summary: Get activity logs for a task
  *     tags: [activity logs]
@@ -23,12 +23,12 @@
 
 /**
  * @swagger
- * /api/v1/activity-log/{subTaskId}:
+ * /api/v1/activity-log/subtask/{id}:
  *   get:
  *     summary: Get activity logs for sub task
  *     tags: [activity logs]
  *     parameters:
- *       - name: subTaskId
+ *       - name: id
  *         in: path
  *         required: true
  *         schema:

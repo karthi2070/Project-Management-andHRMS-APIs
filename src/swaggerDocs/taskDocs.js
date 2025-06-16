@@ -121,8 +121,6 @@
  *                 type: number
  *               project_code:
  *                 type: string
- *               user_id:
- *                 type: number
  *               title:
  *                 type: string
  *               description:
