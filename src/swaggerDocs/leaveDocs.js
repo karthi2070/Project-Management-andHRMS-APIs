@@ -18,6 +18,8 @@
  *           schema:
  *             type: object
  *             properties:
+ *               user_id:
+ *                 type: number
  *               employee_id:
  *                 type: integer
  *               leave_type:
@@ -82,6 +84,8 @@
  *           schema:
  *             type: object
  *             properties:
+ *               user_id:
+ *                 type: number
  *               employee_id:
  *                 type: integer
  *               leave_type:
@@ -128,6 +132,17 @@
  *         required: true
  *         schema:
  *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               is_applicable:
+ *                 type: number
+ *               reason:
+ *                 type: string
  *     responses:
  *       200:
  *         description: is_applicable updated

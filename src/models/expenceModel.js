@@ -3,8 +3,8 @@ const pool = require('../config/db');
 const ExpenseModel = {
     async createExpense(data) {
         try {
-            const sql = `INSERT INTO expense_tbl (date, category, amount, bill_img, description) 
-                         VALUES (?, ?, ?, ?, ?)`;
+            const sql = `INSERT INTO expense_tbl (user_id,date, category, amount, bill_img, description) 
+                         VALUES (?, ?, ?, ?, ?,?)`;
             const [result] = await pool.query(sql, Object.values(data));
             return { id: result.insertId, ...data };
         } catch (error) {
@@ -51,7 +51,7 @@ const ExpenseModel = {
 
     async updateExpense(id, data) {
         try {
-            const sql = `UPDATE expense_tbl SET date=?, category=?, amount=?, bill_img=?, description=? 
+            const sql = `UPDATE expense_tbl SET user_id=?,date=?, category=?, amount=?, bill_img=?, description=? 
                          WHERE id = ? AND is_deleted = 0`;
             await pool.query(sql, [...Object.values(data), id]);
             return { id, ...data };

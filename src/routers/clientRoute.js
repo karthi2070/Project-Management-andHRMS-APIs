@@ -21,7 +21,7 @@ router.patch('/invoice/delete-invoice/:id', ClientController.softDeleteInvoice);
 //insert emi payment
 
 router.post('/invoices/emi-payment/:invoice_id',ClientController. recordEMIPayment);
-
+router.get('/invoice/get-invoice-EMI-payment/:client_id/:invoice_id', ClientController.findEMIPymentInvoiceId); 
 
 
 

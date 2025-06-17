@@ -50,8 +50,9 @@ const EmployeeLeaveController = {
 
   async updateApplicable(req, res, next) {
     try {
+      const {is_applicable,reason}=req.body
       
-      const result = await EmployeeLeaveModel.updateIsApplicable(req.params.id);
+      const result = await EmployeeLeaveModel.updateIsApplicable(req.params.id,is_applicable,reason);
       res.json({ message: "is_applicable updated", result });
     } catch (err) {
       next(err);

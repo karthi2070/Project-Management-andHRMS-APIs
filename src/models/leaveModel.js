@@ -2,12 +2,13 @@ const pool = require("../config/db");
 
 const EmployeeLeaveModel = {
   async createLeave(data) {
-    const sql = `INSERT INTO employee_leave_tbl (employee_id, leave_type, start_date, end_date,reson ) VALUES (?, ?, ?, ?, ?)`;
+    const sql = `INSERT INTO user_id,employee_leave_tbl (employee_id, leave_type, start_date, end_date,reason ) VALUES (?, ?, ?, ?, ?,?)`;
     const values = [
+      data.user_id,
       data.employee_id,
       data.leave_type,
       data.start_date,
-      data.end_date,data.reson
+      data.end_date,data.reason
     ];
     const [result] = await pool.query(sql, values);
     return { id: result.insertId, ...data };
@@ -26,13 +27,13 @@ const EmployeeLeaveModel = {
   },
 
   async updateLeave(id, data) {
-    const sql = `UPDATE employee_leave_tbl SET employee_id=?, leave_type=?, start_date=?, end_date=?, reson=? WHERE id=?`;
+    const sql = `UPDATE employee_leave_tbl SET user_id =?,employee_id=?, leave_type=?, start_date=?, end_date=?, reason=? WHERE id=?`;
     const values = [
-      data.employee_id,
+      data.user_id,data.employee_id,
       data.leave_type,
       data.start_date,
       data.end_date,
-      data.reson,
+      data.reason,
       id
     ];
     const [result] = await pool.query(sql, values);
@@ -45,9 +46,9 @@ const EmployeeLeaveModel = {
     return result;
   },
 
-  async updateIsApplicable(id) {
-    const sql = `UPDATE employee_leave_tbl SET is_applicable = 1 WHERE id = ?`;
-    const [result] = await pool.query(sql, [id]);
+  async updateIsApplicable(id,is_applicable,reason) {
+    const sql = `UPDATE employee_leave_tbl SET is_applicable = ?, reason = ? WHERE id = ? AND is_deleted = 0 `; // 1 leave Applicable 2-reject
+    const [result] = await pool.query(sql, [is_applicable,reason,id]);
     return result;
   }
 };

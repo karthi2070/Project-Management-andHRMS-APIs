@@ -10,8 +10,8 @@ const ClientModel = {
     },
     async createClient(data) {
         console.log("Creating client with data:", data);
-        const sql = `INSERT INTO client_tbl (name, company_name, client_id, mail, phone1, phone2, phone3, gst_num, address, city , state ,pincode) 
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?)`;
+        const sql = `INSERT INTO client_tbl (user_id,name, company_name, client_id, mail, phone1, phone2, phone3, gst_num, address, city , state ,pincode) 
+                     VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?)`;
         const [result] = await pool.query(sql, Object.values(data));
         return { id: result.insertId, ...data };
     },
@@ -30,7 +30,7 @@ const ClientModel = {
 
     async updateClient(id, data) {
         console.log (data)
-        const sql = `UPDATE client_tbl SET name=?, company_name=?, client_id=?, mail=?, phone1=?, phone2=?, phone3=?, gst_num=?, address=? ,
+        const sql = `UPDATE client_tbl SET user_id=?,name=?, company_name=?, client_id=?, mail=?, phone1=?, phone2=?, phone3=?, gst_num=?, address=? ,
                     city =? , state = ? ,pincode= ? WHERE id = ? AND is_deleted = 0`;
         await pool.query(sql, [...Object.values(data), id]);
         return { id, ...data };
@@ -48,11 +48,11 @@ async createInvoice(invoice) {
 
   const query = `
     INSERT INTO invoice_tbl
-    (client_id, invoice_number, invoice_amount, paid_amount, balance_amount, extra_amount, invoice_date, due_date, payment_method, notes)
-    VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    (user_id,client_id, invoice_number, invoice_amount, paid_amount, balance_amount, extra_amount, invoice_date, due_date, payment_method, notes)
+    VALUES ( ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
   const values = [
-    invoice.client_id,
+    invoice.user_id,invoice.client_id,
     invoice.invoice_number,
     invoice.invoice_amount,
     invoice.paid_amount || 0.00,
@@ -69,9 +69,9 @@ async createInvoice(invoice) {
 },
   async update(id, invoice) {
    
-     const query = `UPDATE invoice_tbl SET client_id=?, invoice_number=?, invoice_amount=?, paid_amount=?,  balance_amount =?,extra_amount=?,
+     const query = `UPDATE invoice_tbl SET user_id=?,client_id=?, invoice_number=?, invoice_amount=?, paid_amount=?,  balance_amount =?,extra_amount=?,
      status_id=?,invoice_date=?, due_date=?, payment_method=?, notes=? WHERE id = ?`,
-     values = [   invoice.client_id,
+     values = [  invoice.user_id, invoice.client_id,
         invoice.invoice_number,
         invoice.invoice_amount,
         invoice.paid_amount,
@@ -106,7 +106,7 @@ async createInvoice(invoice) {
   },
 
   async findByInvoiseclintId(clientId) {
-    const query = `select * FROM invoice_tbl WHERE client_id=? AND is_deleted = 0 `
+    const query = `select * FROM invoice_payment_tbl WHERE client_id=? AND is_deleted = 0 `
     // const query = select * FROM invoice_tbl as i
     const [rows] = await pool.query(query, [clientId]);
     return rows;
@@ -119,12 +119,12 @@ async createInvoice(invoice) {
 // insert EMI payment
 
 async  insertPayment (data)  {
-    const { client_id, invoice_id, payment_amount,payment_date, payment_method, payment_status, notes, extra_amount } = data;
+    const {user_id, client_id, invoice_id, payment_amount,payment_date, payment_method, payment_status, notes, extra_amount } = data;
     const [result] = await pool.query(
       `INSERT INTO invoice_payment_tbl 
-       (client_id, invoice_id, payment_amount,payment_date, payment_method, payment_status, notes, extra_amount)
-       VALUES (?, ?, ?, ?, ?, ?,?, ?)`,
-      [client_id, invoice_id, payment_amount,payment_date, payment_method, payment_status, notes, extra_amount]
+       (user_id,client_id, invoice_id, payment_amount,payment_date, payment_method, payment_status, notes, extra_amount)
+       VALUES (?,?, ?, ?, ?, ?, ?,?, ?)`,
+      [user_id,client_id, invoice_id, payment_amount,payment_date, payment_method, payment_status, notes, extra_amount]
     );
     return result;
   },
@@ -137,15 +137,21 @@ async  insertPayment (data)  {
     );
     return rows[0];
   },
+     async findEMIPymentInvoiceId(client_id,invoice_id) {
 
- async updateInvoiceTotals  (updateInvoiseData)  {
+    const query = `SELECT * FROM invoice_payment_tbl WHERE client_id = ? AND invoice_id = ? AND is_deleted = 0 `
+    const [rows] = await pool.query(query, [client_id,invoice_id]);
+    return rows[0];
+  },
 
-  const {paid_amount,balance_amount,extra_amount,status_id,id } =updateInvoiseData
+ async updateInvoiceTotals (updateInvoiseData)  {
+
+  const {user_id,paid_amount,balance_amount,extra_amount,status_id,id } =updateInvoiseData
     
      const query = `UPDATE invoice_tbl 
-       SET paid_amount = ?, balance_amount = ?, extra_amount=?, status_id = ?, updated_at = NOW()
+       SET user_id =?,paid_amount = ?, balance_amount = ?, extra_amount=?, status_id = ?, updated_at = NOW()
        WHERE id = ? AND is_deleted = 0`
-      const [result] = await pool.query(query,[paid_amount, balance_amount, extra_amount,status_id, id]
+      const [result] = await pool.query(query,[user_id,paid_amount, balance_amount, extra_amount,status_id, id]
     );
     return result;
   }

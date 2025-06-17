@@ -13,6 +13,8 @@
  *     Expense:
  *       type: object
  *       properties:
+ *         user_id:
+ *           type: number
  *         date:
  *           type: string
  *           format: date

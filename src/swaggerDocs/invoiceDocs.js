@@ -12,6 +12,8 @@
  *     Invoice:
  *       type: object
  *       properties:
+ *         user_id:
+ *           type:number
  *         client_id:
  *           type: number
  *           description: Unique identifier for the client
@@ -72,6 +74,8 @@
  *               - invoice_date
  *               - due_date
  *             properties:
+ *               user_id:
+ *                 type:number
  *               client_id:
  *                 type: integer
  *                 example: 1
@@ -283,6 +287,8 @@
  *               - payment_method
  *               - payment_status
  *             properties:
+ *               user_id:
+ *                 type:number
  *               client_id:
  *                 type: integer
  *                 example: 45
@@ -336,3 +342,39 @@
  *         description: Internal server error
  */
 
+/**
+ * @swagger
+ * /api/v1/invoice/get-invoices:
+ *   get:
+ *     summary: Get all invoices
+ *     tags: [Invoice]
+ *     responses:
+ *       200:
+ *         description: List of invoices
+ */
+
+/**
+ * @swagger
+ * /api/v1/invoice/get-invoice-EMI-payment/{client_id}/{invoice_id}:
+ *   get:
+ *     summary: Get invoice by ID
+ *     tags: [Invoice]
+ *     parameters:
+ *       - in: path
+ *         name: client_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Client Id
+ *       - in: path
+ *         name: invoice_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Invoice ID
+ *     responses:
+ *       200:
+ *         description: Invoice data
+ *       404:
+ *         description: Invoice not found
+ */

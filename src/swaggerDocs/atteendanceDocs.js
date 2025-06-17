@@ -12,11 +12,13 @@
  *     Attendance:
  *       type: object
  *       required:
+ *         - user_id
  *         - employee_name
- * 
  *         - login
  *         - logout
  *       properties:
+ *         user_id:
+ *           type: number
  *         employee_id:
  *          type: integer
  *         employee_name:

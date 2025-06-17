@@ -13,6 +13,8 @@
  *     Client:
  *       type: object
  *       properties:
+ *         user_id:
+ *           type:number
  *         name:
  *           type: string
  *           description: Client's name
