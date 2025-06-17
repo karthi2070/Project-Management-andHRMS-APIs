@@ -106,7 +106,7 @@ async createInvoice(invoice) {
   },
 
   async findByInvoiseclintId(clientId) {
-    const query = `select * FROM invoice_payment_tbl WHERE client_id=? AND is_deleted = 0 `
+    const query = `select * FROM invoice_tbl WHERE client_id=? AND is_deleted = 0 `
     // const query = select * FROM invoice_tbl as i
     const [rows] = await pool.query(query, [clientId]);
     return rows;
@@ -137,11 +137,18 @@ async  insertPayment (data)  {
     );
     return rows[0];
   },
-     async findEMIPymentInvoiceId(client_id,invoice_id) {
 
-    const query = `SELECT * FROM invoice_payment_tbl WHERE client_id = ? AND invoice_id = ? AND is_deleted = 0 `
-    const [rows] = await pool.query(query, [client_id,invoice_id]);
-    return rows[0];
+async findEMIPymentInvoiceId(client_id, invoice_id) {
+  const query = `SELECT * FROM invoice_payment_tbl WHERE client_id = ? AND invoice_id = ? AND is_deleted = 0`;
+  const [rows] = await pool.query(query, [client_id, invoice_id]);
+  return rows; // Return all rows, not just the first one
+
+  },
+       async findEMIPymentInvoiceById(invoice_id,id) {
+
+    const query = `SELECT * FROM invoice_payment_tbl WHERE invoice_id = ? AND id = ? AND is_deleted = 0 `
+    const [rows] = await pool.query(query, [invoice_id,id]);
+    return rows;
   },
 
  async updateInvoiceTotals (updateInvoiseData)  {

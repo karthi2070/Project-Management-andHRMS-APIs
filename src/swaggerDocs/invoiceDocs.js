@@ -378,3 +378,29 @@
  *       404:
  *         description: Invoice not found
  */
+
+/**
+ * @swagger
+ * /api/v1/invoice/get-invoice-EMI-payment-id/{invoice_id}/{id}:
+ *   get:
+ *     summary: Get invoice by ID
+ *     tags: [Invoice]
+ *     parameters:
+ *       - in: path
+ *         name: invoice_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Client Id
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Invoice ID
+ *     responses:
+ *       200:
+ *         description: Invoice data
+ *       404:
+ *         description: Invoice not found
+ */

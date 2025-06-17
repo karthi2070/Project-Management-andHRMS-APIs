@@ -22,6 +22,7 @@ router.patch('/invoice/delete-invoice/:id', ClientController.softDeleteInvoice);
 
 router.post('/invoices/emi-payment/:invoice_id',ClientController. recordEMIPayment);
 router.get('/invoice/get-invoice-EMI-payment/:client_id/:invoice_id', ClientController.findEMIPymentInvoiceId); 
+router.get('/invoice/get-invoice-EMI-payment-id/:invoice_id/:id', ClientController.findEMIPymentInvoiceById); 
 
 
 

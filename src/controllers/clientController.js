@@ -125,11 +125,12 @@ const ClientController = {
             next(error);
         }
     },
-//EMI pyments
+//EMI pyments findEMIPymentInvoiceById
 
     async findEMIPymentInvoiceId(req, res, next) {
         try {
             const {client_id,invoice_id} =req.params
+            console.log(client_id,invoice_id)
             const invoice = await ClientModel.findEMIPymentInvoiceId(client_id,invoice_id);
             if (!invoice) {
                 return res.status(404).json({ message: 'Invoice not found' });
@@ -139,7 +140,18 @@ const ClientController = {
             next(error);
         }
     },
-
+    async findEMIPymentInvoiceById(req, res, next) {
+        try {
+            const {invoice_id,id} =req.params
+            const invoice = await ClientModel.findEMIPymentInvoiceById(invoice_id,id);
+            if (!invoice) {
+                return res.status(404).json({ message: 'Invoice not found' });
+            }
+            res.status(200).json(invoice);
+        } catch (error) {
+            next(error);
+        }
+    },
 async recordEMIPayment   (req, res, next)  {
   try {
     const invoice_id = parseInt(req.params.invoice_id);
