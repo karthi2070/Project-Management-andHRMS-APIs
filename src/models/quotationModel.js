@@ -3,12 +3,12 @@ const pool = require('../config/db');
 const QuotationModel = {
     async createQuotation(data) {
 
-            const sql = `INSERT INTO quotation_tbl (employee_id, client_name, client_mail, project, amount, date) 
+            const sql = `INSERT INTO quotation_tbl (user_id, client_name, client_mail, project, amount, date) 
                          VALUES (?, ?, ?, ?, ?, ?)`;
                         
                          const amount=data.amount +  (data.amount*0.18) ;
                          console.log("amount",amount);
-            const values = [ data.employee_id, data.client_name, data.client_mail, data.project, amount, data.date]
+            const values = [ data.user_id, data.client_name, data.client_mail, data.project, amount, data.date]
             const [result] = await pool.query(sql, values);
             return { id: result.insertId, ...data };
         
@@ -36,11 +36,11 @@ const QuotationModel = {
 
     async updateQuotation(id, data) {
         try {
-            const sql = `UPDATE quotation_tbl SET employee_id=?, client_name=?, client_mail=?, project=?, amount=?, date=? WHERE id = ? AND is_deleted = 0 `;
+            const sql = `UPDATE quotation_tbl SET user_id=?, client_name=?, client_mail=?, project=?, amount=?, date=? WHERE id = ? AND is_deleted = 0 `;
 
             const amount=data.amount +  (data.amount*0.18) ;
             console.log("amount",amount);
-            const values = [ data.employee_id, data.client_name, data.client_mail, data.project, amount, data.date,id]
+            const values = [ data.user_id, data.client_name, data.client_mail, data.project, amount, data.date,id]
             await pool.query(sql, values);
             return { id, ...data };
         } catch (error) {

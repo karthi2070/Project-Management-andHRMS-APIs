@@ -2,10 +2,9 @@ const pool = require("../config/db");
 
 const EmployeeLeaveModel = {
   async createLeave(data) {
-    const sql = `INSERT INTO user_id,employee_leave_tbl (employee_id, leave_type, start_date, end_date,reason ) VALUES (?, ?, ?, ?, ?,?)`;
+    const sql = `INSERT INTO employee_leave_tbl (user_id, leave_type, start_date, end_date,reason ) VALUES ( ?, ?, ?, ?,?)`;
     const values = [
       data.user_id,
-      data.employee_id,
       data.leave_type,
       data.start_date,
       data.end_date,data.reason
@@ -36,9 +35,9 @@ const EmployeeLeaveModel = {
   },
 
   async updateLeave(id, data) {
-    const sql = `UPDATE employee_leave_tbl SET user_id =?,employee_id=?, leave_type=?, start_date=?, end_date=?, reason=? WHERE id=?`;
+    const sql = `UPDATE employee_leave_tbl SET user_id =?, leave_type=?, start_date=?, end_date=?, reason=? WHERE id=?`;
     const values = [
-      data.user_id,data.employee_id,
+      data.user_id,
       data.leave_type,
       data.start_date,
       data.end_date,

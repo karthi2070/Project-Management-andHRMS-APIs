@@ -9,7 +9,6 @@ const ClientModel = {
         return rows[0].count;
     },
     async createClient(data) {
-        console.log("Creating client with data:", data);
         const sql = `INSERT INTO client_tbl (user_id,name, company_name, client_id, mail, phone1, phone2, phone3, gst_num, address, city , state ,pincode) 
                      VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?)`;
         const [result] = await pool.query(sql, Object.values(data));

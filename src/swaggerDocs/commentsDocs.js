@@ -131,6 +131,24 @@
 
 /**
  * @swagger
+ * /api/v1/comments/get-comment-sub-task-by/{sub_task_id}:
+ *   get:
+ *     summary: Get all comments for a specific task
+ *     tags: [Comments]
+ *     parameters:
+ *       - in: path
+ *         name: sub_task_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Task ID
+ *     responses:
+ *       200:
+ *         description: List of comments for the task
+ */
+
+/**
+ * @swagger
  * /api/v1/comments/delete-comment/{id}:
  *   patch:
  *     summary: Soft delete a comment

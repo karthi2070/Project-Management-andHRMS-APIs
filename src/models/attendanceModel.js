@@ -42,4 +42,22 @@ exports.getAttendanceByDate = async (date) => {
     return rows;
 };
 
+exports.getTotalWorkingDays = async () => {
+  const query = `
+    SELECT 
+      employee_id,
+      employee_name,
+      COUNT(DISTINCT date) AS total_working_days
+    FROM 
+      employee_attendance_tbl
+    WHERE 
+      login IS NOT NULL WHERE user_id =?
+    GROUP BY 
+      employee_id, employee_name;
+  `;
+  //WHERE login IS NOT NULL AND date BETWEEN '2025-06-01' AND '2025-06-30'
 
+    const [rows] = await db.query(query);
+    return rows
+
+};

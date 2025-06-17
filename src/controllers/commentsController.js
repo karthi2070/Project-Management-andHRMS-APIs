@@ -81,7 +81,15 @@ console.log(req.body)
       next(err);
     }
   },
-
+  getCommentsBySubTaskId: async (req, res, next) => {
+    try {
+      const { sub_task_id } = req.params;
+      const comments = await Comments.getCommentsBySubTaskId(sub_task_id);
+      res.status(200).json(comments);
+    } catch (err) {
+      next(err);
+    }
+  },
   deleteComment: async (req, res, next) => {
     try {
       const { id } = req.params;

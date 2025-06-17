@@ -12,7 +12,7 @@
  *     Quotation:
  *       type: object
  *       properties:
- *         employee_id:
+ *         user_id:
  *           type: integer
  *           description: Employee ID linked to the quotation
  *         client_name:

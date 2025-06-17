@@ -20,8 +20,6 @@
  *             properties:
  *               user_id:
  *                 type: number
- *               employee_id:
- *                 type: integer
  *               leave_type:
  *                 type: string
  *               start_date:
@@ -86,8 +84,6 @@
  *             properties:
  *               user_id:
  *                 type: number
- *               employee_id:
- *                 type: integer
  *               leave_type:
  *                 type: string
  *               start_date:
