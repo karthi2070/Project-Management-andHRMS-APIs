@@ -22,6 +22,10 @@
  *             properties:
  *               user_id:
  *                 type: integer
+ *                 example: 2
+ *               creater_name:
+ *                 type: string
+ *                 example: admin
  *               project_id:
  *                 type: integer
  *               name:
@@ -64,6 +68,12 @@
  *           schema:
  *             type: object
  *             properties:
+ *               user_id:
+ *                 type: integer
+ *                 example: 2
+ *               creater_name:
+ *                 type: string
+ *                 example: admin
  *               project_id:
  *                 type: integer
  *               name:

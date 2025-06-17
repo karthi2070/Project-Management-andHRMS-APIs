@@ -67,24 +67,34 @@ async createInvoice(invoice) {
   const [result] = await pool.query(query, values);
   return result.insertId;
 },
-  async update(id, invoice) {
-   
-     const query = `UPDATE invoice_tbl SET user_id=?,client_id=?, invoice_number=?, invoice_amount=?, paid_amount=?,  balance_amount =?,extra_amount=?,
-     status_id=?,invoice_date=?, due_date=?, payment_method=?, notes=? WHERE id = ?`,
-     values = [  invoice.user_id, invoice.client_id,
-        invoice.invoice_number,
-        invoice.invoice_amount,
-        invoice.paid_amount,
-        invoice.balance_amount ,
-        invoice.status_id,
-        invoice.invoice_date,
-        invoice.due_date,
-        invoice.payment_method,
-        invoice.notes,
-        id]
-       const [result] = await pool.query(query, values);
-    return result.affectedRows;
-  },
+async update(id, invoice) {
+  const query = `
+    UPDATE invoice_tbl 
+    SET user_id=?, client_id=?, invoice_number=?, invoice_amount=?, paid_amount=?, balance_amount=?, extra_amount=?,
+        status_id=?, invoice_date=?, due_date=?, payment_method=?, notes=? 
+    WHERE id = ?;
+  `;
+
+  const values = [
+    invoice.user_id,
+    invoice.client_id,
+    invoice.invoice_number,
+    invoice.invoice_amount,
+    invoice.paid_amount,
+    invoice.balance_amount,
+    invoice.extra_amount, 
+    invoice.status_id,
+    invoice.invoice_date,
+    invoice.due_date,
+    invoice.payment_method,
+    invoice.notes,
+    id
+  ];
+
+  const [result] = await pool.query(query, values);
+  return result;
+}
+,
 
    async findAllincoice() {
     const query=`SELECT * FROM invoice_tbl WHERE is_deleted = 0`
@@ -141,7 +151,7 @@ async  insertPayment (data)  {
 async findEMIPymentInvoiceId(client_id, invoice_id) {
   const query = `SELECT * FROM invoice_payment_tbl WHERE client_id = ? AND invoice_id = ? AND is_deleted = 0`;
   const [rows] = await pool.query(query, [client_id, invoice_id]);
-  return rows; // Return all rows, not just the first one
+  return rows;
 
   },
        async findEMIPymentInvoiceById(invoice_id,id) {

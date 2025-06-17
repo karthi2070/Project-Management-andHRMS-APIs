@@ -9,8 +9,6 @@ const EmployeeLeaveController = {
       next(err);
     }
   },
-  
-
 
   async getAll(req, res, next) {
     try {
@@ -20,7 +18,15 @@ const EmployeeLeaveController = {
       next(err);
     }
   },
-
+  async getemployeeLeaves(req, res, next) {
+    try {
+      const {id,is_applicable}=req.params
+      const result = await EmployeeLeaveModel.getemployeeLeaves(id,is_applicable);
+      res.json(result);
+    } catch (err) {
+      next(err);
+    }
+  },
   async getById(req, res, next) {
     try {
       const result = await EmployeeLeaveModel.getLeaveById(req.params.id);

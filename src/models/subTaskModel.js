@@ -3,18 +3,18 @@ const EmployeeModel =require('../models/empolyeeModel')
 
 const  subTaskModel  = {
     async createTask(taskData) {
-        const { user_id,sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,
+        const { user_id,creater_name,sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,
             acceptance, issue_type,story_points, attachments, parent_task_id} = taskData;
 
     const sql = `
         INSERT INTO sub_task_tbl (
-            user_id,sprint_id, project_code, title, description, priority, label, 
+            user_id,creater_name,sprint_id, project_code, title, description, priority, label, 
             start_date, end_date, due_date,status, team, assignee, rca,acceptance, issue_type,
             story_points, attachments, parent_task_id
-        ) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?)
+        ) VALUES (?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?)
     `;
 
-     const values =[user_id,sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,
+     const values =[user_id,creater_name,sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,
         acceptance, issue_type,story_points, JSON.stringify(attachments), parent_task_id  ]
 
            const [result] = await db.query(sql, values);
@@ -48,11 +48,11 @@ const employee =await EmployeeModel.getEmployeeByUserId(user_id);
     },
 
     async updateTask(id, taskData) {
-        const { user_id,sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,acceptance, issue_type,
+        const { user_id,creater_name,sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,acceptance, issue_type,
             story_points, attachments, parent_task_id} = taskData;
 
                // Fetch current task details
-    const [task_data] = await db.execute(`SELECT status, assignee,due_date FROM task_tbl WHERE id = ?`, [id]);
+    const [task_data] = await db.execute(`SELECT status, assignee,due_date FROM sub_task_tbl WHERE id = ?`, [id]);
     if (task_data.length === 0) 
         return json({ message: 'Task not found' });
 
@@ -60,11 +60,11 @@ const employee =await EmployeeModel.getEmployeeByUserId(user_id);
     const oldAssignee = task_data[0].assignee;
     const oldDueDate = task_data[0].due_date
 
-          const sql=  `UPDATE sub_task_tbl SET user_id=?,sprint_id = ?, project_code = ?, title = ?, description = ?, priority = ?, label = ?, 
+          const sql=  `UPDATE sub_task_tbl SET user_id=?,creater_name=?,sprint_id = ?, project_code = ?, title = ?, description = ?, priority = ?, label = ?, 
             start_date = ?, end_date = ?,due_date = ?, status=?, team = ?, assignee = ?, rca = ?,acceptance=?, issue_type = ?,
             story_points = ?, attachments = ?, parent_task_id = ? WHERE is_deleted = 0 AND id = ?`
     
-        const values =[user_id,sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,acceptance, issue_type,
+        const values =[user_id,creater_name,sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,acceptance, issue_type,
               story_points, JSON.stringify(attachments), parent_task_id, id]
               const [result]=await db.query( sql, values);
 

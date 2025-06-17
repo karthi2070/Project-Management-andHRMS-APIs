@@ -13,7 +13,7 @@
  *       type: object
  *       properties:
  *         user_id:
- *           type:number
+ *           type: integer
  *         client_id:
  *           type: number
  *           description: Unique identifier for the client
@@ -68,6 +68,7 @@
  *           schema:
  *             type: object
  *             required:
+ *               - user_id
  *               - client_id
  *               - invoice_number
  *               - invoice_amount
@@ -75,7 +76,7 @@
  *               - due_date
  *             properties:
  *               user_id:
- *                 type:number
+ *                 type: integer
  *               client_id:
  *                 type: integer
  *                 example: 1
@@ -117,17 +118,6 @@
  *     responses:
  *       201:
  *         description: Invoice created successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Invoice created successfully
- *                 invoice_id:
- *                   type: integer
- *                   example: 101
  *       400:
  *         description: Missing or invalid input
  *       500:
@@ -267,7 +257,8 @@
  *   post:
  *     summary: Record an EMI payment for an invoice
  *     description: Adds a new EMI payment entry for a specific invoice. Updates invoice totals only if payment is marked as successful.
- *     tags: [Invoice]
+ *     tags:
+ *       - Invoice
  *     parameters:
  *       - in: path
  *         name: invoice_id
@@ -288,7 +279,8 @@
  *               - payment_status
  *             properties:
  *               user_id:
- *                 type:number
+ *                 type: integer
+ *                 example: 102
  *               client_id:
  *                 type: integer
  *                 example: 45
@@ -306,41 +298,18 @@
  *               payment_status:
  *                 type: integer
  *                 example: 1
- *                 description: |
- *                   0 = Pending  
- *                   1 = Success  
- *                   2 = Failed
  *               notes:
  *                 type: string
  *                 example: "EMI payment for June"
  *     responses:
  *       200:
  *         description: EMI payment recorded successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Payment recorded
- *                 paid_amount:
- *                   type: number
- *                   example: 6000.00
- *                 balance_amount:
- *                   type: number
- *                   example: 4000.00
- *                 extra_amount:
- *                   type: number
- *                   example: 0
- *                 payment_status:
- *                   type: integer
- *                   example: 1
  *       404:
  *         description: Invoice not found
  *       500:
  *         description: Internal server error
  */
+
 
 /**
  * @swagger

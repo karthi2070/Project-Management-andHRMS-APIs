@@ -19,7 +19,16 @@ const EmployeeLeaveModel = {
     const [result] = await pool.query(sql);
     return result;
   },
-
+  async getemployeeLeaves(id,is_applicable=0) {
+    let sql = `SELECT * FROM employee_leave_tbl WHERE user_id=? AND is_deleted = 0`;
+    const value =[id];
+    if(is_applicable !== null && is_applicable !== undefined){
+      sql +=` AND is_applicable =?`
+      value.push(is_applicable)
+    }
+    const [result] = await pool.query(sql,value);
+    return result;
+  },
   async getLeaveById(id) {
     const sql = `SELECT * FROM employee_leave_tbl WHERE id = ? AND is_deleted = 0`;
     const [result] = await pool.query(sql, [id]);

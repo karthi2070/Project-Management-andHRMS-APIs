@@ -30,7 +30,7 @@
  *         - pincode
  *       properties:
  *         user_id:
- *           type: number
+ *           type: integer
  *         name:
  *           type: string
  *         phone:

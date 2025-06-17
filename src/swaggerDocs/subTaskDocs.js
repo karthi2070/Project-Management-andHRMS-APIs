@@ -14,6 +14,9 @@
  *       properties:
  *         user_id:
  *           type: integer
+ *         creater_name:
+ *           type: string
+ *           example: admin
  *         sprint_id:
  *           type: integer
  *           example: 2

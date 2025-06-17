@@ -72,7 +72,7 @@ const taskController = {
         try {
             const { id } = req.params;
             const taskData = req.body;
-
+console.log(taskData)
             const result = await taskModel.updateTask(id, taskData);
 
             if (result.affectedRows === 0) {

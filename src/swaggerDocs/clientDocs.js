@@ -14,7 +14,7 @@
  *       type: object
  *       properties:
  *         user_id:
- *           type:number
+ *           type: integer
  *         name:
  *           type: string
  *           description: Client's name

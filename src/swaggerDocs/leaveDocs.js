@@ -147,3 +147,24 @@
  *       200:
  *         description: is_applicable updated
  */
+
+/**
+ * @swagger
+ * /api/v1/employee-leave/get-employee-leave/{id}/{is_applicable}:
+ *   get:
+ *     summary: Get leave record by ID
+ *     tags: [Employee Leave]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: path
+ *         name: is_applicable
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: A single leave record
+ */

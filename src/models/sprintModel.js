@@ -2,21 +2,21 @@ const pool = require("../config/db");
 
 const SprintModel = {
     async createSprint(data) {
-        const { user_id,project_id, name,description, start_date, end_date, status } = data;
-        const query = `INSERT INTO sprint_tbl (user_id,project_id, name,description, start_date, end_date, status) VALUES (?,?,?, ?, ?, ?, ?)`;
-        const values = [user_id,project_id, name,description, start_date, end_date, status];
+        const { user_id,creater_name,project_id, name,description, start_date, end_date, status } = data;
+        const query = `INSERT INTO sprint_tbl (user_id,creater_name,project_id, name,description, start_date, end_date, status) VALUES (?,?,?,?, ?, ?, ?, ?)`;
+        const values = [user_id,creater_name,project_id, name,description, start_date, end_date, status];
         const [result] = await pool.query(query, values);
         return result.insertId;
     },
 
 async updateSprint(id, data) {
-    const {user_id, project_id, name,description,start_date, end_date, status } = data;
+    const {user_id,creater_name, project_id, name,description,start_date, end_date, status } = data;
     const query = `
       UPDATE sprint_tbl 
-      SET user_id=?,project_id = ?, name = ?,description=? , start_date = ?, end_date = ?, status = ?
+      SET user_id=?, creater_name =? , project_id = ?, name = ?,description=? , start_date = ?, end_date = ?, status = ?
       WHERE id = ? AND is_deleted = 0
     `;
-    const values = [user_id,project_id, name,description, start_date, end_date, status, id];
+    const values = [user_id,creater_name,project_id, name,description, start_date, end_date, status, id];
     const [result] = await pool.query(query, values);
     return result.affectedRows;
   },

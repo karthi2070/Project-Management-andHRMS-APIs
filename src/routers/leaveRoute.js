@@ -4,6 +4,7 @@ const EmployeeLeaveController = require("../controllers/leaveController");
 
 router.post("/employee-leave/create-leave", EmployeeLeaveController.create);
 router.get("/employee-leave/get-all-leave", EmployeeLeaveController.getAll);
+router.get("/employee-leave/get-employee-leave/:id/:is_applicable", EmployeeLeaveController.getemployeeLeaves);
 router.get("/employee-leave/get-leave-id/:id", EmployeeLeaveController.getById);
 router.put("/employee-leave/update-leave/:id", EmployeeLeaveController.update);
 router.patch("employee-leave/delete-leave/:id", EmployeeLeaveController.softDelete);

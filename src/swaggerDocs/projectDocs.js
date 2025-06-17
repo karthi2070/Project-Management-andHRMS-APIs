@@ -20,6 +20,12 @@
  *           schema:
  *             type: object
  *             properties:
+ *               user_id:
+ *                 type: integer
+ *                 example: 2
+ *               creater_name:
+ *                 type: string
+ *                 example: admin
  *               name:
  *                 type: string
  *               project_code:
@@ -66,6 +72,8 @@
  *           schema:
  *             type: object
  *             required:
+ *               - user_id
+ *               - creater_name
  *               - name
  *               - project_code
  *               - description
@@ -74,6 +82,12 @@
  *               - end_date
  *               - status
  *             properties:
+ *               user_id:
+ *                 type: integer
+ *                 example: 2
+ *               creater_name:
+ *                 type: string
+ *                 example: admin
  *               name:
  *                 type: string
  *                 example: TVK-PARTY-WEB

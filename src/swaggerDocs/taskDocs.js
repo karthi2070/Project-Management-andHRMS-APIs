@@ -20,6 +20,9 @@
  *         user_id:
  *           type: integer
  *           example: 2
+ *         creater_name:
+ *           type: string
+ *           example: admin
  *         project_code:
  *           type: string
  *           example: "PRJ001"
@@ -118,7 +121,11 @@
  *               project_id:
  *                 type: number
  *               user_id:
- *                 type: number
+ *                 type: integer
+ *                 example: 2
+ *               creater_name:
+ *                 type: string
+ *                 example: admin
  *               project_code:
  *                 type: string
  *               title:
