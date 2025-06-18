@@ -19,9 +19,9 @@
  *             type: object
  *             properties:
  *               user_id:
- *                 type: number
- *               leave_type:
- *                 type: string
+ *                 type: integer
+ *               leave_type_id:
+ *                 type: integer
  *               start_date:
  *                 type: string
  *                 format: date
@@ -84,19 +84,20 @@
  *             properties:
  *               user_id:
  *                 type: number
- *               leave_type:
- *                 type: string
+ *               leave_type_id:
+ *                 type: integer
  *               start_date:
  *                 type: string
  *                 format: date
  *               end_date:
  *                 type: string
  *                 format: date
- *               reson:
+ *               reason:
  *                 type: string
  *     responses:
  *       200:
- *         description: Leave record updated
+ *         description: Leave record updated'start_date', 'date', 'YES', '', NULL, ''
+
  */
 
 /**
@@ -163,4 +164,112 @@
  *     responses:
  *       200:
  *         description: A single leave record
+ */
+
+// leave balance
+
+/**
+ * @swagger
+ * /api/v1/employee-leave/create-leave-balance:
+ *   post:
+ *     summary: Create a new leave balance entry
+ *     tags:
+ *       - Employee Leave
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user_id:
+ *                 type: integer
+ *               leave_type_id:
+ *                 type: integer
+ *               year:
+ *                  type: integer
+ *                  format: int32
+ *                  example: 2025
+ *               allocated_days:
+ *                 type: number
+ *     responses:
+ *       201:
+ *         description: Leave balance created successfully year, allocated_days
+ */
+
+/**
+ * @swagger
+ * /api/v1/employee-leave/get-all-leave-balance:
+ *   get:
+ *     summary: Get all leave balances
+ *     tags:
+ *       - Employee Leave
+ *     responses:
+ *       200:
+ *         description: A list of all leave balances
+ */
+
+/**
+ * @swagger
+ * /api/v1/employee-leave/get-by-userId-leave-balance/{userId}:
+ *   get:
+ *     summary: Get leave balance by user ID
+ *     tags:
+ *       - Employee Leave
+ *     parameters:
+ *       - name: userId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Leave balance for the specified user
+ */
+
+/**
+ * @swagger
+ * /api/v1/employee-leave/update-leave-balance/{id}:
+ *   put:
+ *     summary: Update leave balance by ID
+ *     tags:
+ *       - Employee Leave
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               total_days:
+ *                 type: number
+ *               used_days:
+ *                 type: number
+ *     responses:
+ *       200:
+ *         description: Leave balance updated successfully
+ */
+
+/**
+ * @swagger
+ * /api/v1/employee-leave/summary/{userId}:
+ *   get:
+ *     summary: Get leave summary by user ID
+ *     tags:
+ *       - Employee Leave
+ *     parameters:
+ *       - name: userId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Summary of leave details for the user
  */

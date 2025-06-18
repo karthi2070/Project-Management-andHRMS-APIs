@@ -58,12 +58,59 @@ const EmployeeLeaveController = {
     try {
       const {is_applicable,reason}=req.body
       
-      const result = await EmployeeLeaveModel.updateIsApplicable(req.params.id,is_applicable,reason);
+      const result = await EmployeeLeaveModel.updateLeaveRequestStatus(req.params.id,is_applicable,reason);
       res.json({ message: "is_applicable updated", result });
     } catch (err) {
       next(err);
     }
+  },
+  // leame balance tracking
+  async createLeaveBalance(req, res, next) {
+    try {
+      const result = await EmployeeLeaveModel.createLeaveBalance(req.body);
+      res.status(201).json({ success: true, data: result });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async getAll(req, res, next) {
+    try {
+      const result = await EmployeeLeaveModel.getAllLeaveBalances();
+      res.status(200).json({ success: true, data: result });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async getLeaveByUserId(req, res, next) {
+    try {
+      const result = await EmployeeLeaveModel.getLeaveByUserId(req.params.userId);
+      res.status(200).json({ success: true, data: result });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async updateLeaveBalance(req, res, next) {
+    try {
+      const result = await EmployeeLeaveModel.updateLeaveBalanceById(req.params.id, req.body);
+      res.status(200).json({ success: true, data: result });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async getLeaveSummary(req, res, next) {
+    try {
+      const result = await EmployeeLeaveModel.getLeaveSummaryByUser(req.params.userId);
+      res.status(200).json({ success: true, data: result });
+    } catch (err) {
+      next(err);
+    }
   }
+
+
 };
 
 module.exports = EmployeeLeaveController;
