@@ -138,7 +138,13 @@
  *     tags: [Attendance]
  *     parameters:
  *       - in: query
- *         name: date
+ *         name: start_date
+ *         schema:
+ *           type: string
+ *           format: date
+ *         required: true
+ *       - in: query
+ *         name: end_date
  *         schema:
  *           type: string
  *           format: date

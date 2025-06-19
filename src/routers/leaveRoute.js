@@ -13,7 +13,7 @@ router.patch("/employee-leave/:id/is_applicable", EmployeeLeaveController.update
 // leave balance tracking
 
 router.post("/employee-leave/create-leave-balance", EmployeeLeaveController.createLeaveBalance);
-router.get("/employee-leave/get-all-leave-balance", EmployeeLeaveController.getAll);
+router.get("/employee-leave/get-all-leave-balance", EmployeeLeaveController.getAllLeaveBalances);
 router.get("/employee-leave/get-by-userId-leave-balance/:userId", EmployeeLeaveController.getLeaveByUserId);
 router.put("/employee-leave/update-leave-balance/:id", EmployeeLeaveController.updateLeaveBalance);
 router.get("/employee-leave/summary/:userId", EmployeeLeaveController.getLeaveSummary);

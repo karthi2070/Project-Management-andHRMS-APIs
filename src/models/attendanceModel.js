@@ -30,14 +30,14 @@ exports.getAttendanceById = async (id) => {
 };
 
 exports.getAttendanceByEmployeeId = async (id) => {
-    const sql =`SELECT * FROM employee_attendance_tbl WHERE employee_id = ?`
+    const sql =`SELECT * FROM employee_attendance_tbl WHERE user_id = ?`
     const [rows] = await db.execute(sql, [id]);
     return rows;
 };
-exports.getAttendanceByDate = async (date) => {
+exports.getAttendanceByDate = async (strat_date,end_date) => {
     
-       const sql = `SELECT * FROM employee_attendance_tbl WHERE DATE(date) = ?`
-        const [rows] = await db.execute(sql,[date]
+       const sql = `SELECT * FROM employee_attendance_tbl WHERE date between  ? AND ?`
+        const [rows] = await db.execute(sql,[strat_date,end_date]
     );
     return rows;
 };

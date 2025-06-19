@@ -74,7 +74,7 @@ const EmployeeLeaveController = {
     }
   },
 
-  async getAll(req, res, next) {
+  async getAllLeaveBalances(req, res, next) {
     try {
       const result = await EmployeeLeaveModel.getAllLeaveBalances();
       res.status(200).json({ success: true, data: result });
