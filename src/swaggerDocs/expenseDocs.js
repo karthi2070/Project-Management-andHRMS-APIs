@@ -19,9 +19,8 @@
  *           type: string
  *           format: date
  *           description: Expense date
- *         category:
- *           type: string
- *           description: Expense category (e.g., food, travel)
+ *         category_id:
+ *           type: integer
  *         amount:
  *           type: number
  *           format: float
@@ -129,9 +128,9 @@
  *     tags: [Expense]
  *     parameters:
  *       - in: query
- *         name: category
+ *         name: category_id
  *         schema:
- *           type: string
+ *           type: integer
  *       - in: query
  *         name: startDate
  *         schema:

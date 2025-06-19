@@ -77,7 +77,60 @@ const ExpenseController = {
     console.error("Error filtering expenses:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
+    },
+
+    //expence status id
+  async create(req, res, next) {
+    try {
+      const { status_name } = req.body;
+      const result = await ExpenseModel.create(status_name);
+      res.status(201).json(result);
+    } catch (err) {
+      next(err);
     }
+  },
+
+  async update(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { status_name } = req.body;
+      await ExpenseModel.update(id, status_name);
+      res.json({ message: 'Status updated' });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async getAll(req, res, next) {
+    try {
+      const statuses = await ExpenseModel.getAll();
+      res.json(statuses);
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async getById(req, res, next) {
+    try {
+      const { id } = req.params;
+      const status = await ExpenseModel.getById(id);
+      res.json(status);
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async softDelete(req, res, next) {
+    try {
+      const { id } = req.params;
+      await ExpenseModel.softDelete(id);
+      res.json({ message: 'Status soft-deleted' });
+    } catch (err) {
+      next(err);
+    }
+  }
 };
+
+
 
 module.exports = ExpenseController;
