@@ -11,7 +11,7 @@ function normalizeDateOnly(value) {
 }
 
 
-async function logIfChanged({ field, oldValue, newValue, taskId, userId, userName }) {
+async function logIfChanged({ field, oldValue, newValue, taskId=null, subTaskId = null, userId, userName }) {
   const isDateField = field === 'due_date';
 
   const normalizedOld = isDateField
@@ -31,10 +31,10 @@ async function logIfChanged({ field, oldValue, newValue, taskId, userId, userNam
         task_id, sub_task_id, user_id, user_name, action_type,
         old_value, new_value, updated_by, created_at
       )
-      VALUES (?, NULL, ?, ?, ?, ?, ?, ?, NOW())`;
-
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())`;
     await db.query(logQuery, [
       taskId,
+      subTaskId,
       userId,
       userName,
       actionType,
@@ -43,16 +43,16 @@ async function logIfChanged({ field, oldValue, newValue, taskId, userId, userNam
       `${userName} changed ${label} from ${normalizedOld} to ${normalizedNew}`
     ]);
   }
-  console.log('[due_date check]', {
-  oldRaw: oldValue,
-  newRaw: newValue,
-  normalizedOld,
-  normalizedNew
-});
+//   console.log('[due_date check]', {
+//   oldRaw: oldValue,
+//   newRaw: newValue,
+//   normalizedOld,
+//   normalizedNew
+// });
 }
 
 
-async function logTaskFieldChanges({ taskId, userId, userName, oldData, newData }) {
+async function logTaskFieldChanges({ taskId=null, subTaskId = null, userId, userName, oldData, newData }) {
     const trackedFields = ['status', 'assignee', 'due_date', 'priority'];
 
     for (const field of trackedFields) {
@@ -61,10 +61,11 @@ async function logTaskFieldChanges({ taskId, userId, userName, oldData, newData 
             oldValue: oldData[field],
             newValue: newData[field],
             taskId,
+            subTaskId,
             userId,
             userName
         });
     }
 }
 
-module.exports = {logIfChanged,logTaskFieldChanges};
+module.exports = {logTaskFieldChanges};
