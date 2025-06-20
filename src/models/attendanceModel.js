@@ -1,48 +1,48 @@
 const db = require('../config/db');
 
-exports.createAttendance = async (data) => {
+const AttendanceModel={
+async createAttendance (data) {
     const { user_id,employee_id,employee_name, department,date, login, logout } = data;
    
        const sql= `INSERT INTO employee_attendance_tbl (user_id,employee_id, employee_name, department,date, login, logout) VALUES (?, ?,?,?,?, ?, ?)`
        const [result] = await db.execute(sql,[user_id,employee_id,employee_name, department,date, login, logout]
     );
     return result;
-};
+},
 
-exports.updateAttendance = async (id, data) => {
+ async updateAttendance(id, data)  {
     const {user_id, employee_id,employee_name, department,date, login, logout } = data;
     
         const sql=`UPDATE employee_attendance_tbl SET user_id=?, employee_id = ? , employee_name = ?, department = ?,date =?, login = ?, logout = ? WHERE id = ?`
        const [result] = await db.execute(sql, [user_id,employee_id,employee_name, department,date, login, logout, id]
     );
     return result;
-};
+},
 
-exports.getAllAttendance = async () => {
+ async getAllAttendance ()  {
     const sql =`SELECT * FROM employee_attendance_tbl`
     const [rows] = await db.execute(sql);
     return rows;
-};
-exports.getAttendanceById = async (id) => {
+},
+ async getAttendanceById(id)  {
     const sql = `SELECT * FROM employee_attendance_tbl WHERE id = ?`;
     const [rows] = await db.execute(sql, [id]);
     return rows;
-};
+},
 
-exports.getAttendanceByEmployeeId = async (id) => {
+async getAttendanceByUserId (id) {
     const sql =`SELECT * FROM employee_attendance_tbl WHERE user_id = ?`
     const [rows] = await db.execute(sql, [id]);
     return rows;
-};
-exports.getAttendanceByDate = async (strat_date,end_date) => {
+},
+async getAttendanceByDate (strat_date,end_date) {
     
        const sql = `SELECT * FROM employee_attendance_tbl WHERE date between  ? AND ?`
         const [rows] = await db.execute(sql,[strat_date,end_date]
     );
     return rows;
-};
-
-exports.getTotalWorkingDays = async () => {
+},
+async getTotalWorkingDays  ()  {
   const query = `
     SELECT 
       employee_id,
@@ -60,4 +60,13 @@ exports.getTotalWorkingDays = async () => {
     const [rows] = await db.query(query);
     return rows
 
+},
+async getPresentEmployeeIds(date){
+        const query =`SELECT DISTINCT user_id FROM employee_attendance_tbl WHERE date= ? `
+
+        const [rows]= await db.query(query,[date])
+        return rows.map (r => r.user_id);
+        
+}
 };
+module.exports=AttendanceModel
