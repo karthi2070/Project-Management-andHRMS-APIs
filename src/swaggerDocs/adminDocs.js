@@ -55,33 +55,16 @@
  *           example: Detailed error
  */
 
-// /**
-//  * @swagger
-//  * /admin/users:
-//  *   post:
-//  *     summary: Create a new user
-//  *     description: Creates a new user in the system. Requires admin privileges and JWT authentication.
-//  *     tags: [User Management]
-//  *     security:
-//  *       - bearerAuth: []
-//  *     requestBody:
-//  *       required: true
-//  *       content:
-//  *         application/json:
-//  *           schema:
-//  *             $ref: '#/components/schemas/User'
-//  *     responses:
-//  *       200:
-//  *         description: User created successfully
-//  *       400:
-//  *         description: Invalid input
-//  *       401:
-//  *         description: Unauthorized (invalid or missing token)
-//  *       403:
-//  *         description: Forbidden (non-admin user)
-//  *       500:
-//  *         description: Internal server error
-//  */
+/**
+ * @swagger
+ * /admin/dashboard:
+ *   get:
+ *     summary: Get all counts
+ *     tags: [Permission Management]
+ *     responses:
+ *       200:
+ *         description: List of all counts
+ */
 
 /**
  * @swagger

@@ -5,7 +5,6 @@ const ClientModel = {
       async getClientCount() {
         const sql = `SELECT COUNT(*) AS count FROM client_tbl where is_deleted =0 `;
         const [rows] = await pool.query(sql);
-        console.log(rows[0].count)
         return rows[0].count;
     },
     async createClient(data) {

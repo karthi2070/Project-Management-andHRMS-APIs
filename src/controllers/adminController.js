@@ -5,13 +5,12 @@ const employeeModel =require('../models/empolyeeModel')
 const projectModel =require ('../models/projectModel')
 
 const adminController = {
-allcount :async (req,res,next)=>{
+ dashboardCount :async (req,res,next)=>{
   try{
-    const [clientCount,employeeCount,projectCount] = await([ clientModel.getClientCount(),
-      employeeModel.getEmployeeCount(),projectModel.projectCount()
-
-    ])
-    return {clientCount,employeeCount,projectCount}
+    const [clientCount,employeeCount,projectCount] = await Promise.all([ clientModel.getClientCount(),
+      employeeModel.getEmployeeCount(),projectModel.projectCount() ])
+      console.log({client: clientCount,employee:employeeCount,project:projectCount})
+    res.status(200).json({client: clientCount,employee:employeeCount,project:projectCount})
 
   }catch(error){
     next(error)
