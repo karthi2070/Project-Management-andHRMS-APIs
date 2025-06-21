@@ -6,7 +6,7 @@ require('../src/config/passport.js');
 const errorHandler = require('./middleware/errorHandler');
 const passport = require('passport');
 const app = express();
-app.use(cors({ origin: 'http://localhost:5173',credentials: true}));
+app.use(cors());
 app.use(express.json());
 app.use(passport.initialize());
 app.use(express.urlencoded({ extended: true })); // Middleware to parse URL-encoded data    
