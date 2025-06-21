@@ -83,7 +83,7 @@
  
  /**
   * @swagger
-  * /n1suite/api/v1/sub-tasks/create-task:
+  * /api/v1/sub-tasks/create-task:
   *   post:
   *     summary: Create a new task
   *     tags: [Sub Tasks]
@@ -102,7 +102,7 @@
  
  /**
   * @swagger
-  * /n1suite/api/v1/sub-tasks/sprint-tasks/{id}:
+  * /api/v1/sub-tasks/sprint-tasks/{id}:
   *   get:
   *     summary: Get a task by sprintId
   *     tags: [Sub Tasks]
@@ -122,7 +122,7 @@
  
  /**
   * @swagger
-  * /n1suite/api/v1/sub-tasks/get-subtasks-id/{id}:
+  * /api/v1/sub-tasks/get-subtasks-id/{id}:
   *   get:
   *     summary: Get a task by ID
   *     tags: [Sub Tasks]
@@ -142,7 +142,7 @@
 
   /**
   * @swagger
-  * /n1suite/api/v1/sub-tasks/get-subtasks-id/{parent_id}/{id}:
+  * /api/v1/sub-tasks/get-subtasks-id/{parent_id}/{id}:
   *   get:
   *     summary: Get sub-tasks for a parent task
   *     tags: [Sub Tasks]
@@ -165,7 +165,7 @@
   */
  /**
   * @swagger
-  * /n1suite/api/v1/sub-tasks/update-task/{id}:
+  * /api/v1/sub-tasks/update-task/{id}:
   *   put:
   *     summary: Update a task by ID
   *     tags: [Sub Tasks]
@@ -192,7 +192,7 @@
  
  /**
   * @swagger
-  * /n1suite/api/v1/sub-tasks/delete-task/{id}:
+  * /api/v1/sub-tasks/delete-task/{id}:
   *   patch:
   *     summary: Soft delete a task by ID
   *     tags: [Sub Tasks]

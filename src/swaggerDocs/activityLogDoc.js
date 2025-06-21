@@ -6,7 +6,7 @@
  */
 /**
  * @swagger
- * /n1suite/api/v1/activity-log/task/{taskId}:
+ * /api/v1/activity-log/task/{taskId}:
  *   get:
  *     summary: Get activity logs for a task
  *     tags: [activity logs]
@@ -23,7 +23,7 @@
 
 /**
  * @swagger
- * /n1suite/api/v1/activity-log/subtask/{id}:
+ * /api/v1/activity-log/subtask/{id}:
  *   get:
  *     summary: Get activity logs for sub task
  *     tags: [activity logs]
@@ -39,7 +39,7 @@
  */
 /**
  * @swagger
- * /n1suite/api/v1/activity-log/{logId}/comments:
+ * /api/v1/activity-log/{logId}/comments:
  *   put:
  *     summary: Update comments for an activity log entry
  *     tags: [activity logs]

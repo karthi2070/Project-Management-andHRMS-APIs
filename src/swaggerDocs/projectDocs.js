@@ -9,7 +9,7 @@
 
 /**
  * @swagger
- * /n1suite/api/v1/projects/create-project:
+ * /api/v1/projects/create-project:
  *   post:
  *     summary: Create a new project
  *     tags: [Projects]
@@ -53,7 +53,7 @@
 
 /**
  * @swagger
- * /n1suite/api/v1/projects/update-project/{id}:
+ * /api/v1/projects/update-project/{id}:
  *   put:
  *     summary: Update an existing project by ID
  *     tags: [Projects]
@@ -135,7 +135,7 @@
 
 /**
  * @swagger
- * /n1suite/api/v1/projects/get-all-projects:
+ * /api/v1/projects/get-all-projects:
  *   get:
  *     summary: Get all projects
  *     tags: [Projects]
@@ -149,7 +149,7 @@
 
 /**
  * @swagger
- * /n1suite/api/v1/projects/get-by-id/{project_id}:
+ * /api/v1/projects/get-by-id/{project_id}:
  *   get:
  *     summary: Get a project by ID
  *     tags: [Projects]

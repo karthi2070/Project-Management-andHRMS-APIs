@@ -35,7 +35,7 @@
 
 /**
  * @swagger
- * /n1suite/api/v1/expense/create-expense :
+ * /api/v1/expense/create-expense :
  *   post:
  *     summary: Create a new expense
  *     tags: [Expense]
@@ -52,7 +52,7 @@
 
 /**
  * @swagger
- * /n1suite/api/v1/expense/get-expense-list :
+ * /api/v1/expense/get-expense-list :
  *   get:
  *     summary: Get all expenses
  *     tags: [Expense]
@@ -63,7 +63,7 @@
 
 /**
  * @swagger
- * /n1suite/api/v1/expense/get-expense-id/{id}:
+ * /api/v1/expense/get-expense-id/{id}:
  *   get:
  *     summary: Get an expense by ID
  *     tags: [Expense]
@@ -82,7 +82,7 @@
 
 /**
  * @swagger
- * /n1suite/api/v1/expense/update-expense/{id}:
+ * /api/v1/expense/update-expense/{id}:
  *   put:
  *     summary: Update an expense
  *     tags: [Expense]
@@ -105,7 +105,7 @@
 
 /**
  * @swagger
- * /n1suite/api/v1/expense/delete-expense/{id}:
+ * /api/v1/expense/delete-expense/{id}:
  *   patch:
  *     summary: Soft delete an expense
  *     tags: [Expense]
@@ -122,7 +122,7 @@
 
 /**
  * @swagger
- * /n1suite/api/v1/expense/get-filtered-expenses :
+ * /api/v1/expense/get-filtered-expenses :
  *   get:
  *     summary: Get expenses filtered dynamically
  *     tags: [Expense]
@@ -164,7 +164,7 @@
 
 /**
  * @swagger
- * /n1suite/api/v1/expense/get-expens :
+ * /api/v1/expense/get-expens :
  *   get:
  *     summary: Get expenses filtered dynamically
  *     tags: [Expense]

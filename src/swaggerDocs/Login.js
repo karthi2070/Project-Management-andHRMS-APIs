@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /n1suite/auth/login:
+ * /auth/login:
  *   post:
  *     summary: User login with email and password
  *     description: Authenticates a user and returns a JWT token with user details.
@@ -55,7 +55,7 @@
 
 /**
  * @swagger
- * /n1suite/auth/create:
+ * /auth/create:
  *   post:
  *     summary: Register a new user
  *     description: Creates a user with email, password, and role ID.
@@ -92,7 +92,7 @@
 
 /**
  * @swagger
- * /n1suite/auth/user/{email}:
+ * /auth/user/{email}:
  *   get:
  *     summary: Get user by email
  *     description: Retrieves user details for the specified email.
@@ -132,7 +132,7 @@
 
 /**
  * @swagger
- * /n1suite/admin/users:
+ * /admin/users:
  *   post:
  *     summary: Create a new user
  *     description: Creates a new user in the system. Requires admin privileges and JWT authentication.
@@ -189,7 +189,7 @@
 
 /**
  * @swagger
- * /n1suite/auth/update-user:
+ * /auth/update-user:
  *   put:
  *     summary: Update user information
  *     description: Updates the authenticated user's email and/or role ID.

@@ -8,7 +8,7 @@
 
 /**
  * @swagger
- * /n1suite/api/v1/holidays/create-holiday:
+ * /api/v1/holidays/create-holiday:
  *   post:
  *     summary: Create a new holiday
  *     tags: [Holidays]
@@ -42,7 +42,7 @@
 
 /**
  * @swagger
- * /n1suite/api/v1/holidays/get-all-holiday:
+ * /api/v1/holidays/get-all-holiday:
  *   get:
  *     summary: Get all holidays
  *     tags: [Holidays]
@@ -55,7 +55,7 @@
 
 /**
  * @swagger
- * /n1suite/api/v1/holidays/get-by-holiday/{id}:
+ * /api/v1/holidays/get-by-holiday/{id}:
  *   get:
  *     summary: Get holiday by ID
  *     tags: [Holidays]
@@ -77,7 +77,7 @@
 
 /**
  * @swagger
- * /n1suite/api/v1/holidays/update-holiday/{id}:
+ * /api/v1/holidays/update-holiday/{id}:
  *   put:
  *     summary: Update a holiday
  *     tags: [Holidays]
@@ -115,7 +115,7 @@
 
 /**
  * @swagger
- * /n1suite/api/v1/holidays/delete-holiday/{id}:
+ * /api/v1/holidays/delete-holiday/{id}:
  *   patch:
  *     summary: Delete a holiday
  *     tags: [Holidays]

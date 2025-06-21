@@ -36,7 +36,7 @@
 
 /**
  * @swagger
- * /n1suite/api/v1/attendance/create-attendance:
+ * /api/v1/attendance/create-attendance:
  *   post:
  *     summary: Create a new attendance record
  *     tags: [Attendance]
@@ -53,7 +53,7 @@
 
 /**
  * @swagger
- * /n1suite/api/v1/attendance/get-attendance-list :
+ * /api/v1/attendance/get-attendance-list :
  *   get:
  *     summary: Get all attendance records
  *     tags: [Attendance]
@@ -64,7 +64,7 @@
 
 /**
  * @swagger
- * /n1suite/api/v1/attendance/get-attendance-id/{id}:
+ * /api/v1/attendance/get-attendance-id/{id}:
  *   get:
  *     summary: Get attendance by ID
  *     tags: [Attendance]
@@ -84,7 +84,7 @@
 
 /**
  * @swagger
- * /n1suite/api/v1/attendance/get-attendance-user-id/{userId}:
+ * /api/v1/attendance/get-attendance-user-id/{userId}:
  *   get:
  *     summary: Get attendance by employee id
  *     tags: [Attendance]
@@ -104,7 +104,7 @@
 
 /**
  * @swagger
- * /n1suite/api/v1/attendance/update-attendance/{id}:
+ * /api/v1/attendance/update-attendance/{id}:
  *   put:
  *     summary: Update attendance by ID
  *     tags: [Attendance]
@@ -131,7 +131,7 @@
 
 /**
  * @swagger
- * /n1suite/api/v1/attendance/attendance-summary:
+ * /api/v1/attendance/attendance-summary:
  *   get:
  *     summary: Get attendance records by login date
  *     tags: [Attendance]
@@ -151,7 +151,7 @@
 
 /**
  * @swagger
- * /n1suite/api/v1/attendance/filter-by-date:
+ * /api/v1/attendance/filter-by-date:
  *   get:
  *     summary: Get attendance records by login date
  *     tags: [Attendance]
@@ -178,7 +178,7 @@
 
 /**
  * @swagger
- * /n1suite/api/v1/attendance/working-days-count:
+ * /api/v1/attendance/working-days-count:
  *   get:
  *     summary: Get total working days per employee
  *     tags: [Attendance]
