@@ -183,11 +183,3 @@ const EmployeeController = {
 };
 
 module.exports = EmployeeController;
-
-// const BankModel = require('../models/bankModel');
-
-// const BankController = {
-    
-// };
-
-// module.exports = BankController;
