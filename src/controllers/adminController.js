@@ -1,8 +1,23 @@
 const User = require('../models/userModel');
 const Permission = require('../models/permissionModel');
+const clientModel =require('../models/clientModel')
+const employeeModel =require('../models/empolyeeModel')
+const projectModel =require ('../models/projectModel')
 
 const adminController = {
-createUserAdmin: async (req, res, next) => {
+ dashboardCount :async (req,res,next)=>{
+  try{
+    const [clientCount,employeeCount,projectCount] = await Promise.all([ clientModel.getClientCount(),
+      employeeModel.getEmployeeCount(),projectModel.projectCount() ])
+      console.log({client: clientCount,employee:employeeCount,project:projectCount})
+    res.status(200).json({client: clientCount,employee:employeeCount,project:projectCount})
+
+  }catch(error){
+    next(error)
+  }
+
+},
+createUserAdmin : async (req, res, next) => {
     try {
       const { email, role_id } = req.body;
       console.log('Admin create user:', { email, role_id });

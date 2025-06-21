@@ -1,6 +1,12 @@
 const pool = require("../config/db");
 
+const projectCount =async ()=>{
+        const  sql =`select COUNT(*) AS count from project_tbl `
+        const [result] =await pool.query(sql)
+        return result[0].count;
+}
 const createProject = async (data) => {
+
 const { user_id,creater_name,name,project_code ,description,due_date, start_date, end_date,sprints_count, status } = data;
         const query = `INSERT INTO project_tbl (user_id,creater_name,name,project_code, description,due_date, start_date, end_date, sprints_count, status) 
         VALUES ( ?, ?, ?, ?,?,?,?,?, ?, ?)`;
@@ -44,4 +50,4 @@ const deleteProject =async(id)=>{
         return rows[0];      
 }
 
-module.exports = { createProject, updateProject, getProjects, getProjectById };
+module.exports = { createProject, updateProject, getProjects, getProjectById,deleteProject,projectCount };

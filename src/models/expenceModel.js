@@ -1,117 +1,109 @@
 const pool = require('../config/db');
 
 const ExpenseModel = {
-    async createExpense(data) {
-        try {
-            const sql = `INSERT INTO expense_tbl (user_id,date, category_id, amount, bill_img, description) 
+  async createExpense(data) {
+    try {
+      const sql = `INSERT INTO expense_tbl (user_id,date, category_id, amount, bill_img, description) 
                          VALUES (?, ?, ?, ?, ?,?)`;
-            const [result] = await pool.query(sql, Object.values(data));
-            return { id: result.insertId, ...data };
-        } catch (error) {
-            throw error;
-        }
-    },
+      const [result] = await pool.query(sql, Object.values(data));
+      return { id: result.insertId, ...data };
+    } catch (error) {
+      throw error;
+    }
+  },
 
-    async getAllExpenses() {
-            const sql = `SELECT * FROM expense_tbl WHERE is_deleted = 0`;
-            const [expenses] = await pool.query(sql);
+  async getAllExpenses() {
+    const sql = `SELECT * FROM expense_tbl WHERE is_deleted = 0`;
+    const [expenses] = await pool.query(sql);
 
-        if (expenses.length === 0) return null;
+    if (expenses.length === 0) return null;
 
-        const formatedresponce =(expenses).map((expense) => {
+    const formatedresponce = (expenses).map((expense) => {
 
-        const dateObj = new Date(expense.date);
-        const day = String(dateObj.getDate()).padStart(2, '0');
-        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-        const year = dateObj.getFullYear();
-        expense.date = `${day}-${month}-${year}`;
+      const dateObj = new Date(expense.date);
+      const day = String(dateObj.getDate()).padStart(2, '0');
+      const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const year = dateObj.getFullYear();
+      expense.date = `${day}-${month}-${year}`;
 
-        return expense;
-        })  
-        return formatedresponce
-    },
+      return expense;
+    })
+    return formatedresponce
+  },
 
-    async getExpenseById(id) {
-        const sql = `SELECT * FROM expense_tbl WHERE id = ? AND is_deleted = 0`;
-        const [expenses] = await pool.query(sql, [id]);
+  async getExpenseById(id) {
+    const sql = `SELECT * FROM expense_tbl WHERE id = ? AND is_deleted = 0`;
+    const [expenses] = await pool.query(sql, [id]);
 
-        if (expenses.length === 0) return null;
+    if (expenses.length === 0) return null;
 
-        const expense = expenses[0];
+    const expense = expenses[0];
 
-        const dateObj = new Date(expense.date);
-        const day = String(dateObj.getDate()).padStart(2, '0');
-        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-        const year = dateObj.getFullYear();
-        expense.date = `${day}-${month}-${year}`;
+    const dateObj = new Date(expense.date);
+    const day = String(dateObj.getDate()).padStart(2, '0');
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const year = dateObj.getFullYear();
+    expense.date = `${day}-${month}-${year}`;
 
-        return expense;
+    return expense;
 
-    },
+  },
 
-    async updateExpense(id, data) {
-        try {
-            const sql = `UPDATE expense_tbl SET user_id=?,date=?, category_id=?, amount=?, bill_img=?, description=? 
+  async updateExpense(id, data) {
+    try {
+      const sql = `UPDATE expense_tbl SET user_id=?,date=?, category_id=?, amount=?, bill_img=?, description=? 
                          WHERE id = ? AND is_deleted = 0`;
-            await pool.query(sql, [...Object.values(data), id]);
-            return { id, ...data };
-        } catch (error) {
-            throw error;
-        }
-    },
+      await pool.query(sql, [...Object.values(data), id]);
+      return { id, ...data };
+    } catch (error) {
+      throw error;
+    }
+  },
 
-    async softDeleteExpense(id) {
-        try {
-            const sql = `UPDATE expense_tbl SET is_deleted = 1 WHERE id = ?`;
-            await pool.query(sql, [id]);
-            return { id, deleted: true };
-        } catch (error) {
-            throw error;
-        }
-    },
-    async getFilteredExpenses(filters) {
-        let sql = `SELECT * FROM expense_tbl WHERE is_deleted = 0`;
-        const queryParams = [];
+  async softDeleteExpense(id) {
+    try {
+      const sql = `UPDATE expense_tbl SET is_deleted = 1 WHERE id = ?`;
+      await pool.query(sql, [id]);
+      return { id, deleted: true };
+    } catch (error) {
+      throw error;
+    }
+  }, 
 
-        if (filters.category) {
-            sql += ` AND category_id = ? `;;
-            queryParams.push(filters.category);
-        }
-        if (filters.startDate && filters.endDate) {
-            sql += ` AND date BETWEEN ? AND ?`;
-            queryParams.push(filters.startDate, filters.endDate);
-        }
-        if (filters.minAmount && filters.maxAmount) {
-            sql += ` AND amount BETWEEN ? AND ?`;
-            queryParams.push(filters.minAmount, filters.maxAmount);
-        }
+async getFilteredExpenses(startDate, endDate, categoryId) {
+  console.log(startDate, endDate, categoryId);
 
-        const [expenses] = await pool.query(sql, queryParams);
-        if (expenses.length === 0) return null;
+  let categoryName = null;
 
-        const formatedresponce =(expenses).map((expense) => {
+  if (categoryId) {
+    const category = await this.getById(categoryId);
+    if (!category) {
+      // Category ID not found
+      return {
+        filtered_expenses: [],
+        total_expense: 0,
+        average_expense: 0,
+        highest_expense_category: null,
+        highest_expense_amount: 0
+      };
+    }
+    categoryName = category.name;
+  }
 
-        const dateObj = new Date(expense.date);
-        const day = String(dateObj.getDate()).padStart(2, '0');
-        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-        const year = dateObj.getFullYear();
-        expense.date = `${day}-${month}-${year}`;
+  console.log('Resolved Category Name:', categoryName);
 
-        return expense;
-        })  
-        return formatedresponce
-    
+  let filterQuery = `
+    SELECT e.*, c.name AS category_name
+    FROM expense_tbl e
+    JOIN expense_category_tbl c ON e.category_id = c.id
+    WHERE e.date BETWEEN ? AND ?
+  `;
 
-    },
-
-    async getFilteredExpenses (startDate, endDate, category)  {
-
-  let filterQuery = `SELECT * FROM expense_tbl WHERE date BETWEEN ? AND ?`;
   const params = [startDate, endDate];
 
-  if (category) {
-    filterQuery += ` AND category_id = ?`;
-    params.push(category);
+  if (categoryId) {
+    filterQuery += ` AND e.category_id = ?`;
+    params.push(categoryId);
   }
 
   const [expenses] = await pool.query(filterQuery, params);
@@ -123,11 +115,12 @@ const ExpenseModel = {
   let highestCategory = null;
   let highestAmount = 0;
 
-  if (!category) {
-    // Group by category and find highest
+  if (!categoryId) {
+    // Group by category_name and find highest
     const categoryTotals = {};
     expenses.forEach(exp => {
-      categoryTotals[exp.category] = (categoryTotals[exp.category] || 0) + parseFloat(exp.amount);
+      categoryTotals[exp.category_name] =
+        (categoryTotals[exp.category_name] || 0) + parseFloat(exp.amount);
     });
 
     for (const [cat, amt] of Object.entries(categoryTotals)) {
@@ -137,27 +130,30 @@ const ExpenseModel = {
       }
     }
   } else {
-    // Category is provided, just return total amount of that category
-    highestCategory = category;
+    highestCategory = categoryName;
     highestAmount = totalExpense;
   }
 
   return {
     filtered_expenses: expenses,
+    category_name:categoryName,
     total_expense: totalExpense,
     average_expense: averageExpense,
     highest_expense_category: highestCategory,
     highest_expense_amount: highestAmount
   };
-    },
- 
-
-
-//expences status
-
+},
+  //expences status
+async getById(id) {
+  const [rows] = await pool.execute(
+    'SELECT * FROM expense_category_tbl WHERE id = ? AND is_deleted = 0',
+    [id]
+  );
+  return rows[0]; // this returns a single object
+},
   async create(status_name) {
     const [result] = await pool.execute(
-      'INSERT INTO expense_status_tbl (status_name) VALUES (?)',
+      'INSERT INTO expense_category_tbl (status_name) VALUES (?)',
       [status_name]
     );
     return { id: result.insertId, status_name };
@@ -165,29 +161,22 @@ const ExpenseModel = {
 
   async update(id, status_name) {
     await pool.execute(
-      'UPDATE expense_status_tbl SET status_name = ? WHERE id = ? AND is_deleted = 0',
+      'UPDATE expense_category_tbl SET status_name = ? WHERE id = ? AND is_deleted = 0',
       [status_name, id]
     );
   },
 
   async getAll() {
     const [rows] = await pool.execute(
-      'SELECT * FROM expense_status_tbl WHERE is_deleted = 0'
+      'SELECT * FROM expense_category_tbl WHERE is_deleted = 0'
     );
     return rows;
   },
 
-  async getById(id) {
-    const [rows] = await pool.execute(
-      'SELECT * FROM expense_status_tbl WHERE id = ? AND is_deleted = 0',
-      [id]
-    );
-    return rows[0];
-  },
 
   async softDelete(id) {
     await pool.execute(
-      'UPDATE expense_status_tbl SET is_deleted = 1 WHERE id = ?',
+      'UPDATE expense_category_tbl SET is_deleted = 1 WHERE id = ?',
       [id]
     );
   }

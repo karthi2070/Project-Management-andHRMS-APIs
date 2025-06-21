@@ -86,13 +86,13 @@
 
 /**
  * @swagger
- * /api/v1/attendance/get-attendance-emp-id/{id}:
+ * /api/v1/attendance/get-attendance-user-id/{userId}:
  *   get:
  *     summary: Get attendance by employee id
  *     tags: [Attendance]
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: userId
  *         required: true
  *         schema:
  *           type: integer
@@ -128,6 +128,27 @@
  *         description: Attendance updated successfully
  *       404:
  *         description: Record not found
+ */
+
+
+/**
+ * @swagger
+ * /api/v1/attendance/attendance-summary:
+ *   get:
+ *     summary: Get attendance records by login date
+ *     tags: [Attendance]
+ *     parameters:
+ *       - in: query
+ *         name: date
+ *         schema:
+ *           type: string
+ *           format: date
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Attendance records on the given date
+ *       404:
+ *         description: No records found
  */
 
 /**
