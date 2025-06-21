@@ -57,7 +57,7 @@
 
 /**
  * @swagger
- * /admin/dashboard:
+ * /n1suite/admin/dashboard:
  *   get:
  *     summary: Get all counts
  *     tags: [Permission Management]
@@ -68,7 +68,7 @@
 
 /**
  * @swagger
- * /admin/permissions:
+ * /n1suite/admin/permissions:
  *   post:
  *     summary: Set a new permission
  *     description: Creates a new permission for a role to access a module. Requires admin privileges and JWT authentication.
@@ -96,7 +96,7 @@
 
 /**
  * @swagger
- * /admin/permissions:
+ * /n1suite/admin/permissions:
  *   put:
  *     summary: Update an existing permission
  *     description: Updates the access status of an existing permission for a role and module. Requires admin privileges and JWT authentication.
@@ -124,7 +124,7 @@
 
 /**
  * @swagger
- * /auth/login:
+ * /n1suite/auth/login:
  *   post:
  *     summary: User login with email and password
  *     description: Authenticates a user with email and password, returning a JWT token. Role-based access restrictions apply to subsequent endpoints.

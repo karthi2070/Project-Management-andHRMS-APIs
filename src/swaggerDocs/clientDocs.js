@@ -54,7 +54,7 @@
 
 /**
  * @swagger
- * /api/v1/client/create-client:
+ * /n1suite/api/v1/client/create-client:
  *   post:
  *     summary: Create a new client
  *     tags: [Client]
@@ -71,7 +71,7 @@
 
 /**
  * @swagger
- * /api/v1/client/get-clients-list:
+ * /n1suite/api/v1/client/get-clients-list:
  *   get:
  *     summary: Get all clients
  *     tags: [Client]
@@ -82,7 +82,7 @@
 
 /**
  * @swagger
- * /api/v1/client/get-client-id/{id}:
+ * /n1suite/api/v1/client/get-client-id/{id}:
  *   get:
  *     summary: Get a client by ID
  *     tags: [Client]
@@ -101,7 +101,7 @@
 
 /**
  * @swagger
- * /api/v1/client/update-client/{id}:
+ * /n1suite/api/v1/client/update-client/{id}:
  *   put:
  *     summary: Update a client
  *     tags: [Client]
@@ -124,7 +124,7 @@
 
 /**
  * @swagger
- * /api/v1/client/delete-client/{id}:
+ * /n1suite/api/v1/client/delete-client/{id}:
  *   patch:
  *     summary: Soft delete a client
  *     tags: [Client]

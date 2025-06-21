@@ -56,7 +56,7 @@
 
 /**
  * @swagger
- * /api/v1/invoice/create-invoice:
+ * /n1suite/api/v1/invoice/create-invoice:
  *   post:
  *     summary: Create a new invoice
  *     description: Creates a new invoice with optional advance/initial payment. Calculates balance and extra amount.
@@ -127,7 +127,7 @@
 
 /**
  * @swagger
- * /api/v1/invoice/get-invoices:
+ * /n1suite/api/v1/invoice/get-invoices:
  *   get:
  *     summary: Get all invoices
  *     tags: [Invoice]
@@ -138,7 +138,7 @@
 
 /**
  * @swagger
- * /api/v1/invoice/get-invoice/{client_id}/{invoice_id}:
+ * /n1suite/api/v1/invoice/get-invoice/{client_id}/{invoice_id}:
  *   get:
  *     summary: Get invoice by ID
  *     tags: [Invoice]
@@ -164,7 +164,7 @@
 
 /**
  * @swagger
- * /api/v1/invoice/get-invoice-by-client/{clientId}:
+ * /n1suite/api/v1/invoice/get-invoice-by-client/{clientId}:
  *   get:
  *     summary: Get invoices by client ID
  *     tags: [Invoice]
@@ -184,7 +184,7 @@
 
 /**
  * @swagger
- * /api/v1/invoice/get-invoice-by-number/{invoiceNumber}:
+ * /n1suite/api/v1/invoice/get-invoice-by-number/{invoiceNumber}:
  *   get:
  *     summary: Get invoice by invoice number
  *     tags: [Invoice]
@@ -204,7 +204,7 @@
 
 /**
  * @swagger
- * /api/v1/invoice/update-invoice/{id}:
+ * /n1suite/api/v1/invoice/update-invoice/{id}:
  *   put:
  *     summary: Update an invoice
  *     tags: [Invoice]
@@ -232,7 +232,7 @@
 
 /**
  * @swagger
- * /api/v1/invoice/delete-invoice/{id}:
+ * /n1suite/api/v1/invoice/delete-invoice/{id}:
  *   patch:
  *     summary: Soft delete an invoice
  *     tags: [Invoice]
@@ -253,7 +253,7 @@
 
 /**
  * @swagger
- * /api/v1/invoices/emi-payment/{invoice_id}:
+ * /n1suite/api/v1/invoices/emi-payment/{invoice_id}:
  *   post:
  *     summary: Record an EMI payment for an invoice
  *     description: Adds a new EMI payment entry for a specific invoice. Updates invoice totals only if payment is marked as successful.
@@ -313,7 +313,7 @@
 
 /**
  * @swagger
- * /api/v1/invoice/get-invoices:
+ * /n1suite/api/v1/invoice/get-invoices:
  *   get:
  *     summary: Get all invoices
  *     tags: [Invoice]
@@ -324,7 +324,7 @@
 
 /**
  * @swagger
- * /api/v1/invoice/get-invoice-EMI-payment/{client_id}/{invoice_id}:
+ * /n1suite/api/v1/invoice/get-invoice-EMI-payment/{client_id}/{invoice_id}:
  *   get:
  *     summary: Get invoice by ID
  *     tags: [Invoice]
@@ -350,7 +350,7 @@
 
 /**
  * @swagger
- * /api/v1/invoice/get-invoice-EMI-payment-id/{invoice_id}/{id}:
+ * /n1suite/api/v1/invoice/get-invoice-EMI-payment-id/{invoice_id}/{id}:
  *   get:
  *     summary: Get invoice by ID
  *     tags: [Invoice]

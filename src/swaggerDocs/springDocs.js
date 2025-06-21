@@ -9,7 +9,7 @@
 
 /**
  * @swagger
- * /api/v1/sprints/create-sprints:
+ * /n1suite/api/v1/sprints/create-sprints:
  *   post:
  *     summary: Create a new sprint
  *     tags: [Sprints]
@@ -49,7 +49,7 @@
 
 /**
  * @swagger
- * /api/v1/sprints/update-sprints/{id}:
+ * /n1suite/api/v1/sprints/update-sprints/{id}:
  *   put:
  *     summary: Update a sprint by ID
  *     tags:
@@ -106,7 +106,7 @@
 
 /**
  * @swagger
- * /api/v1/sprints/get-by-id/{project_id}/{id}:
+ * /n1suite/api/v1/sprints/get-by-id/{project_id}/{id}:
  *   get:
  *     summary: Get a sprint by project ID and sprint ID
  *     tags: [Sprints]
@@ -143,7 +143,7 @@
 
 /**
  * @swagger
- * /api/v1/sprints/get-by-project/{project_id}:
+ * /n1suite/api/v1/sprints/get-by-project/{project_id}:
  *   get:
  *     summary: Get all sprints by project ID
  *     tags: [Sprints]
@@ -164,7 +164,7 @@
 
 /**
  * @swagger
- * /api/v1/sprints/delete-sprints/{id}:
+ * /n1suite/api/v1/sprints/delete-sprints/{id}:
  *   patch:
  *     summary: Delete a sprint
  *     tags: [Sprints]

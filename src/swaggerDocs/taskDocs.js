@@ -80,7 +80,7 @@
 
 /**
  * @swagger
- * /api/v1/tasks/create-task:
+ * /n1suite/api/v1/tasks/create-task:
  *   post:
  *     summary: Create a new task
  *     tags: [Tasks]
@@ -97,7 +97,7 @@
 
 /**
  * @swagger
- * /api/v1/task/update-task/{id}:
+ * /n1suite/api/v1/task/update-task/{id}:
  *   put:
  *     summary: Update a task by its ID
  *     description: Updates all fields of a task in the task_tbl using the provided task data.
@@ -184,7 +184,7 @@
 
 /**
  * @swagger
- * /api/v1/tasks/sprint-tasks/{sprint_id}:
+ * /n1suite/api/v1/tasks/sprint-tasks/{sprint_id}:
  *   get:
  *     summary: Get all tasks by sprint ID
  *     tags: [Tasks]
@@ -201,7 +201,7 @@
  */
 /**
  * @swagger
- * /api/v1/tasks/get-all-task-by-project/{project_id}:
+ * /n1suite/api/v1/tasks/get-all-task-by-project/{project_id}:
  *   get:
  *     summary: Get all tasks by project_id
  *     tags: [Tasks]
@@ -219,7 +219,7 @@
 // /tasks/get-by-task/:sprint_id/:task_id
 /**
  * @swagger
- * /api/v1/tasks/get-by-task/{sprint_id}/{task_id}:
+ * /n1suite/api/v1/tasks/get-by-task/{sprint_id}/{task_id}:
  *   get:
  *     summary: Get a task by sprint ID and task ID
  *     tags: [Tasks]
@@ -245,7 +245,7 @@
 
 /**
  * @swagger
- * /api/v1/task/delete-task/{id}:
+ * /n1suite/api/v1/task/delete-task/{id}:
  *   patch:
  *     summary: Delete a task (soft delete)
  *     tags: [Tasks]

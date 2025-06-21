@@ -37,7 +37,7 @@
 
 /**
  * @swagger
- * /api/v1/quotation/create-quotation :
+ * /n1suite/api/v1/quotation/create-quotation :
  *   post:
  *     summary: Create a new quotation
  *     tags: [Quotation]
@@ -54,7 +54,7 @@
 
 /**
  * @swagger
- * /api/v1/quotation/get-list-quotation :
+ * /n1suite/api/v1/quotation/get-list-quotation :
  *   get:
  *     summary: Get all quotations
  *     tags: [Quotation]
@@ -65,7 +65,7 @@
 
 /**
  * @swagger
- * /api/v1/quotation/get-by-id/{id}:
+ * /n1suite/api/v1/quotation/get-by-id/{id}:
  *   get:
  *     summary: Get a quotation by ID
  *     tags: [Quotation]
@@ -84,7 +84,7 @@
 
 /**
  * @swagger
- * /api/v1/quotation/update-quotation/{id}:
+ * /n1suite/api/v1/quotation/update-quotation/{id}:
  *   put:
  *     summary: Update a quotation
  *     tags: [Quotation]
@@ -107,7 +107,7 @@
 
 /**
  * @swagger
- * /api/v1/quotation/delete-quotation/{id}:
+ * /n1suite/api/v1/quotation/delete-quotation/{id}:
  *   patch:
  *     summary: Soft delete a quotation
  *     tags: [Quotation]

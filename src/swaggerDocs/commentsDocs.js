@@ -7,7 +7,7 @@
 
 /**
  * @swagger
- * /api/v1/comments/add-comment:
+ * /n1suite/api/v1/comments/add-comment:
  *   post:
  *     summary: Create a new comment or reply
  *     tags: [Comments]
@@ -44,7 +44,7 @@
 
 /**
  * @swagger
- * /api/v1/comments/edit-comment/{id}:
+ * /n1suite/api/v1/comments/edit-comment/{id}:
  *   put:
  *     summary: Edit a comment
  *     tags: [Comments]
@@ -82,7 +82,7 @@
 
 /**
  * @swagger
- * /api/v1/comments/get-all-comments:
+ * /n1suite/api/v1/comments/get-all-comments:
  *   get:
  *     summary: Get all comments
  *     tags: [Comments]
@@ -93,7 +93,7 @@
 
 /**
  * @swagger
- * /api/v1/comments/get-comment-by-id/{id}:
+ * /n1suite/api/v1/comments/get-comment-by-id/{id}:
  *   get:
  *     summary: Get a specific comment by ID
  *     tags: [Comments]
@@ -113,7 +113,7 @@
 
 /**
  * @swagger
- * /api/v1/comments/get-comment-task-by/{task_id}:
+ * /n1suite/api/v1/comments/get-comment-task-by/{task_id}:
  *   get:
  *     summary: Get all comments for a specific task
  *     tags: [Comments]
@@ -131,7 +131,7 @@
 
 /**
  * @swagger
- * /api/v1/comments/get-comment-sub-task-by/{sub_task_id}:
+ * /n1suite/api/v1/comments/get-comment-sub-task-by/{sub_task_id}:
  *   get:
  *     summary: Get all comments for a specific task
  *     tags: [Comments]
@@ -149,7 +149,7 @@
 
 /**
  * @swagger
- * /api/v1/comments/delete-comment/{id}:
+ * /n1suite/api/v1/comments/delete-comment/{id}:
  *   patch:
  *     summary: Soft delete a comment
  *     tags: [Comments]

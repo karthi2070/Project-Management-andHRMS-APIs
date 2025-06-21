@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /send-email:
+ * /n1suite/send-email:
  *   post:
  *     summary: Send an email with an optional PDF attachment
  *     tags: [Email]

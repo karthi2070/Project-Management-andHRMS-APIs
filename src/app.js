@@ -35,25 +35,25 @@ const authMiddleware = require('./middleware/authMiddleware');
 const adminMiddleware = require('./middleware/adminMiddleware.js');
 const checkModuleAccess = require('./middleware/rbacMiddleware');
 
-app.use('/auth', authRoutes);
-app.use('/admin', adminRoutes);
+app.use('/n1suite/auth', authRoutes);
+app.use('/n1suite/admin', adminRoutes);
 //app.use('/admin', authMiddleware, adminMiddleware, adminRoutes);
-app.use('/attendance', authMiddleware, checkModuleAccess('attendance'), attendanceRoutes);
-app.use('/api/v1', employee); // Employee Routes
-app.use('/api/v1', expense); // Bank Details Routes
-app.use('/api/v1', quotation); // Quotation Routes
-app.use('/api/v1', clientRoutes); // Client Routes
-app.use('/', nodemailer); // Nodemailer Routes
-app.use('/api/v1', attendance); // Attendance Routes
-app.use('/api/v1', project); // Project Routes
-app.use('/api/v1', sprint); // Sprint Routes
-app.use('/api/v1', task); // Task Routes
-app.use('/api/v1', subTask); // Task Routes
-app.use('/api/v1', leave); // Leave Routes
-app.use('/api/v1',comments);
-app.use('/api/v1', holiday); // Holiday Routes
+app.use('/n1suite/attendance', authMiddleware, checkModuleAccess('attendance'), attendanceRoutes);
+app.use('/n1suite/api/v1', employee); // Employee Routes
+app.use('/n1suite/api/v1', expense); // Bank Details Routes
+app.use('/n1suite/api/v1', quotation); // Quotation Routes
+app.use('/n1suite/api/v1', clientRoutes); // Client Routes
+app.use('/n1suite', nodemailer); // Nodemailer Routes
+app.use('/n1suite/api/v1', attendance); // Attendance Routes
+app.use('/n1suite/api/v1', project); // Project Routes
+app.use('/n1suite/api/v1', sprint); // Sprint Routes
+app.use('/n1suite/api/v1', task); // Task Routes
+app.use('/n1suite/api/v1', subTask); // Task Routes
+app.use('/n1suite/api/v1', leave); // Leave Routes
+app.use('/n1suite/api/v1',comments);
+app.use('/n1suite/api/v1', holiday); // Holiday Routes
 
-app.use('/api/v1',activityLog);
+app.use('/n1suite/api/v1',activityLog);
 
 
 app.use(errorHandler); // Centralized Error Handling Middleware

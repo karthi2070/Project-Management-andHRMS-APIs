@@ -32,7 +32,7 @@
 
 /**
  * @swagger
- * /api/v1/bank/create-acc:
+ * /n1suite/api/v1/bank/create-acc:
  *   post:
  *     summary: Create bank details
  *     tags: [BankDetails]
@@ -49,7 +49,7 @@
 
 /**
  * @swagger
- * /api/v1/bank/get-acc-list:
+ * /n1suite/api/v1/bank/get-acc-list:
  *   get:
  *     summary: Get all bank details
  *     tags: [BankDetails]
@@ -60,7 +60,7 @@
 
 /**
  * @swagger
- * /api/v1/bank/get-acc-em-id/{id}:
+ * /n1suite/api/v1/bank/get-acc-em-id/{id}:
  *   get:
  *     summary: Get bank details by ID
  *     tags: [BankDetails]
@@ -79,7 +79,7 @@
 
 /**
  * @swagger
- * /api/v1/bank/update-acc-em-id/{id}:
+ * /n1suite/api/v1/bank/update-acc-em-id/{id}:
  *   put:
  *     summary: Update bank details
  *     tags: [BankDetails]
@@ -102,7 +102,7 @@
 
 /**
  * @swagger
- * /api/v1/bank/delete-acc-em-id/{id}:
+ * /n1suite/api/v1/bank/delete-acc-em-id/{id}:
  *   patch:
  *     summary: Soft delete bank details
  *     tags: [BankDetails]

@@ -9,7 +9,7 @@
 
   /**
    * @swagger
-   * /api/v1/expense/create-status:
+   * /n1suite/api/v1/expense/create-status:
    *   post:
    *     summary: Create a new expense status
    *     tags: [ExpenseStatus]
@@ -29,7 +29,7 @@
    */
   /**
    * @swagger
-   * /api/v1/expense/update-status/{id}:
+   * /n1suite/api/v1/expense/update-status/{id}:
    *   put:
    *     summary: Update an expense status by ID
    *     tags: [ExpenseStatus]
@@ -56,7 +56,7 @@
 
   /**
    * @swagger
-   * /api/v1/expense/get-all-status:
+   * /n1suite/api/v1/expense/get-all-status:
    *   get:
    *     summary: Retrieve all expense statuses
    *     tags: [ExpenseStatus]
@@ -67,7 +67,7 @@
 
   /**
    * @swagger
-   * /api/v1/expense/get-by-id-status/{id}:
+   * /n1suite/api/v1/expense/get-by-id-status/{id}:
    *   get:
    *     summary: Retrieve a status by ID
    *     tags: [ExpenseStatus]
@@ -84,7 +84,7 @@
  
   /**
    * @swagger
-   * /api/v1/expense/delete-status/{id}:
+   * /n1suite/api/v1/expense/delete-status/{id}:
    *   patch:
    *     summary: Soft-delete a status
    *     tags: [ExpenseStatus]
