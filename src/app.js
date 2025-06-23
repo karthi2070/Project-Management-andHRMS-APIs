@@ -9,12 +9,13 @@ const app = express();
 const allowedOrigins = [
   'https://www.n1suite.namuvi.com',
   'https://n1suite.namuvi.com',
-  'http://localhost:3002'
+  'http://localhost:5173',
+  'http://localhost:3002',
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    console.log('CORS Origin:', origin);
+    // console.log('CORS Origin:', origin);
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {

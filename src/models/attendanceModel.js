@@ -42,22 +42,22 @@ async getAttendanceByDate (strat_date,end_date) {
     );
     return rows;
 },
-async getTotalWorkingDays  ()  {
+async getTotalWorkingDays  (user_id)  {
   const query = `
     SELECT 
-      employee_id,
+      user_id,
       employee_name,
       COUNT(DISTINCT date) AS total_working_days
     FROM 
       employee_attendance_tbl
     WHERE 
-      login IS NOT NULL WHERE user_id =?
+      login IS NOT NULL AND user_id =?
     GROUP BY 
-      employee_id, employee_name;
+      user_id, employee_name;
   `;
   //WHERE login IS NOT NULL AND date BETWEEN '2025-06-01' AND '2025-06-30'
 
-    const [rows] = await db.query(query);
+    const [rows] = await db.query(query,[user_id]);
     return rows
 
 },
