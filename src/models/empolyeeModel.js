@@ -1,6 +1,7 @@
 const pool = require('../config/db');
  
  const EmployeeModel = {
+    
     async getEmployeeCount() {
         const sql = `SELECT COUNT(*) AS count FROM employee_tbl`;
         const [rows] = await pool.query(sql);

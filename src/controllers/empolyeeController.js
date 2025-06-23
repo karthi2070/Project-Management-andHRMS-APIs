@@ -12,7 +12,7 @@ const EmployeeController = {
 
             // Get count from DB instead of list (to avoid memory load and concurrency issue)
             const count = await EmployeeModel.getEmployeeCount();
-            const employee_id = `EMP00${count + 1}`;
+            const employee_id = `NT00${count + 1}`;
 
             const employeeData = {
                 name, employee_id, phone, mail, dob, doj, department, designation, salary, status,

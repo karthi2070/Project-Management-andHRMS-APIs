@@ -8,9 +8,13 @@ const ClientModel = {
         return rows[0].count;
     },
     async createClient(data) {
-        const sql = `INSERT INTO client_tbl (user_id,name, company_name, client_id, mail, phone1, phone2, phone3, gst_num, address, city , state ,pincode) 
-                     VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?)`;
-        const [result] = await pool.query(sql, Object.values(data));
+      const {user_id,name, company_name,client_id, mail, phone1, phone2, phone3, gst_num, address, city, state, pincode} = data;
+        const sql = `INSERT INTO client_tbl 
+(user_id, name, company_name, client_id, mail, phone1, phone2, phone3, gst_num, address, city, state, pincode) 
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                     console.log(data)
+                   const  values=[user_id,name, company_name, client_id, mail, phone1, phone2, phone3, gst_num, address, city, state, pincode]
+        const [result] = await pool.query(sql,values);
         return { id: result.insertId, ...data };
     },
 
@@ -27,8 +31,7 @@ const ClientModel = {
     },
 
     async updateClient(id, data) {
-        console.log (data)
-        const sql = `UPDATE client_tbl SET user_id=?,name=?, company_name=?, client_id=?, mail=?, phone1=?, phone2=?, phone3=?, gst_num=?, address=? ,
+        const sql = `UPDATE client_tbl SET user_id=?,name=?, company_name=?, mail=?, phone1=?, phone2=?, phone3=?, gst_num=?, address=? ,
                     city =? , state = ? ,pincode= ? WHERE id = ? AND is_deleted = 0`;
         await pool.query(sql, [...Object.values(data), id]);
         return { id, ...data };
