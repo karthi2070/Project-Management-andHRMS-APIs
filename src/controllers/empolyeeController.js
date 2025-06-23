@@ -5,7 +5,7 @@ const EmployeeController = {
     async createEmployee(req, res, next) {
         try {
             const {
-                name, phone, mail, dob, doj, department, designation, salary, status,
+                user_id,name, phone, mail, dob, doj, department, designation, salary, status,
                 status_reson, status_desc, pan, aadhar, education, address, city, state,
                 pincode, p_address, p_city, p_state, p_pincode
             } = req.body;
@@ -15,7 +15,7 @@ const EmployeeController = {
             const employee_id = `NT00${count + 1}`;
 
             const employeeData = {
-                name, employee_id, phone, mail, dob, doj, department, designation, salary, status,
+                user_id,name, employee_id, phone, mail, dob, doj, department, designation, salary, status,
                 status_reson, status_desc, pan, aadhar, education, address, city, state,
                 pincode, p_address, p_city, p_state, p_pincode
             };

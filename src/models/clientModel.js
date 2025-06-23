@@ -2,11 +2,6 @@ const pool = require('../config/db');
 
 const ClientModel = {
     
-      async getClientCount() {
-        const sql = `SELECT COUNT(*) AS count FROM client_tbl where is_deleted =0 `;
-        const [rows] = await pool.query(sql);
-        return rows[0].count;
-    },
     async createClient(data) {
       const {user_id,name, company_name,client_id, mail, phone1, phone2, phone3, gst_num, address, city, state, pincode} = data;
         const sql = `INSERT INTO client_tbl 
@@ -42,9 +37,46 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
         await pool.query(sql, [id]);
         return { id, deleted: true };
     },
-    //invoise
-    // id, client_id, invoice_number, invoice_amount, paid_amount, balance_amount, extra_amount, status_id,
-    //  invoice_date, due_date, payment_method, notes, is_deleted, created_at, updated_at
+
+  async getTotalClients() {
+const sql=`
+      SELECT COUNT(DISTINCT client_id) AS total_clients
+      FROM invoice_tbl
+      WHERE is_deleted = 0 `    
+      const [rows] = await pool.query(sql);
+    return rows[0];
+  },
+
+  // 2. Total pending payments (balance > 0)
+  async getPendingPaymentsValue() {
+const sql=` SELECT SUM(balance_amount) AS total_pending_payment
+      FROM invoice_tbl
+      WHERE is_deleted = 0 AND balance_amount > 0`   
+       const [rows] = await pool.query(sql);
+    return rows[0];
+  },
+
+  // 3. Upcoming due invoices (within 39 days)
+  async getUpcomingDueClients() {
+
+      const sql =` SELECT DISTINCT client_id
+      FROM invoice_tbl
+      WHERE is_deleted = 0
+        AND due_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + INTERVAL 30 DAY `;
+    const [rows] = await pool.query(sql);
+    return rows;
+  },
+
+ async getUpcomingDueClientsCount(){
+   const sql=` SELECT COUNT(DISTINCT client_id) AS upcoming_due_clients_count
+      FROM invoice_tbl
+      WHERE is_deleted = 0
+        AND due_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + INTERVAL 30 DAY
+    `;
+    const [rows] = await pool.query(sql);
+    return rows[0];
+  },
+
 async createInvoice(invoice) {
 
   const query = `

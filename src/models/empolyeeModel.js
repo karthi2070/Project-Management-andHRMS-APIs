@@ -14,7 +14,7 @@ const pool = require('../config/db');
             status_reson, status_desc, pan, aadhar, education, address, city, state,
             pincode, p_address, p_city, p_state, p_pincode
         } = data;
-
+console.log("Creating employee with data:", data);
         const sql = `
             INSERT INTO employee_tbl (
                 user_id,name, employee_id, phone, mail, dob, doj, department, designation, salary, status,
@@ -30,7 +30,7 @@ const pool = require('../config/db');
         ];
 
         const [result] = await pool.query(sql, values);
-        return { id: result.insertId, ...data };
+        return { id: result.insertId };
     },
 //id, name, employee_id, phone, mail, dob, doj, department, designation, salary, status, status_reson, status_desc, pan, aadhar, education, address, city, state, pincode, p_address, p_city, p_state, p_pincode, is_deleted, created_at, updated_at
      async getAllEmployees() {
@@ -59,11 +59,11 @@ const pool = require('../config/db');
  
      async updateEmployee(id, data) {
     
-             const sql = `UPDATE employee_tbl SET user_id=?, name=?, phone=?,mail=?, dob=?, doj=?, department=?, designation=?, salary=?, pan=?, aadhar=?, education=?, address=? 
+             const sql = `UPDATE employee_tbl SET user_id=?, name=?, phone=?,mail=?, dob=?, doj=?, department=?, designation=?, salary=?,
+             status=?, status_reson=?, status_desc=?, pan=?, aadhar=?, education=?, address=?, city=?, state=?, pincode=?, p_address=?, p_city=?, p_state=?, p_pincode=?
                           WHERE id = ? AND is_deleted = 0`;
              await pool.query(sql, [...Object.values(data), id]);
              return { id, ...data };
-
      },
  
      async softDeleteEmployee(id) {

@@ -82,6 +82,17 @@
 
 /**
  * @swagger
+ * /api/v1/client/client-dashboard:
+ *   get:
+ *     summary: Get  clients dash board
+ *     tags: [Client]
+ *     responses:
+ *       200:
+ *         description: Client dashboard data
+ */
+
+/**
+ * @swagger
  * /api/v1/client/get-client-id/{id}:
  *   get:
  *     summary: Get a client by ID
