@@ -9,6 +9,7 @@ const app = express();
 const allowedOrigins = [
   'https://www.n1suite.namuvi.com',
   'https://n1suite.namuvi.com',
+  'http://localhost:3002'
 ];
 
 app.use(cors({
