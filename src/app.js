@@ -6,7 +6,24 @@ require('../src/config/passport.js');
 const errorHandler = require('./middleware/errorHandler');
 const passport = require('passport');
 const app = express();
-app.use(cors({ origin: 'http://localhost:5173',credentials: true}));
+const allowedOrigins = [
+  'https://www.n1suite.namuvi.com',
+  'https://n1suite.namuvi.com',
+  'http://localhost:3002'
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    console.log('CORS Origin:', origin);
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+}));
+
 app.use(express.json());
 app.use(passport.initialize());
 app.use(express.urlencoded({ extended: true })); // Middleware to parse URL-encoded data    

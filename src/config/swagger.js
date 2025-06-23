@@ -11,7 +11,8 @@ const options = {
     },
     servers: [
       {
-        url: 'http://localhost:3002',
+        url:process.env.BASE_URL
+        // url:process.env.LOCAL_BASE_URL
       },
     ],      components: {
       securitySchemes: {
