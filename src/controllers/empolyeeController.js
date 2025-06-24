@@ -6,7 +6,7 @@ const EmployeeController = {
         try {
             const {
                 user_id,name, phone, mail, dob, doj, department, designation, salary, status,
-                status_reson, status_desc, pan, aadhar, education, address, city, state,
+                status_reson, status_desc,relieving_date, pan, aadhar, education, address, city, state,
                 pincode, p_address, p_city, p_state, p_pincode
             } = req.body;
 
@@ -16,7 +16,7 @@ const EmployeeController = {
 
             const employeeData = {
                 user_id,name, employee_id, phone, mail, dob, doj, department, designation, salary, status,
-                status_reson, status_desc, pan, aadhar, education, address, city, state,
+                status_reson, status_desc,relieving_date, pan, aadhar, education, address, city, state,
                 pincode, p_address, p_city, p_state, p_pincode
             };
 
@@ -84,6 +84,13 @@ const EmployeeController = {
     async updateEmployee(req, res, next) {
         try {
             const updatedEmployee = await EmployeeModel.updateEmployee(req.params.id, req.body);
+            res.status(200).json(updatedEmployee);
+        } catch (error) {
+           next(error);        }
+    },
+       async relievingEmployee(req, res, next) {
+        try {
+            const updatedEmployee = await EmployeeModel.relievingEmployee(req.params.id, req.body);
             res.status(200).json(updatedEmployee);
         } catch (error) {
            next(error);        }

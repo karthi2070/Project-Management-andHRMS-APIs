@@ -55,12 +55,14 @@
  *           type: string
  *         status_desc:
  *           type: string
+ *         relieving_date:
+ *           type: string
  *         pan:
  *           type: string
  *         aadhar:
  *           type: string
  *         education:
- *           type: string    # ✅ actual property spelling
+ *           type: string    
  *         address:
  *           type: string
  *         city:
@@ -118,7 +120,47 @@
  *             $ref: '#/components/schemas/Employee'
  *     responses:
  *       200:
+ *         description: Employee relieved successfully
+ *       404:
+ *         description: Employee not found
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/v1/employees/relieving-empolyee/{id}:
+ *   put:
+ *     summary: Relieve an employee
+ *     tags: [Employee]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *               status_reson:
+ *                 type: string
+ *               status_desc:
+ *                 type: string
+ *               relieving_date:
+ *                 type: string
+ *     responses:
+ *       200:
  *         description: Employee updated
+ *       404:
+ *         description: Employee not found
+ *       500:
+ *         description: Internal server error
  */
 
 /**

@@ -9,6 +9,7 @@ router.get('/employees/get-empolyee-list', EmployeeController.getAllEmployees);
 router.get('/employees/get-empolyee-pkid/:id', EmployeeController.getEmployeeById);
 router.get('/employees/get-empolyee-user-id/:user_id', EmployeeController.getEmployeeByUserId);
 router.put('/employees/update-empolyee/:id', EmployeeController.updateEmployee);
+router.put('/employees/Relieving-empolyee/:id', EmployeeController.relievingEmployee);// Relieving Employee API
 router.patch('/employees/delete-empolyee/:id', EmployeeController.softDeleteEmployee);
 router.get('/employees/get-filtered-department', EmployeeController.getFilteredDepartment);
 router.get('/employees/search-empolyee', EmployeeController.searchEmployee);
