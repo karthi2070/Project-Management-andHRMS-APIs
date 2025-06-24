@@ -53,10 +53,9 @@ const authMiddleware = require('./middleware/authMiddleware');
 const adminMiddleware = require('./middleware/adminMiddleware.js');
 const checkModuleAccess = require('./middleware/rbacMiddleware');
 
-
-//app.use('/admin', authMiddleware, adminMiddleware, adminRoutes);/
 app.use('/auth', authRoutes);
 app.use('/admin', adminRoutes);
+//app.use('/admin', authMiddleware, adminMiddleware, adminRoutes);
 app.use('/attendance', authMiddleware, checkModuleAccess('attendance'), attendanceRoutes);
 app.use('/api/v1', employee); // Employee Routes
 app.use('/api/v1', expense); // Bank Details Routes
@@ -71,7 +70,10 @@ app.use('/api/v1', subTask); // Task Routes
 app.use('/api/v1', leave); // Leave Routes
 app.use('/api/v1',comments);
 app.use('/api/v1', holiday); // Holiday Routes
+
 app.use('/api/v1',activityLog);
+
+
 app.use(errorHandler); // Centralized Error Handling Middleware
 
 

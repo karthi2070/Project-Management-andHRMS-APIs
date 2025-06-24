@@ -163,7 +163,7 @@
  *                 type: array
  *                 items:
  *                   type: string
- *                 example: ["file1.png", "file2.pdf"]
+ *                 example: ["https://example.com/attachment.png", "https://example.com/attachment2.png"]
  *     responses:
  *       200:
  *         description: Task updated successfully

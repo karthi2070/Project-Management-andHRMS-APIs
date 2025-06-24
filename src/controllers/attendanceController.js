@@ -7,12 +7,8 @@ const AttendanceController = {
      try {
       const { date } = req.query;
       if (!date) return res.status(400).json({ success: false, message: 'Date is required' });
-const Employees = await employeeModel.getAllEmployees();
 
-const allEmployees = Employees.map(emp => ({user_id: emp.user_id,name: emp.name}));
-
-console.log(allEmployees);
-
+    const allEmployees = await employeeModel.getAllEmployees();   
     const presentIds = await attendanceModel.getPresentEmployeeIds(date);
 
     const presentEmployees = allEmployees.filter(emp => presentIds.includes(emp.user_id));

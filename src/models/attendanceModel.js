@@ -2,19 +2,19 @@ const db = require('../config/db');
 
 const AttendanceModel={
 async createAttendance (data) {
-    const { user_id,employee_name, department,date, login, logout } = data;
+    const { user_id,employee_id,employee_name, department,date, login, logout } = data;
    
-       const sql= `INSERT INTO employee_attendance_tbl (user_id, employee_name, department,date, login, logout) VALUES ( ?,?,?,?,?, ?)`
-       const [result] = await db.execute(sql,[user_id,employee_name, department,date, login, logout]
+       const sql= `INSERT INTO employee_attendance_tbl (user_id,employee_id, employee_name, department,date, login, logout) VALUES (?, ?,?,?,?, ?, ?)`
+       const [result] = await db.execute(sql,[user_id,employee_id,employee_name, department,date, login, logout]
     );
     return result;
 },
 
  async updateAttendance(id, data)  {
-    const {user_id,employee_name, department,date, login, logout } = data;
+    const {user_id, employee_id,employee_name, department,date, login, logout } = data;
     
-        const sql=`UPDATE employee_attendance_tbl SET user_id=?,  employee_name = ?, department = ?,date =?, login = ?, logout = ? WHERE id = ?`
-       const [result] = await db.execute(sql, [user_id,employee_name, department,date, login, logout, id]
+        const sql=`UPDATE employee_attendance_tbl SET user_id=?, employee_id = ? , employee_name = ?, department = ?,date =?, login = ?, logout = ? WHERE id = ?`
+       const [result] = await db.execute(sql, [user_id,employee_id,employee_name, department,date, login, logout, id]
     );
     return result;
 },
