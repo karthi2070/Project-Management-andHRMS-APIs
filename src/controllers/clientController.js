@@ -61,7 +61,7 @@ async getClientDashboard(req, res, next) {
         total_clients: totalClients.total_clients,
         total_pending_payment: pendingPayments.total_pending_payment,
         upcoming_due_clients_count: upcomingClientsCount.upcoming_due_clients_count,
-        upcoming_due_clients: upcomingClients.map(row => row.client_id),
+        upcoming_due_clients_id: upcomingClients.map(row => row.client_id),
       });
     } catch (error) {
       next(error);

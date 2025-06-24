@@ -13,9 +13,9 @@
  *     BankDetails:
  *       type: object
  *       properties:
- *         employee_id:
+ *         user_id:
  *           type: integer
- *           description: Employee ID linked to the bank details
+ *           description: User ID linked to the bank details
  *         acc_holder_name:
  *           type: string
  *           description: Name of the account holder
@@ -32,7 +32,7 @@
 
 /**
  * @swagger
- * /n1suite/api/v1/bank/create-acc:
+ * /api/v1/bank/create-acc:
  *   post:
  *     summary: Create bank details
  *     tags: [BankDetails]
@@ -49,7 +49,7 @@
 
 /**
  * @swagger
- * /n1suite/api/v1/bank/get-acc-list:
+ * /api/v1/bank/get-acc-list:
  *   get:
  *     summary: Get all bank details
  *     tags: [BankDetails]
