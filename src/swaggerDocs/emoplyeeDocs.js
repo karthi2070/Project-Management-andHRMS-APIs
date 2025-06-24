@@ -23,7 +23,7 @@
  *         - salary
  *         - pan
  *         - aadhar
- *         - education     # ✅ fixed spelling here
+ *         - education    
  *         - address
  *         - city
  *         - state
@@ -208,62 +208,62 @@
  */
 
 
-// /**
-//  * @swagger
-//  * /api/v1/employees/get-filtered-department:
-//  *   get:
-//  *     summary: Get employees by department
-//  *     tags: [Employee]
-//  *     parameters:
-//  *       - in: query
-//  *         name: department
-//  *         required: true
-//  *         schema:
-//  *           type: string
-//  *     responses:
-//  *       200:
-//  *         description: List of employees in the specified department
-//  */
+/**
+ * @swagger
+ * /api/v1/employees/get-filtered-department:
+ *   get:
+ *     summary: Get employees by department
+ *     tags: [Employee]
+ *     parameters:
+ *       - in: query
+ *         name: department
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: List of employees in the specified department
+ */
 
-// /**
-//  * @swagger
-//  * /api/v1/employees/search-empolyee:
-//  *   get:
-//  *     summary: Search employees by name
-//  *     tags: [Employee]
-//  *     parameters:
-//  *       - in: query
-//  *         name: name
-//  *         required: true
-//  *         schema:
-//  *           type: string
-//  *     responses:
-//  *       200:
-//  *         description: List of employees matching the search criteria
-//  */
+/**
+ * @swagger
+ * /api/v1/employees/search-empolyee:
+ *   get:
+ *     summary: Search employees by name
+ *     tags: [Employee]
+ *     parameters:
+ *       - in: query
+ *         name: name
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: List of employees matching the search criteria
+ */
 
-// /**
-//  * @swagger
-//  * /api/v1/employees/get-empolyee-sort:
-//  *   get:
-//  *     summary: Retrieve a list of employees sorted by a specified field.
-//  *     description: Returns all non-deleted employees sorted in ascending order by the given field.
-//  *     tags: [Employee]
-//  *     parameters:
-//  *       - in: query
-//  *         name: field
-//  *         schema:
-//  *           type: string
-//  *         required: true
-//  *         description: The field name to sort employees by.
-//  *     responses:
-//  *       200:
-//  *         description: A list of sorted employees.
-//  *       400:
-//  *         description: Invalid field parameter.
-//  *       500:
-//  *         description: Server error.
-//  */
+/**
+ * @swagger
+ * /api/v1/employees/get-empolyee-sort:
+ *   get:
+ *     summary: Retrieve a list of employees sorted by a specified field.
+ *     description: Returns all non-deleted employees sorted in ascending order by the given field.
+ *     tags: [Employee]
+ *     parameters:
+ *       - in: query
+ *         name: field
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The field name to sort employees by.
+ *     responses:
+ *       200:
+ *         description: A list of sorted employees.
+ *       400:
+ *         description: Invalid field parameter.
+ *       500:
+ *         description: Server error.
+ */
 
 /**
  * @swagger
