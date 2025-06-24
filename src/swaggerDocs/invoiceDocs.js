@@ -14,12 +14,11 @@
  *       properties:
  *         user_id:
  *           type: integer
+ *         service_name:
+ *           type: string
  *         client_id:
  *           type: number
  *           description: Unique identifier for the client
- *         invoice_number:
- *           type: string
- *           description: Unique invoice number
  *         invoice_amount:
  *           type: number
  *           description: Total amount of the invoice
@@ -35,22 +34,20 @@
  *           type: string
  *           format: date
  *           description: Date when the invoice was issued
- *         due_date:
+ *         followup_date:
  *           type: string
  *           format: date
  *           description: Due date for the invoice payment
+ *         service_renewal_date:
+ *           type: string
+ *           format: date
+ *           description: Date when the service is due for renewal
  *         payment_method:
  *           type: string
  *           description: Method of payment (e.g., cash, credit card, bank transfer)
  *         notes:
  *           type: string
  *           description: Additional notes or comments about the invoice
- *       required:
- *         - client_id
- *         - invoice_number
- *         - invoice_amount
- *         - invoice_date
- *         - due_date
  */
 
 
@@ -66,55 +63,7 @@
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - user_id
- *               - client_id
- *               - invoice_number
- *               - invoice_amount
- *               - invoice_date
- *               - due_date
- *             properties:
- *               user_id:
- *                 type: integer
- *               client_id:
- *                 type: integer
- *                 example: 1
- *               invoice_number:
- *                 type: string
- *                 example: "INV-1001"
- *               invoice_amount:
- *                 type: number
- *                 format: float
- *                 example: 12000.00
- *               paid_amount:
- *                 type: number
- *                 format: float
- *                 example: 2000.00
- *                 description: Optional. Advance or first payment. Default is 0.00
- *               balance_amount:
- *                 type: number
- *                 format: float
- *                 example: 10000.00
- *                 description: Optional. Calculated as invoice_amount - paid_amount
- *               extra_amount:
- *                 type: number
- *                 format: float
- *                 example: 0.00
- *               invoice_date:
- *                 type: string
- *                 format: date
- *                 example: "2025-06-11"
- *               due_date:
- *                 type: string
- *                 format: date
- *                 example: "2025-07-11"
- *               payment_method:
- *                 type: string
- *                 example: "UPI"
- *               notes:
- *                 type: string
- *                 example: "First installment paid"
+ *             $ref: '#/components/schemas/Invoice'
  *     responses:
  *       201:
  *         description: Invoice created successfully

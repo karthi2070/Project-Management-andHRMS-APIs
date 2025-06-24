@@ -5,7 +5,8 @@ const ClientController = {
         try {
             const {user_id,name, company_name, mail, phone1, phone2, phone3, gst_num, address, city, state, pincode}=req.body
 
-            const count = await ClientModel.getClientCount()
+            const count = await ClientModel.getTotalClients()
+            console.log("count",count)
             const client_id =`CLI000${count+1}`
             const client_data= {user_id,user_id,name, company_name,client_id, mail, phone1, phone2, phone3, gst_num, address, city, state, pincode}
             const client = await ClientModel.createClient(client_data);
@@ -54,23 +55,39 @@ async getClientDashboard(req, res, next) {
     try {
       const totalClients = await ClientModel.getTotalClients();
       const pendingPayments = await ClientModel.getPendingPaymentsValue();
-      const upcomingClients = await ClientModel.getUpcomingDueClients();
-      const upcomingClientsCount = await ClientModel.getUpcomingDueClientsCount();
+      const upcomingClientsCount = await ClientModel.getPendingPaymentsCount();
+      const getRenewalClients = await ClientModel.getRenewalClients();
 
       res.status(200).json({
-        total_clients: totalClients.total_clients,
+        total_clients: totalClients,
         total_pending_payment: pendingPayments.total_pending_payment,
-        upcoming_due_clients_count: upcomingClientsCount.upcoming_due_clients_count,
-        upcoming_due_clients_id: upcomingClients.map(row => row.client_id),
+        upcomingClientsCount: upcomingClientsCount.upcoming_due_clients_count,
+        upcomingClientsId: upcomingClientsCount.upcoming_due_clients_ids,
+        renewalClientsCount: getRenewalClients.renewal_clients_count,
+        renewalClientsId: getRenewalClients.clients_renewal_id
+            //     res.status(200).json({
+    //     total_clients: totalClients,
+    //     total_pending_payment: pendingPayments.total_pending_payment,
+    //     upcomingClientsCount: upcomingClientsCount,
+    //     renewalClientsCount: getRenewalClients
+    //   });
       });
     } catch (error) {
       next(error);
     }
   },
+
     // Invoice Methods
     async createInvoice(req, res, next) {
         try {
-            const invoiceId = await ClientModel.createInvoice(req.body);
+            const {user_id, service_name, client_id, invoice_amount, paid_amount,
+                 balance_amount, status_id, invoice_date, followup_date, service_renewal_date, payment_method, notes } = req.body;
+
+             const count = await ClientModel.getTotalInvoice()
+            const invoice_number =`INC000${count+1}`
+            const invoiceData = { user_id, service_name, client_id, invoice_number, invoice_amount, paid_amount,
+                 balance_amount, status_id, invoice_date, followup_date, service_renewal_date, payment_method, notes }
+            const invoiceId = await ClientModel.createInvoice(invoiceData);
             res.status(201).json({ id: invoiceId });
         } catch (error) {
             next(error);

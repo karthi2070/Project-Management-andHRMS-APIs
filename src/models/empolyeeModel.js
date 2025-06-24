@@ -14,7 +14,6 @@ const pool = require('../config/db');
             status_reson, status_desc, pan, aadhar, education, address, city, state,
             pincode, p_address, p_city, p_state, p_pincode
         } = data;
-console.log("Creating employee with data:", data);
         const sql = `
             INSERT INTO employee_tbl (
                 user_id,name, employee_id, phone, mail, dob, doj, department, designation, salary, status,
