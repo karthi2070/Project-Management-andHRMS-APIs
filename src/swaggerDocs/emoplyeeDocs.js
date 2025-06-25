@@ -79,6 +79,12 @@
  *           type: string
  *         p_pincode:
  *           type: string
+ *         emergency_name:
+ *           type: string
+ *         emergency_phone:
+ *           type: string
+ *         emergency_relation:
+ *           type: string
  */
 
 

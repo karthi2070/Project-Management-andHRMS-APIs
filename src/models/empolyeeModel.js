@@ -12,20 +12,21 @@ const pool = require('../config/db');
         const {
             user_id,name, employee_id, phone, mail, dob, doj, department, designation, salary, status,
             status_reson, status_desc,relieving_date, pan, aadhar, education, address, city, state,
-            pincode, p_address, p_city, p_state, p_pincode
+            pincode, p_address, p_city, p_state, p_pincode,emergency_name,emergency_phone,emergency_relation
         } = data;
         const sql = `
             INSERT INTO employee_tbl (
                 user_id,name, employee_id, phone, mail, dob, doj, department, designation, salary, status,
                 status_reson, status_desc,relieving_date, pan, aadhar, education, address, city, state,
-                pincode, p_address, p_city, p_state, p_pincode
-            ) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                pincode, p_address, p_city, p_state, p_pincode,emergency_name,emergency_phone,emergency_relation
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
         const values = [
             user_id,name, employee_id, phone, mail, dob, doj, department, designation, salary, status,
             status_reson, status_desc,relieving_date, pan, aadhar, education, address, city, state,
-            pincode, p_address, p_city, p_state, p_pincode ];
+            pincode, p_address, p_city, p_state, p_pincode,emergency_name,emergency_phone,emergency_relation
+        ];
 
         const [result] = await pool.query(sql, values);
         return { id: result.insertId };
@@ -63,7 +64,8 @@ const pool = require('../config/db');
      async updateEmployee(id, data) {
     
              const sql = `UPDATE employee_tbl SET user_id=?, name=?, phone=?,mail=?, dob=?, doj=?, department=?, designation=?, salary=?,
-             status=?, status_reson=?, status_desc=?,relieving_date=?, pan=?, aadhar=?, education=?, address=?, city=?, state=?, pincode=?, p_address=?, p_city=?, p_state=?, p_pincode=?
+             status=?, status_reson=?, status_desc=?,relieving_date=?, pan=?, aadhar=?, education=?, address=?, city=?, state=?, pincode=?,
+             p_address=?, p_city=?, p_state=?, p_pincode=?,emergency_name=?,emergency_phone=?,emergency_relation=?
                           WHERE id = ? AND is_deleted = 0`;
              await pool.query(sql, [...Object.values(data), id]);
              return { id, ...data };
