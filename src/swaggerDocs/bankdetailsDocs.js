@@ -13,9 +13,9 @@
  *     BankDetails:
  *       type: object
  *       properties:
- *         user_id:
+ *         employee_id:
  *           type: integer
- *           description: User ID linked to the bank details
+ *           description: Employee ID linked to the bank details
  *         acc_holder_name:
  *           type: string
  *           description: Name of the account holder

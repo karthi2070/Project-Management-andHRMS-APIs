@@ -52,18 +52,8 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     const [rows] = await pool.query(sql);
     return rows[0];
   },
-    // 3. Upcoming due invoices (within 39 days)
-//   async getUpcomingDueClients() {
 
-//     const sql = ` SELECT DISTINCT client_id
-// FROM invoice_tbl
-// WHERE is_deleted = 0
-//   AND balance_amount <> 0
-//   AND followup_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + INTERVAL 30 DAY; `
-//     const [rows] = await pool.query(sql);
-//     return rows;
-//   },
-async getPendingPaymentsCount() {
+  async getPendingPaymentsCount() {
     const sql = ` WITH upcoming_clients AS (
   SELECT DISTINCT client_id
   FROM invoice_tbl
@@ -80,7 +70,7 @@ FROM upcoming_clients; `
     return rows[0];
   },
 
-  async getRenewalClients(){
+  async getRenewalClients() {
     const sql = `WITH clients_renewal AS (
   SELECT DISTINCT client_id
   FROM invoice_tbl
@@ -91,10 +81,10 @@ SELECT
   COUNT(*) AS renewal_clients_count,
   JSON_ARRAYAGG(client_id) AS clients_renewal_id
 FROM clients_renewal; `
-  const [rows] = await pool.query(sql);
+    const [rows] = await pool.query(sql);
     return rows[0];
   },
- 
+
 
   async getUpcomingDueClientsCount() {
     const sql = ` SELECT COUNT(DISTINCT client_id) AS upcoming_due_clients_count
@@ -105,7 +95,7 @@ FROM clients_renewal; `
     const [rows] = await pool.query(sql);
     return rows[0];
   },
-    async getTotalInvoice() {
+  async getTotalInvoice() {
     const sql = `SELECT COUNT(*) AS count FROM invoice_tbl  WHERE is_deleted = 0 `
     const [rows] = await pool.query(sql);
     return rows[0].count;
@@ -145,7 +135,7 @@ FROM clients_renewal; `
 
     const values = [
       invoice.user_id,
-      invoice.service_name, 
+      invoice.service_name,
       invoice.client_id,
       invoice.invoice_number,
       invoice.invoice_amount,
@@ -163,8 +153,7 @@ FROM clients_renewal; `
 
     const [result] = await pool.query(query, values);
     return result;
-  }
-  ,
+  },
 
   async findAllincoice() {
     const query = `SELECT * FROM invoice_tbl WHERE is_deleted = 0`

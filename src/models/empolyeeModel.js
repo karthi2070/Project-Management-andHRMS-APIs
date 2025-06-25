@@ -120,7 +120,7 @@ const pool = require('../config/db');
     // Bank Details Methods
      async createBankDetails(data) {
       
-            const sql = `INSERT INTO bank_details_tbl (user_id, acc_holder_name,  account_number, ifsc_code, bank_name)
+            const sql = `INSERT INTO bank_details_tbl (employee_id, acc_holder_name,  account_number, ifsc_code, bank_name)
                          VALUES (?, ?, ?, ? , ?)`;
             const [result] = await pool.query(sql, Object.values(data));
             return { id: result.insertId, ...data };
@@ -137,7 +137,7 @@ const pool = require('../config/db');
 
     async getBankDetailsById(id) {
 
-            const sql = `SELECT * FROM bank_details_tbl WHERE user_id = ? AND is_deleted = 0`;
+            const sql = `SELECT * FROM bank_details_tbl WHERE employee_id = ? AND is_deleted = 0`;
             const [banks] = await pool.query(sql, [id]);
             return banks[0] || null;
     
@@ -146,7 +146,7 @@ const pool = require('../config/db');
     async updateBankDetails(id, data) {
 
             const sql = `UPDATE bank_details_tbl SET acc_holder_name=?, account_number= ?,  ifsc_code= ?, bank_name=? 
-                         WHERE user_id = ? AND is_deleted = 0`;
+                         WHERE employee_id = ? AND is_deleted = 0`;
             await pool.query(sql, [...Object.values(data), id]);
             return { id, ...data };
 
@@ -154,7 +154,7 @@ const pool = require('../config/db');
 
     async softDeleteBankDetails(id) {
 
-            const sql = `UPDATE bank_details_tbl SET is_deleted = 1 WHERE user_id = ?`;
+            const sql = `UPDATE bank_details_tbl SET is_deleted = 1 WHERE employee_id = ?`;
             await pool.query(sql, [id]);
             return { id, deleted: true };
 
