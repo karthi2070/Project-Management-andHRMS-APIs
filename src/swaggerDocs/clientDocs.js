@@ -82,6 +82,24 @@
 
 /**
  * @swagger
+ * /api/v1/client/client-dashboard-clientId/{id}:
+ *   get:
+ *     summary: Get a client's dashboard details by ID
+ *     tags: [Client]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Client found
+ *       404:
+ *         description: Client not found
+ */
+/**
+ * @swagger
  * /api/v1/client/client-dashboard:
  *   get:
  *     summary: Get  clients dash board

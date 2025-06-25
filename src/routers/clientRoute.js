@@ -10,6 +10,7 @@ router.put('/client/update-client/:id', ClientController.updateClient);
 router.patch('/client/delete-client/:id', ClientController.softDeleteClient);   
 
 // Client Dashboard
+router.get('/client/client-dashboard-clientId/:id', ClientController.getPerClientDashboardDetails);
 router.get('/client/client-dashboard', ClientController.getClientDashboard);
 // Invoice Routes
 router.post('/invoice/create-invoice', ClientController.createInvoice);

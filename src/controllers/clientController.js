@@ -51,20 +51,36 @@ const ClientController = {
            next(error);
         }
     },
+    async getPerClientDashboardDetails(req, res, next) {
+    try {
+        const clientId = req.params.id;
+        const clientDashboard = await ClientModel.perClientDashBoard(clientId);
+        const clientDashboardDetails = {
+            total_invoice_amount: clientDashboard[0]['SUM(invoice_amount)'] || 0,
+            total_paid_amount: clientDashboard[0]['sum(paid_amount)'] || 0,
+            total_balance_amount: clientDashboard[0]['sum(balance_amount)'] || 0 
+            
+        }   
+        res.status(200).json(clientDashboardDetails);
+    } catch (error) {
+        next(error);
+    }
+},
+
 async getClientDashboard(req, res, next) {
     try {
       const totalClients = await ClientModel.getTotalClients();
       const pendingPayments = await ClientModel.getPendingPaymentsValue();
-      const upcomingClientsCount = await ClientModel.getPendingPaymentsCount();
+      const upcomingClientsCount = await ClientModel.upcomingDueClients();
       const getRenewalClients = await ClientModel.getRenewalClients();
 
       res.status(200).json({
         total_clients: totalClients,
         total_pending_payment: pendingPayments.total_pending_payment,
-        upcomingClientsCount: upcomingClientsCount.upcoming_due_clients_count,
-        upcomingClientsId: upcomingClientsCount.upcoming_due_clients_ids,
-        renewalClientsCount: getRenewalClients.renewal_clients_count,
-        renewalClientsId: getRenewalClients.clients_renewal_id
+        upcoming_due_clients: upcomingClientsCount,
+        // upcoming_due_clients_ids: upcomingClientsCount.upcoming_due_clients_ids,
+        renewalClientsCount: getRenewalClients,
+        // renewalClientsId: getRenewalClients.clients_renewal_id
             //     res.status(200).json({
     //     total_clients: totalClients,
     //     total_pending_payment: pendingPayments.total_pending_payment,
