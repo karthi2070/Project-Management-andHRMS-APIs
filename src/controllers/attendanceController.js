@@ -1,31 +1,20 @@
 const attendanceModel = require('../models/attendanceModel');
 const employeeModel =require('../models/empolyeeModel')
+const { getAttendanceSummaryData } = require('../helper/attedanceDashboard');
+
 
 const AttendanceController = {
+async  getAttendanceSummary(req, res, next) {
+  try {
+    const date = req.body || new Date()
+    if (!date) return res.status(400).json({ success: false, message: 'Date is required' });
 
-  async getAttendanceSummary  (req,res,next) {
-     try {
-      const { date } = req.query;
-      if (!date) return res.status(400).json({ success: false, message: 'Date is required' });
-
-    const allEmployees = await employeeModel.getAllEmployees();   
-    const presentIds = await attendanceModel.getPresentEmployeeIds(date);
-
-    const presentEmployees = allEmployees.filter(emp => presentIds.includes(emp.user_id));
-    const absentEmployees = allEmployees.filter(emp => !presentIds.includes(emp.user_id));
-
-    const data= {
-      date,
-      totalEmployees: allEmployees.length,
-      presentCount: presentEmployees.length,
-      absentCount: absentEmployees.length,
-      presentEmployees,
-      absentEmployees }
-      res.status(200).json({ success: true,data });
-    
-}catch(error)
-{next(error)}
-  },
+    const data = await getAttendanceSummaryData(date);
+    res.status(200).json({ success: true, data });
+  } catch (error) {
+    next(error);
+  }
+},
 
 async createAttendance (req, res, next)  {
     try {
