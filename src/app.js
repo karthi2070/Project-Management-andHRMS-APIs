@@ -34,6 +34,7 @@ const employee = require('./routers/empolyeeRoute');
 const expense = require('./routers/expenceRoute');
 const quotation = require('./routers/quotationRoute.js');
 const clientRoutes = require('./routers/clientRoute.js');
+const service=require('./routers/serviceRoute.js')
 const nodemailer = require('./routers/mailRoutes.js')
 const attendance= require('./routers/attendanceRoute.js');
 const project= require('./routers/projectRoute.js'); // Project Routes
@@ -61,6 +62,7 @@ app.use('/api/v1', employee); // Employee Routes
 app.use('/api/v1', expense); // Bank Details Routes
 app.use('/api/v1', quotation); // Quotation Routes
 app.use('/api/v1', clientRoutes); // Client Routes
+app.use('/api/v1', service); // Service Routes
 app.use('/', nodemailer); // Nodemailer Routes
 app.use('/api/v1', attendance); // Attendance Routes
 app.use('/api/v1', project); // Project Routes
