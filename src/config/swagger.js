@@ -11,8 +11,8 @@ const options = {
     },
     servers: [
       {
-       // url:process.env.BASE_URL
-         url:process.env.LOCAL_BASE_URL
+        url:process.env.BASE_URL
+        // url:process.env.LOCAL_BASE_URL
       },
     ],      components: {
       securitySchemes: {
