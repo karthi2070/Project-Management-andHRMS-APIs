@@ -1,7 +1,7 @@
+const express = require('express');
+const router = express.Router();
+const { handleRewrite } = require('../controllers/openAiControllers');
 
-const router = express().Router;
-const { handleRewrite } = require('./controller');
+router.post('/openai/rewrite', handleRewrite);
 
-router.post('/api/rewrite', handleRewrite);
-
-module.exports=handleRewrite;
+module.exports = router;

@@ -48,29 +48,27 @@ const ExpenseController = {
             res.status(500).json({ message: 'Error deleting expense', error });
         }
     },
-    async getFilteredExpenses(req, res) {
-        try {
-            const { category, startDate, endDate, minAmount, maxAmount, keyword } = req.query;
-            const filters = { category, startDate, endDate, minAmount, maxAmount, keyword };
+    // async getFilteredExpenses(req, res) {
+    //     try {
+    //         const { category, startDate, endDate, minAmount, maxAmount, keyword } = req.query;
+    //         const filters = { category, startDate, endDate, minAmount, maxAmount, keyword };
 
-            const expenses = await ExpenseModel.getFilteredExpenses(filters);
-            res.status(200).json(expenses);
-        } catch (error) {
-            res.status(500).json({ message: 'Error filtering expenses', error });
-        }
-    },
+    //         const expenses = await ExpenseModel.getFilteredExpenses(filters);
+    //         res.status(200).json(expenses);
+    //     } catch (error) {
+    //         res.status(500).json({ message: 'Error filtering expenses', error });
+    //     }
+    // },
 
    async filterExpenses  (req, res) {
   try {
-    const { startDate, endDate, category } = req.query;
-    //console.log("Filtering expenses with:", { startDate, endDate, category });
+    const { startDate, endDate, category_id } = req.query;
 
-
-    if (!startDate || !endDate) {
-      return res.status(400).json({ message: "start_date and end_date are required." });
+    if (!startDate && !endDate && !category_id) {
+      return res.status(400).json({ message: "category_id,startDate and endDate are required." });
     }
 
-    const result = await ExpenseModel.getFilteredExpenses(startDate, endDate, category);
+    const result = await ExpenseModel.getFilteredExpenses(startDate, endDate, category_id);
     return res.status(200).json(result);
 
   } catch (error) {

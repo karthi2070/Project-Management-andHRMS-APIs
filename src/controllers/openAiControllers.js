@@ -1,38 +1,35 @@
-const OpenAI = require('openai');
+const openAi = require('../config/openAi');
 
-// Initialize OpenAI client
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
-
-// Service + Controller in one
 async function handleRewrite(req, res) {
-    const { content } = req.body;
+  const { content } = req.body;
 
-    if (!content || typeof content !== 'string') {
-        return res.status(400).json({ error: 'Content is required and must be a string.' });
-    }
+  if (!content || typeof content !== 'string') {
+    return res.status(400).json({ error: 'Content is required and must be a string.' });
+  }
 
-    const prompt = `
-You are a writing assistant. Please rewrite and correct the following content for grammar, spelling, and clarity only.
-Do not change the original meaning. Do not add or remove information. Keep formatting similar.
+  const prompt = `I am creating a SAAS application and I am going to use open AI to correct and generate texts for me in the below field and I need a prompt for each one of them to apply from the backend
 
-Content:
+Project Description
+Sprint Description
+Task Description
+Acceptance Criteria 
 ${content}
 `;
 
-    try {
-        const response = await openai.chat.completions.create({
-            model: 'gpt-4',
-            messages: [{ role: 'user', content: prompt }],
-            temperature: 0.2,
-        });
-        const corrected = response.choices[0].message.content.trim();
-        res.json({ corrected });
-    } catch (error) {
-        console.error('OpenAI Error:', error);
-        res.status(500).json({ error: 'Failed to rewrite content.' });
-    }
+  try {
+    const response = await openAi.chat.completions.create({
+      model: 'gpt-4', // or fallback to gpt-3.5-turbo
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.2,
+    });
+
+    const corrected = response.choices[0].message.content.trim();
+    res.json({ corrected });
+
+  } catch (error) {
+    console.error('OpenAI Error:', error?.response?.data || error.message || error);
+    res.status(500).json({ error: 'Failed to rewrite content.' });
+  }
 }
 
 module.exports = { handleRewrite };

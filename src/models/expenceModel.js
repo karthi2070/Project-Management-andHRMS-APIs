@@ -70,14 +70,14 @@ const ExpenseModel = {
     }
   }, 
 
-async getFilteredExpenses(startDate, endDate, categoryId) {
-  console.log(startDate, endDate, categoryId);
+async getFilteredExpenses(startDate, endDate, category_id) {
 
   let categoryName = null;
 
-  if (categoryId) {
-    const category = await this.getById(categoryId);
+  if (category_id) {
+    const category = await this.getById(category_id);
     if (!category) {
+      
       // Category ID not found
       return {
         filtered_expenses: [],
@@ -101,9 +101,9 @@ async getFilteredExpenses(startDate, endDate, categoryId) {
 
   const params = [startDate, endDate];
 
-  if (categoryId) {
+  if (category_id) {
     filterQuery += ` AND e.category_id = ?`;
-    params.push(categoryId);
+    params.push(category_id);
   }
 
   const [expenses] = await pool.query(filterQuery, params);
@@ -115,7 +115,7 @@ async getFilteredExpenses(startDate, endDate, categoryId) {
   let highestCategory = null;
   let highestAmount = 0;
 
-  if (!categoryId) {
+  if (!category_id) {
     // Group by category_name and find highest
     const categoryTotals = {};
     expenses.forEach(exp => {
@@ -149,7 +149,7 @@ async getById(id) {
     'SELECT * FROM expense_category_tbl WHERE id = ? AND is_deleted = 0',
     [id]
   );
-  return rows[0]; // this returns a single object
+  return rows; // this returns a single object
 },
   async create(status_name) {
     const [result] = await pool.execute(

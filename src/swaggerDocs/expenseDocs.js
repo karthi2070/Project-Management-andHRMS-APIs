@@ -120,69 +120,70 @@
  *         description: Expense soft-deleted successfully
  */
 
+// /**
+//  * @swagger
+//  * /api/v1/expense/get-filtered-expenses :
+//  *   get:
+//  *     summary: Get expenses filtered dynamically
+//  *     tags: [Expense]
+//  *     parameters:
+//  *       - in: query
+//  *         name: category_id
+//  *         schema:
+//  *           type: integer
+//  *       - in: query
+//  *         name: startDate
+//  *         schema:
+//  *           type: string
+//  *           format: date
+//  *       - in: query
+//  *         name: endDate
+//  *         schema:
+//  *           type: string
+//  *           format: date
+//  *       - in: query
+//  *         name: minAmount
+//  *         schema:
+//  *           type: number
+//  *           format: float
+//  *       - in: query
+//  *         name: maxAmount
+//  *         schema:
+//  *           type: number
+//  *           format: float
+//  *       - in: query
+//  *         name: keyword
+//  *         schema:
+//  *           type: string
+//  *     responses:
+//  *       200:
+//  *         description: Filtered expenses retrieved successfully
+//  */
+
+
+
 /**
  * @swagger
- * /api/v1/expense/get-filtered-expenses :
+ * /api/v1/expense/get-expens-by-filter :
  *   get:
  *     summary: Get expenses filtered dynamically
  *     tags: [Expense]
  *     parameters:
+ *       - in: query
+ *         name: startDate
+ *         schema:
+ *           type: string
+ *           format: date
+ *       - in: query
+ *         name: endDate
+ *         schema:
+ *           type: string
+ *           format: date
  *       - in: query
  *         name: category_id
  *         schema:
  *           type: integer
- *       - in: query
- *         name: startDate
- *         schema:
- *           type: string
- *           format: date
- *       - in: query
- *         name: endDate
- *         schema:
- *           type: string
- *           format: date
- *       - in: query
- *         name: minAmount
- *         schema:
- *           type: number
- *           format: float
- *       - in: query
- *         name: maxAmount
- *         schema:
- *           type: number
- *           format: float
- *       - in: query
- *         name: keyword
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Filtered expenses retrieved successfully
- */
-
-
-
-/**
- * @swagger
- * /api/v1/expense/get-expens :
- *   get:
- *     summary: Get expenses filtered dynamically
- *     tags: [Expense]
- *     parameters:
- *       - in: query
- *         name: startDate
- *         schema:
- *           type: string
- *           format: date
- *       - in: query
- *         name: endDate
- *         schema:
- *           type: string
- *           format: date
- *       - in: query
- *         name: category
- *         schema:
- *           type: string
+ *           description: Category ID to filter expenses
  *     responses:
  *       200:
  *         description: Filtered expenses retrieved successfully

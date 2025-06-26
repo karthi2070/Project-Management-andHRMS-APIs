@@ -45,6 +45,7 @@ const leave = require('./routers/leaveRoute.js'); // Leave Routes
 const holiday = require('./routers/holidayRoute.js'); // Holiday Routes
 const comments =require('./routers/commentsRoute.js')
 const activityLog =require('./routers/activityLogRoutes.js')
+const openAi = require('./routers/openAiRute.js'); // OpenAI Routes
 
 
 const authRoutes = require('./routers/authRoute');
@@ -74,7 +75,7 @@ app.use('/api/v1',comments);
 app.use('/api/v1', holiday); // Holiday Routes
 
 app.use('/api/v1',activityLog);
-
+app.use('/api/v1', openAi); // OpenAI Routes
 
 app.use(errorHandler); // Centralized Error Handling Middleware
 

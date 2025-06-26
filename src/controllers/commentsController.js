@@ -93,9 +93,21 @@ console.log(req.body)
   deleteComment: async (req, res, next) => {
     try {
       const { id } = req.params;
+      if (!id) return res.status(400).json({ message: 'Comment ID is required' });
+      const comment = await Comments.getCommentById(id)
+      if (!comment) return res.status(404).json({ message: 'Comment not found' });
       const deleted = await Comments.deleteComment(id);
-      if (!deleted) return res.status(404).json({ message: 'Comment not found' });
-      res.status(200).json({ message: 'Comment soft deleted' });
+
+      await activityLogger.deleteCommentLog({
+        task_id: comment.task_id,
+        sub_task_id: comment.sub_task_id,
+        user_id: comment.user_id,
+        old_value: comment.comment,
+        new_value: 'comment_deleted' 
+
+      });
+//id, task_id, sub_task_id, user_name, action_type, old_value, new_value, updated_by, created_at, updated_at, user_id
+      res.status(201).json({ message: 'Comment deleted', comment_id: id });
     } catch (err) {
       next(err);
     }
