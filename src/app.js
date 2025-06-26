@@ -15,7 +15,11 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function (origin, callback) {
-    // console.log('CORS Origin:', origin);
+ git add src/app.js
+git commit -m "Updated app.js with latest changes"
+git pull --rebase       # pull latest without merge conflict
+git push origin develop.v1
+
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
