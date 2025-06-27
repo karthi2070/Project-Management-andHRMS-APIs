@@ -9,16 +9,15 @@ const app = express();
 const allowedOrigins = [
   'https://www.n1suite.namuvi.com',
   'https://n1suite.namuvi.com',
+  'https://api.sellero2.com/n1suite',
+  'https://api.sellero2.com/n1suite/api-docs',
+  'https://api.sellero2.com/n1suite/api-docs/',
   'http://localhost:5173',
   'http://localhost:3002',
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
- git add src/app.js
-git commit -m "Updated app.js with latest changes"
-git pull --rebase       # pull latest without merge conflict
-git push origin develop.v1
 
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
@@ -38,17 +37,17 @@ const employee = require('./routers/empolyeeRoute');
 const expense = require('./routers/expenceRoute');
 const quotation = require('./routers/quotationRoute.js');
 const clientRoutes = require('./routers/clientRoute.js');
-const service=require('./routers/serviceRoute.js')
+const service = require('./routers/serviceRoute.js')
 const nodemailer = require('./routers/mailRoutes.js')
-const attendance= require('./routers/attendanceRoute.js');
-const project= require('./routers/projectRoute.js'); // Project Routes
+const attendance = require('./routers/attendanceRoute.js');
+const project = require('./routers/projectRoute.js'); // Project Routes
 const sprint = require('./routers/sprintRoute.js'); // Sprint Routes
 const task = require('./routers/taskRoute.js');
 const subTask = require('./routers/subTaskRoute.js')
 const leave = require('./routers/leaveRoute.js'); // Leave Routes
 const holiday = require('./routers/holidayRoute.js'); // Holiday Routes
-const comments =require('./routers/commentsRoute.js')
-const activityLog =require('./routers/activityLogRoutes.js')
+const comments = require('./routers/commentsRoute.js')
+const activityLog = require('./routers/activityLogRoutes.js')
 const openAi = require('./routers/openAiRute.js'); // OpenAI Routes
 
 
@@ -75,10 +74,10 @@ app.use('/api/v1', sprint); // Sprint Routes
 app.use('/api/v1', task); // Task Routes
 app.use('/api/v1', subTask); // Task Routes
 app.use('/api/v1', leave); // Leave Routes
-app.use('/api/v1',comments);
+app.use('/api/v1', comments);
 app.use('/api/v1', holiday); // Holiday Routes
 
-app.use('/api/v1',activityLog);
+app.use('/api/v1', activityLog);
 app.use('/api/v1', openAi); // OpenAI Routes
 
 app.use(errorHandler); // Centralized Error Handling Middleware
