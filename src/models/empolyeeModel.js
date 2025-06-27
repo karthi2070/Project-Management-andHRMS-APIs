@@ -34,6 +34,15 @@ const pool = require('../config/db');
 //id, name, employee_id, phone, mail, dob, doj, department, designation, salary, status, status_reson, status_desc, pan, aadhar, education, address, city, state, pincode, p_address, p_city, p_state, p_pincode, is_deleted, created_at, updated_at
      async getAllEmployees() {
          try {
+             const sql = `SELECT * FROM employee_tbl WHERE is_deleted = 0`;
+             const [employees] = await pool.query(sql);
+             return employees;
+         } catch (error) {
+             throw error;
+         }
+     },
+          async getAllEmployeesdash() {
+         try {
              const sql = `SELECT name, employee_id, mail,department,status FROM employee_tbl WHERE is_deleted = 0`;
              const [employees] = await pool.query(sql);
              return employees;
