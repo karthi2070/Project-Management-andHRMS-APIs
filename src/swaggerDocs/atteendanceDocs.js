@@ -19,8 +19,6 @@
  *       properties:
  *         user_id:
  *           type: number
- *         employee_id:
- *          type: integer
  *         employee_name:
  *           type: string
  *         department:

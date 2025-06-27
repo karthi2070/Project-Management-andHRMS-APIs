@@ -3,7 +3,7 @@ const attendanceModel = require('../models/attendanceModel');
 
 async function getAttendanceSummaryData(date) {
 //   const dateObj = new Date(date || new Date());
-  const allEmployees = await employeeModel.getAllEmployees();   
+  const allEmployees = await employeeModel.getAllEmployeesdash();   
   const presentIds = await attendanceModel.getPresentEmployeeIds(date);
 
   const presentEmployees = allEmployees.filter(emp => presentIds.includes(emp.user_id));

@@ -11,5 +11,6 @@ router.get('/service/get-by-client-id/:clientId', serviceController.getClientByI
 router.get('/service/payment-filter/:status', serviceController.paymentFilter);
 router.patch('/service/delete-service/:id', serviceController.deleteService);
 
+router.post('/service/due-payment/:service_id', serviceController.recordServiceEMIPayment);
 
 module.exports = router;

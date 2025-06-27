@@ -25,7 +25,7 @@ const serviceController = {
             const { id } = req.params;
             const { status } = req.body;
             if (!status) return res.status(400).json({ success: false, message: 'Status is required' });
-            const data = await serviceModel.statusUpdate(id, status);
+            const data = await serviceModel.paymentUpdate(id, status);
             res.status(200).json({ success: true, message: 'Service status updated', data });
         } catch (error) {
             next(error);
@@ -84,7 +84,68 @@ const serviceController = {
         } catch (error) {
             next(error);
         }
+    },
+
+    // record EMI payment
+
+    async recordServiceEMIPayment   (req, res, next)  {
+  try {
+    const service_id = parseInt(req.params.service_id);
+    const { client_id, payment_amount,payment_date, payment_method, payment_status, notes } = req.body;
+
+    // Step 1: Fetch invoice
+    const service = await serviceModel.getById(service_id);
+    console.log(service)
+    if (!service) {
+      return res.status(404).json({ message: 'service not found' });
     }
+//client_id, invoice_number, invoice_amount, paid_amount, balance_amount,status_id, invoice_date, due_date, payment_method, notes
+    const serviceAmount = Number(service.service_amount);
+    const currentPaid = Number(service.paid_amount);
+    const newTotalPaid = currentPaid + Number(payment_amount);
+    let balanceAmount = serviceAmount - newTotalPaid;
+
+    let extra_amount = 0;
+    if (balanceAmount < 0) {
+      extra_amount = Math.abs(balanceAmount);
+      balanceAmount = 0;
+    }
+user_id =  1; // Assuming user_id is from the authenticated user, defaulting to 1 if not available
+    // Step 2: Insert payment
+    await serviceModel.insertServicePayment({
+        user_id:user_id,
+      client_id,
+      service_id,
+      payment_amount,
+      payment_date,
+      payment_method,
+      payment_status,
+      notes,
+      extra_amount
+    });
+
+    // Step 3: Update service only if payment is successful (e.g., 1 = success)
+    if (Number(payment_status) === 1) {
+      const newStatusId = newTotalPaid >= serviceAmount ? 2 : 3; // 2 = partial, 3 = paid
+
+    const  updateServiceData={paid_amount: newTotalPaid,balance_amount: balanceAmount,extra_amount:extra_amount,status_id: newStatusId,id :service_id}
+      await serviceModel.updateServiceTotals(updateServiceData);
+    }
+
+    return res.status(200).json({
+      message: 'Payment recorded',
+      paid_amount: newTotalPaid,
+      balance_amount: balanceAmount,
+      payment_date,
+      extra_amount,
+      payment_status
+    });
+
+  } catch (err) {
+    next(err); 
+  }
+
+}
 };
 
 module.exports = serviceController;

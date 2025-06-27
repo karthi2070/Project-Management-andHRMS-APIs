@@ -78,15 +78,7 @@ async getClientDashboard(req, res, next) {
         total_clients: totalClients,
         total_pending_payment: pendingPayments.total_pending_payment,
         upcoming_due_clients: upcomingClientsCount,
-        // upcoming_due_clients_ids: upcomingClientsCount.upcoming_due_clients_ids,
         renewalClientsCount: getRenewalClients,
-        // renewalClientsId: getRenewalClients.clients_renewal_id
-            //     res.status(200).json({
-    //     total_clients: totalClients,
-    //     total_pending_payment: pendingPayments.total_pending_payment,
-    //     upcomingClientsCount: upcomingClientsCount,
-    //     renewalClientsCount: getRenewalClients
-    //   });
       });
     } catch (error) {
       next(error);
@@ -101,6 +93,7 @@ async getClientDashboard(req, res, next) {
 
              const count = await ClientModel.getTotalInvoice()
             const invoice_number =`INC000${count+1}`
+            
             const invoiceData = { user_id, service_name, client_id, invoice_number, invoice_amount, paid_amount,
                  balance_amount, status_id, invoice_date, followup_date, service_renewal_date, payment_method, notes }
             const invoiceId = await ClientModel.createInvoice(invoiceData);

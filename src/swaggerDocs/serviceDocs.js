@@ -192,3 +192,63 @@
  *       200:
  *         description: Service deleted
  */
+
+
+
+/**
+ * @swagger
+ * /api/v1/service/due-payment/{service_id}:
+ *   post:
+ *     summary: Record a due payment for a service
+ *     description: Adds a new due payment entry for a specific service. Updates service totals only if payment is marked as successful.
+ *     tags: [Service]
+ *     parameters:
+ *       - in: path
+ *         name: service_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID of the service for which due payment is being made
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - client_id
+ *               - payment_amount
+ *               - payment_method
+ *               - payment_status
+ *             properties:
+ *               user_id:
+ *                 type: integer
+ *                 example: 102
+ *               client_id:
+ *                 type: integer
+ *                 example: 45
+ *               payment_amount:
+ *                 type: number
+ *                 format: float
+ *                 example: 2000.00
+ *               payment_date:
+ *                 type: string
+ *                 format: date
+ *                 example: "2025-06-11"
+ *               payment_method:
+ *                 type: string
+ *                 example: "UPI"
+ *               payment_status:
+ *                 type: integer
+ *                 example: 1
+ *               notes:
+ *                 type: string
+ *                 example: "EMI payment for June"
+ *     responses:
+ *       200:
+ *         description: EMI payment recorded successfully
+ *       404:
+ *         description: Invoice not found
+ *       500:
+ *         description: Internal server error
+ */

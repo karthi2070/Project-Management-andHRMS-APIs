@@ -246,7 +246,7 @@ FROM clients_renewal; `
     const { user_id, paid_amount, balance_amount, extra_amount, status_id, id } = updateInvoiseData
 
     const query = `UPDATE invoice_tbl 
-       SET user_id =?,paid_amount = ?, balance_amount = ?, extra_amount=?, status_id = ?, updated_at = NOW()
+       SET user_id =?,paid_amount = ?, balance_amount = ?, extra_amount=?, status_id = ?
        WHERE id = ? AND is_deleted = 0`
     const [result] = await pool.query(query, [user_id, paid_amount, balance_amount, extra_amount, status_id, id]
     );
