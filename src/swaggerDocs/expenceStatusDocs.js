@@ -3,7 +3,7 @@
 /**
  * @swagger
  * tags:
- *   - name: ExpenseStatus
+ *   - name: Expense Category
  *     description: APIs for managing expense statuses
  */
 
@@ -12,7 +12,7 @@
    * /api/v1/expense/create-status:
    *   post:
    *     summary: Create a new expense status
-   *     tags: [ExpenseStatus]
+   *     tags: [Expense Category]
    *     requestBody:
    *       required: true
    *       content:
@@ -20,7 +20,7 @@
    *           schema:
    *             type: object
    *             properties:
-   *               status_name:
+   *               name:
    *                 type: string
    *                 example: Pending Approval
    *     responses:
@@ -32,7 +32,7 @@
    * /api/v1/expense/update-status/{id}:
    *   put:
    *     summary: Update an expense status by ID
-   *     tags: [ExpenseStatus]
+   *     tags: [Expense Category]
    *     parameters:
    *       - in: path
    *         name: id
@@ -46,7 +46,7 @@
    *           schema:
    *             type: object
    *             properties:
-   *               status_name:
+   *               name:
    *                 type: string
    *                 example: Approved
    *     responses:
@@ -59,7 +59,7 @@
    * /api/v1/expense/get-all-status:
    *   get:
    *     summary: Retrieve all expense statuses
-   *     tags: [ExpenseStatus]
+   *     tags: [Expense Category]
    *     responses:
    *       200:
    *         description: Array of status records
@@ -70,7 +70,7 @@
    * /api/v1/expense/get-by-id-status/{id}:
    *   get:
    *     summary: Retrieve a status by ID
-   *     tags: [ExpenseStatus]
+   *     tags: [Expense Category]
    *     parameters:
    *       - in: path
    *         name: id
@@ -87,7 +87,7 @@
    * /api/v1/expense/delete-status/{id}:
    *   patch:
    *     summary: Soft-delete a status
-   *     tags: [ExpenseStatus]
+   *     tags: [Expense Category]
    *     parameters:
    *       - in: path
    *         name: id

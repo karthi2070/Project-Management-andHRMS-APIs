@@ -151,18 +151,18 @@ async getById(id) {
   );
   return rows; // this returns a single object
 },
-  async create(status_name) {
+  async create(name) {
     const [result] = await pool.execute(
-      'INSERT INTO expense_category_tbl (status_name) VALUES (?)',
-      [status_name]
+      'INSERT INTO expense_category_tbl (name) VALUES (?)',
+      [name]
     );
-    return { id: result.insertId, status_name };
+    return { id: result.insertId, name };
   },
 
-  async update(id, status_name) {
+  async update(id, name) {
     await pool.execute(
-      'UPDATE expense_category_tbl SET status_name = ? WHERE id = ? AND is_deleted = 0',
-      [status_name, id]
+      'UPDATE expense_category_tbl SET name = ? WHERE id = ? AND is_deleted = 0',
+      [name, id]
     );
   },
 
@@ -175,10 +175,7 @@ async getById(id) {
 
 
   async softDelete(id) {
-    await pool.execute(
-      'UPDATE expense_category_tbl SET is_deleted = 1 WHERE id = ?',
-      [id]
-    );
+    await pool.execute( 'UPDATE expense_category_tbl SET is_deleted = 1 WHERE id = ?', [id] );
   }
 };
 

@@ -80,8 +80,8 @@ const ExpenseController = {
     //expence status id
   async create(req, res, next) {
     try {
-      const { status_name } = req.body;
-      const result = await ExpenseModel.create(status_name);
+      const { name } = req.body;
+      const result = await ExpenseModel.create(name);
       res.status(201).json(result);
     } catch (err) {
       next(err);
@@ -91,8 +91,8 @@ const ExpenseController = {
   async update(req, res, next) {
     try {
       const { id } = req.params;
-      const { status_name } = req.body;
-      await ExpenseModel.update(id, status_name);
+      const { name } = req.body;
+      await ExpenseModel.update(id, name);
       res.json({ message: 'Status updated' });
     } catch (err) {
       next(err);

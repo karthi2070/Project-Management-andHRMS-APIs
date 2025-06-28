@@ -1,4 +1,5 @@
-const db = require('../config/db'); // assume db is your MySQL pool or connection
+const db = require('../config/db'); 
+
 const EmployeeModel =require('../models/empolyeeModel')
 const {logTaskFieldChanges}= require('../helper/taskActivityLog')
 

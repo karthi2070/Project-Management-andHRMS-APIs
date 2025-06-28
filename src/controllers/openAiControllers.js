@@ -1,21 +1,45 @@
 const openAi = require('../config/openAi');
+const { projectDescriptionPrompt,
+   sprintDescriptionPrompt,
+    taskDescriptionPrompt,
+     acceptanceCriteriaPrompt } = require('../helper/promtTemplate');
+     
+function generatePrompt(template, userInput) {
+  return template.replace('{{user_input}}', userInput);
+}
 
+// Controller function
 async function handleRewrite(req, res) {
-  const { content } = req.body;
+  const { content, type } = req.body;
 
   if (!content || typeof content !== 'string') {
     return res.status(400).json({ error: 'Content is required and must be a string.' });
   }
 
-  const prompt = `I am creating a SAAS application and I am going to use open AI to correct and generate texts for me in the below field and I need a prompt for each one of them to apply from the backend
+  if (!type || !['project', 'sprint', 'task', 'acceptance'].includes(type)) {
+    return res.status(400).json({ error: 'Type must be one of: project, sprint, task, acceptance' });
+  }
 
-Project Description
-Sprint Description
-Task Description
-Acceptance Criteria 
-${content}
-`;
+  let promptTemplate;
 
+  switch (type) {
+    case 'project':
+      promptTemplate = projectDescriptionPrompt;
+      break;
+    case 'sprint':
+      promptTemplate = sprintDescriptionPrompt;
+      break;
+    case 'task':
+      promptTemplate = taskDescriptionPrompt;
+      break;
+    case 'acceptance':
+      promptTemplate = acceptanceCriteriaPrompt;
+      break;
+    default:
+      return res.status(400).json({ error: 'Invalid type provided.' });
+  }
+
+  const prompt = generatePrompt(promptTemplate, content);
   try {
     const response = await openAi.chat.completions.create({
       model: 'gpt-4', // or fallback to gpt-3.5-turbo
