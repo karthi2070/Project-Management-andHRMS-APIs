@@ -22,12 +22,20 @@
  *         to_date:
  *           type: string
  *           format: date
+ *         service_amount:
+ *           type: integer
+ *         paid_amount:
+ *           type: number
+ *           format: float
+ *         balance_amount:
+ *           type: number
+ *           format: float
+ *         renewal_amount:
+ *           type: number
+ *           format: float
  *         last_renewal_date:
  *           type: string
  *           format: date
- *         amount:
- *           type: number
- *           format: float
  *         payment_status:
  *           type: integer
  *           default: 0

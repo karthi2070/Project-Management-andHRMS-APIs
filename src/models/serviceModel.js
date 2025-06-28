@@ -21,7 +21,8 @@ const serviceModel = {
       data.last_renewal_date || null,
       data.payment_status || 0
     ]);
-    console.log('Service created with ID:', result.insertId);
+    console.log("amount",data.service_amount * 0.18,"renamount", data.renewal_amount * 0.18);
+    console.log(result);
     return { id: result.insertId, ...data };
   },
 

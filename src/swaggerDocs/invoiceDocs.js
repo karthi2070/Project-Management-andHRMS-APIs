@@ -34,6 +34,10 @@
  *           type: string
  *           format: date
  *           description: Date when the invoice was issued
+ *         due_date:
+ *           type: string
+ *           format: date
+ *           description: ue date for the invoice payment
  *         followup_date:
  *           type: string
  *           format: date

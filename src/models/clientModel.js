@@ -126,17 +126,18 @@ FROM clients_renewal; `
 
     const query = `
     INSERT INTO invoice_tbl
-    (user_id,service_name,client_id, invoice_number, invoice_amount, paid_amount, balance_amount, extra_amount, invoice_date, followup_date,service_renewal_date, payment_method, notes)
-    VALUES ( ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
+    (user_id,service_name,client_id, invoice_number, invoice_amount, paid_amount, balance_amount, extra_amount, invoice_date,due_date, followup_date,service_renewal_date, payment_method, notes)
+    VALUES ( ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?);`;
 
     const values = [
       invoice.user_id, invoice.service_name, invoice.client_id,
       invoice.invoice_number,
-      invoice.invoice_amount,
+      invoice.invoice_amount* 0.18,
       invoice.paid_amount || 0.00,
       invoice.balance_amount || invoice.invoice_amount,
       invoice.extra_amount || 0.00,
       invoice.invoice_date,
+      invoice.due_date ,
       invoice.followup_date,
       invoice.service_renewal_date,
       invoice.payment_method,
@@ -150,7 +151,7 @@ FROM clients_renewal; `
     const query = `
     UPDATE invoice_tbl 
     SET user_id=?,service_name=?, client_id=?, invoice_number=?, invoice_amount=?, paid_amount=?, balance_amount=?, extra_amount=?,
-        status_id=?, invoice_date=?, followup_date=?,service_renewal_date=?, payment_method=?, notes=? 
+        status_id=?, invoice_date=?,due_date=? followup_date=?,service_renewal_date=?, payment_method=?, notes=? 
     WHERE id = ?;
   `;
 
@@ -159,13 +160,14 @@ FROM clients_renewal; `
       invoice.service_name,
       invoice.client_id,
       invoice.invoice_number,
-      invoice.invoice_amount,
+      invoice.invoice_amount*0.18,
       invoice.paid_amount,
       invoice.balance_amount,
       invoice.extra_amount,
       invoice.status_id,
       invoice.invoice_date,
       invoice.followup_date,
+      invoice.due_date,
       invoice.service_renewal_date,
       invoice.payment_method,
       invoice.notes,
@@ -252,8 +254,6 @@ FROM clients_renewal; `
     );
     return result;
   }
-
-
 
 };
 
