@@ -90,6 +90,8 @@ const EmployeeController = {
     },
        async relievingEmployee(req, res, next) {
         try {
+            console.log("Relieving employee with ID:", req.params.id);
+            console.log("Relieving data:", req.body);
             const updatedEmployee = await EmployeeModel.relievingEmployee(req.params.id, req.body);
             res.status(200).json(updatedEmployee);
         } catch (error) {
@@ -191,10 +193,3 @@ const EmployeeController = {
 
 module.exports = EmployeeController;
 
-// const BankModel = require('../models/bankModel');
-
-// const BankController = {
-    
-// };
-
-// module.exports = BankController;

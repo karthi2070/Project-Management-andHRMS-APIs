@@ -83,8 +83,8 @@ const pool = require('../config/db');
     
              const sql = `UPDATE employee_tbl SET  status=?, status_reson=?, status_desc=?,relieving_date=?
                           WHERE user_id = ? AND is_deleted = 0`;
-             await pool.query(sql, [...Object.values(data), id]);
-             return { id, ...data };
+            const [result] = await pool.query(sql, [...Object.values(data), id]);
+             return result.affectedRows > 0 ? { id, ...data } : null;
      },
  
      async softDeleteEmployee(id) {

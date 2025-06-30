@@ -133,11 +133,12 @@
  *         description: Internal server error
  */
 
+
 /**
  * @swagger
  * /api/v1/employees/relieving-empolyee/{id}:
  *   put:
- *     summary: Relieve an employee
+ *     summary: Relieve an employee by user id
  *     tags: [Employee]
  *     parameters:
  *       - in: path
@@ -160,6 +161,7 @@
  *                 type: string
  *               relieving_date:
  *                 type: string
+ *                format: date
  *     responses:
  *       200:
  *         description: Employee updated
