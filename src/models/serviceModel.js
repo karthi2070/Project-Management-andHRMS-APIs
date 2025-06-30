@@ -107,12 +107,12 @@ const serviceModel = {
 
 //
   async insertServicePayment(data) {
-    const { user_id, client_id, service_id, payment_amount, payment_date, payment_method, payment_status, notes, extra_amount } = data;
+    const { user_id, client_id, service_id, payment_amount, payment_date, payment_method, payment_status,next_due_date, notes, extra_amount } = data;
     const [result] = await db.query(
       `INSERT INTO service_payment_tbl 
-       (user_id,client_id, service_id, payment_amount,payment_date, payment_method, payment_status, notes, extra_amount)
-       VALUES (?,?,?,?,?,?,?,?,?)`,
-      [user_id, client_id, service_id, payment_amount, payment_date, payment_method, payment_status, notes, extra_amount]
+       (user_id,client_id, service_id, payment_amount,payment_date, payment_method, payment_status,next_due_date, notes, extra_amount)
+       VALUES (?,?,?,?,?,?,?,?,?,?)`,
+      [user_id, client_id, service_id, payment_amount, payment_date, payment_method, payment_status,next_due_date, notes, extra_amount]
     );
     return result;
   },

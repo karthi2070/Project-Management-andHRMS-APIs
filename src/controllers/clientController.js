@@ -75,10 +75,10 @@ async getClientDashboard(req, res, next) {
       const getRenewalClients = await ClientModel.getRenewalClients();
 
       res.status(200).json({
-        total_clients: totalClients,
+        total_clients: totalClients ? totalClients : 0,
         total_pending_payment: pendingPayments.total_pending_payment ? pendingPayments.total_pending_payment : 0,
-        upcoming_due_clients: upcomingClientsCount,
-        renewalClientsCount: getRenewalClients,
+        upcoming_due_clients: upcomingClientsCount ? upcomingClientsCount : 0,
+        renewalClientsCount: getRenewalClients ? getRenewalClients : 0,
       });
     } catch (error) {
       next(error);

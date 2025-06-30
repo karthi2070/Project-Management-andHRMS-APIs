@@ -91,7 +91,7 @@ const serviceController = {
     async recordServiceEMIPayment   (req, res, next)  {
   try {
     const service_id = parseInt(req.params.service_id);
-    const { client_id, payment_amount,payment_date, payment_method, payment_status, notes } = req.body;
+    const { client_id, payment_amount,payment_date, payment_method, payment_status,next_due_date, notes } = req.body;
 
     // Step 1: Fetch invoice
     const service = await serviceModel.getById(service_id);
@@ -120,6 +120,7 @@ user_id =  1; // Assuming user_id is from the authenticated user, defaulting to 
       payment_date,
       payment_method,
       payment_status,
+      next_due_date, // Assuming next_due_date is part of the service model
       notes,
       extra_amount
     });
