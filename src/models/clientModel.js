@@ -132,7 +132,7 @@ FROM clients_renewal; `
     const values = [
       invoice.user_id, invoice.service_name, invoice.client_id,
       invoice.invoice_number,
-      invoice.invoice_amount* 0.18,
+      invoice.invoice_amount* 1.18,
       invoice.paid_amount || 0.00,
       invoice.balance_amount || invoice.invoice_amount,
       invoice.extra_amount || 0.00,
@@ -160,7 +160,7 @@ FROM clients_renewal; `
       invoice.service_name,
       invoice.client_id,
       invoice.invoice_number,
-      invoice.invoice_amount*0.18,
+      invoice.invoice_amount*1.18,
       invoice.paid_amount,
       invoice.balance_amount,
       invoice.extra_amount,

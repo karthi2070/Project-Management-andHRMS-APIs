@@ -76,7 +76,7 @@ async getClientDashboard(req, res, next) {
 
       res.status(200).json({
         total_clients: totalClients,
-        total_pending_payment: pendingPayments.total_pending_payment,
+        total_pending_payment: pendingPayments.total_pending_payment ? pendingPayments.total_pending_payment : 0,
         upcoming_due_clients: upcomingClientsCount,
         renewalClientsCount: getRenewalClients,
       });

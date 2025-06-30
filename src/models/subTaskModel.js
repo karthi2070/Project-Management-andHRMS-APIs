@@ -5,22 +5,23 @@ const {logTaskFieldChanges}= require('../helper/taskActivityLog')
 
 const  subTaskModel  = {
     async createTask(taskData) {
-        const { user_id,creater_name,sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,
-            acceptance, issue_type,story_points, attachments, parent_task_id} = taskData;
+        const { user_id,creater_name,project_id,sprint_id, parent_task_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,
+            acceptance, issue_type,story_points, attachments} = taskData;
 
     const sql = `
         INSERT INTO sub_task_tbl (
-            user_id,creater_name,sprint_id, project_code, title, description, priority, label, 
+            user_id,creater_name,project_id,sprint_id, parent_task_id, project_code, title, description, priority, label, 
             start_date, end_date, due_date,status, team, assignee, rca,acceptance, issue_type,
-            story_points, attachments, parent_task_id
-        ) VALUES (?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?)
+            story_points, attachments
+        ) VALUES (?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?,?)
     `;
 
-     const values =[user_id,creater_name,sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,
+     const values =[user_id,creater_name,project_id,sprint_id, parent_task_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,
         acceptance, issue_type,story_points, JSON.stringify(attachments), parent_task_id  ]
 
            const [result] = await db.query(sql, values);
            const taskId =result.insertId
+
 const employee =await EmployeeModel.getEmployeeByUserId(user_id);
 
     // Log task creation in activity_logs_tbl
@@ -32,7 +33,15 @@ const employee =await EmployeeModel.getEmployeeByUserId(user_id);
         return { id: result.insertId, ...taskData };
     },
     async getAllSubTasks(parentId) {
-            const sql = `SELECT * FROM sub_task_tbl WHERE is_deleted = 0 AND parent_task_id = ?`
+            //const sql = `SELECT * FROM sub_task_tbl WHERE is_deleted = 0 AND parent_task_id = ?`
+    const sql = `SELECT s.id, s.project_id, p.name AS project_name, s.sprint_id, sp.name AS sprint_name, s.parent_task_id, t.title AS task_name,
+     s.project_code, s.title, s.description, s.priority, s.label, s.start_date, s.end_date, s.due_date, s.status, s.team, s.assignee, s.rca,
+      s.acceptance, s.issue_type, s.story_points, s.attachments, s.is_deleted, s.created_at, s.updated_at 
+      FROM sub_task_tbl s
+       LEFT JOIN project_tbl p ON s.project_id = p.id 
+       LEFT JOIN sprint_tbl sp ON s.sprint_id = sp.id 
+       LEFT JOIN task_tbl t ON s.parent_task_id = t.id 
+       WHERE s.is_deleted = 0 AND s.parent_task_id = ?; `
            const [rows] =await db.execute(sql, [parentId]);
         return rows;
     },
@@ -50,8 +59,8 @@ const employee =await EmployeeModel.getEmployeeByUserId(user_id);
     },
 
     async updateTask(id, taskData) {
-        const { user_id,creater_name,sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,acceptance, issue_type,
-            story_points, attachments, parent_task_id} = taskData;
+        const { user_id,creater_name,project_id,sprint_id, parent_task_id,project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,acceptance, issue_type,
+            story_points, attachments} = taskData;
 
                // Fetch current task details
     const [task_data] = await db.execute(`SELECT status, assignee,due_date,priority FROM sub_task_tbl WHERE id = ?`, [id]);
@@ -59,12 +68,12 @@ const employee =await EmployeeModel.getEmployeeByUserId(user_id);
         return json({ message: 'Task not found' });
 
     if (!task_data.length) return json({ message: 'Task not found' });
-          const sql=  `UPDATE sub_task_tbl SET user_id=?,creater_name=?,sprint_id = ?, project_code = ?, title = ?, description = ?, priority = ?, label = ?, 
+          const sql=  `UPDATE sub_task_tbl SET user_id=?,creater_name=?, project_id=?,sprint_id=?, parent_task_id=?, project_code = ?, title = ?, description = ?, priority = ?, label = ?, 
             start_date = ?, end_date = ?,due_date = ?, status=?, team = ?, assignee = ?, rca = ?,acceptance=?, issue_type = ?,
-            story_points = ?, attachments = ?, parent_task_id = ? WHERE is_deleted = 0 AND id = ?`
+            story_points = ?, attachments = ? WHERE is_deleted = 0 AND id = ?`
     
-        const values =[user_id,creater_name,sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,acceptance, issue_type,
-              story_points, JSON.stringify(attachments), parent_task_id, id]
+        const values =[user_id,creater_name,project_id,sprint_id, parent_task_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,acceptance, issue_type,
+              story_points, JSON.stringify(attachments), id]
               const [result]=await db.query( sql, values);
 
                   const employee = await EmployeeModel.getEmployeeByUserId(user_id);

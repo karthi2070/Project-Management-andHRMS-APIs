@@ -17,7 +17,13 @@
  *         creater_name:
  *           type: string
  *           example: admin
+ *         project_id:
+ *           type: integer
+ *           example: 2
  *         sprint_id:
+ *           type: integer
+ *           example: 2
+ *         parent_task_id:
  *           type: integer
  *           example: 2
  *         project_code:
@@ -73,9 +79,6 @@
  *           items:
  *             type: string
  *           example: ["https://example.com/attachment.png", "https://example.com/attachment2.png"]
- *         parent_task_id:
- *           type: integer
- *           example: 55
  */
 
  
@@ -124,7 +127,7 @@
   * @swagger
   * /api/v1/sub-tasks/get-subtasks-id/{id}:
   *   get:
-  *     summary: Get a task by ID
+  *     summary: Get a sub task by ID
   *     tags: [Sub Tasks]
   *     parameters:
   *       - in: path
@@ -132,12 +135,12 @@
   *         required: true
   *         schema:
   *           type: integer
-  *         description: Task ID
+  *         description: sub task  ID
   *     responses:
   *       200:
-  *         description: Task details
+  *         description: sub Task details
   *       404:
-  *         description: Task not found
+  *         description: sub Task not found
   */
 
   /**

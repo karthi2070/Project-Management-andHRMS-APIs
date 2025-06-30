@@ -6,22 +6,26 @@ const serviceModel = {
     //id, client_id, service_name, from_date, to_date, service_amount, paid_amount, balance_amount, renewal_amount, last_renewal_date,
     //  payment_status, is_deleted, created_at, updated_at
     const sql = `INSERT INTO service_tbl 
-      (client_id, service_name, from_date, to_date,service_amount, paid_amount, balance_amount, renewal_amount,last_renewal_date, payment_status) 
+      (client_id, service_name, from_date, to_date,service_amount, paid_amount, balance_amount, renewal_amount,last_renewal_date, payment_status,notes) 
       VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+      console.log("data", data);
+    const serviceAmountWithTax = data.service_amount * 1.18;
+    const renewalAmountWithTax = data.renewal_amount * 1.18;
 
     const [result] = await db.execute(sql, [
       data.client_id,
       data.service_name,
       data.from_date,
       data.to_date,
-      data.service_amount * 0.18,
+      serviceAmountWithTax,
       data.paid_amount,
       data.balance_amount,
-      data.renewal_amount * 0.18,
+      renewalAmountWithTax,
       data.last_renewal_date || null,
-      data.payment_status || 0
+      data.payment_status || 0,
+      data.notes || null
     ]);
-    console.log("amount",data.service_amount * 0.18,"renamount", data.renewal_amount * 0.18);
+    console.log("amount", serviceAmountWithTax, "renamount", renewalAmountWithTax);
     console.log(result);
     return { id: result.insertId, ...data };
   },
@@ -40,7 +44,7 @@ const serviceModel = {
   async update(id, data) {
     const sql = `UPDATE service_tbl SET 
       client_id = ?, service_name = ?, from_date = ?, to_date = ?,service_amount=?, paid_amount=?, balance_amount=?, renewal_amount=?,
-      last_renewal_date=?, payment_status = ? 
+      last_renewal_date=?, payment_status = ? ,notes = ?
       WHERE id = ? AND is_deleted = 0`;
     await db.execute(sql, [
       data.client_id,
@@ -52,8 +56,8 @@ const serviceModel = {
       data.balance_amount,
       data.renewal_amount * 0.18,
       data.last_renewal_date || null,
-
       data.payment_status,
+      data.notes || null,
       id
     ]);
     return { id, ...data };
