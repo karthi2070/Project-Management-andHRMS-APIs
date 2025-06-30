@@ -133,7 +133,6 @@
  *         description: Internal server error
  */
 
-
 /**
  * @swagger
  * /api/v1/employees/relieving-empolyee/{id}:
@@ -155,13 +154,13 @@
  *             properties:
  *               status:
  *                 type: string
- *               status_reson:
+ *               status_reason:   
  *                 type: string
  *               status_desc:
  *                 type: string
  *               relieving_date:
  *                 type: string
- *                format: date
+ *                 format: date  
  *     responses:
  *       200:
  *         description: Employee updated
@@ -170,6 +169,7 @@
  *       500:
  *         description: Internal server error
  */
+
 
 /**
  * @swagger

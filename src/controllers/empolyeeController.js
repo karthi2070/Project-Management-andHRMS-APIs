@@ -6,7 +6,7 @@ const EmployeeController = {
         try {
             const {
                 user_id,name, phone, mail, dob, doj, department, designation, salary, status,
-                status_reson, status_desc,relieving_date, pan, aadhar, education, address, city, state,
+                status_reason, status_desc,relieving_date, pan, aadhar, education, address, city, state,
                 pincode, p_address, p_city, p_state, p_pincode,emergency_name,emergency_phone,emergency_relation
             } = req.body;
 
@@ -16,7 +16,7 @@ const EmployeeController = {
 
             const employeeData = {
                 user_id,name, employee_id, phone, mail, dob, doj, department, designation, salary, status,
-                status_reson, status_desc,relieving_date, pan, aadhar, education, address, city, state,
+                status_reason, status_desc,relieving_date, pan, aadhar, education, address, city, state,
                 pincode, p_address, p_city, p_state, p_pincode,emergency_name,emergency_phone,emergency_relation
             };
 

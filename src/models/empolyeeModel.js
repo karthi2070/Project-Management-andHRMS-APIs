@@ -11,20 +11,19 @@ const pool = require('../config/db');
     async createEmployee(data) {
         const {
             user_id,name, employee_id, phone, mail, dob, doj, department, designation, salary, status,
-            status_reson, status_desc,relieving_date, pan, aadhar, education, address, city, state,
-            pincode, p_address, p_city, p_state, p_pincode,emergency_name,emergency_phone,emergency_relation
-        } = data;
+            status_reason, status_desc,relieving_date, pan, aadhar, education, address, city, state,
+            pincode, p_address, p_city, p_state, p_pincode,emergency_name,emergency_phone,emergency_relation } = data;
         const sql = `
             INSERT INTO employee_tbl (
                 user_id,name, employee_id, phone, mail, dob, doj, department, designation, salary, status,
-                status_reson, status_desc,relieving_date, pan, aadhar, education, address, city, state,
+                status_reason, status_desc,relieving_date, pan, aadhar, education, address, city, state,
                 pincode, p_address, p_city, p_state, p_pincode,emergency_name,emergency_phone,emergency_relation
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
         const values = [
             user_id,name, employee_id, phone, mail, dob, doj, department, designation, salary, status,
-            status_reson, status_desc,relieving_date, pan, aadhar, education, address, city, state,
+            status_reason, status_desc,relieving_date, pan, aadhar, education, address, city, state,
             pincode, p_address, p_city, p_state, p_pincode,emergency_name,emergency_phone,emergency_relation
         ];
 
@@ -73,7 +72,7 @@ const pool = require('../config/db');
      async updateEmployee(id, data) {
     
              const sql = `UPDATE employee_tbl SET user_id=?, name=?, phone=?,mail=?, dob=?, doj=?, department=?, designation=?, salary=?,
-             status=?, status_reson=?, status_desc=?,relieving_date=?, pan=?, aadhar=?, education=?, address=?, city=?, state=?, pincode=?,
+             status=?, status_reason=?, status_desc=?,relieving_date=?, pan=?, aadhar=?, education=?, address=?, city=?, state=?, pincode=?,
              p_address=?, p_city=?, p_state=?, p_pincode=?,emergency_name=?,emergency_phone=?,emergency_relation=?
                           WHERE id = ? AND is_deleted = 0`;
              await pool.query(sql, [...Object.values(data), id]);
@@ -81,7 +80,7 @@ const pool = require('../config/db');
      },
      async relievingEmployee(id, data){
     
-             const sql = `UPDATE employee_tbl SET  status=?, status_reson=?, status_desc=?,relieving_date=?
+             const sql = `UPDATE employee_tbl SET  status=?, status_reason=?, status_desc=?,relieving_date=?
                           WHERE user_id = ? AND is_deleted = 0`;
             const [result] = await pool.query(sql, [...Object.values(data), id]);
              return result.affectedRows > 0 ? { id, ...data } : null;
