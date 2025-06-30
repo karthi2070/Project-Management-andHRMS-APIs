@@ -7,7 +7,7 @@ const serviceModel = {
     //  payment_status, is_deleted, created_at, updated_at
     const sql = `INSERT INTO service_tbl 
       (client_id, service_name, from_date, to_date,service_amount, paid_amount, balance_amount, renewal_amount,last_renewal_date, payment_status,notes) 
-      VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+      VALUES ( ?, ?, ?, ?, ?, ?, ?, ?,?,?,  ?)`;
       console.log("data", data);
     const serviceAmountWithTax = data.service_amount * 1.18;
     const renewalAmountWithTax = data.renewal_amount * 1.18;
@@ -43,7 +43,7 @@ const serviceModel = {
   },
   async update(id, data) {
     const sql = `UPDATE service_tbl SET 
-      client_id = ?, service_name = ?, from_date = ?, to_date = ?,service_amount=?, paid_amount=?, balance_amount=?, renewal_amount=?,
+      client_id = ?, service_name = ?, from_date = ?, to_date = ?,service_amount=?, paid_amount=?, balance_amount=?,followup_date=?, renewal_amount=?,
       last_renewal_date=?, payment_status = ? ,notes = ?
       WHERE id = ? AND is_deleted = 0`;
     await db.execute(sql, [
@@ -54,6 +54,7 @@ const serviceModel = {
       data.service_amount * 0.18,
       data.paid_amount,
       data.balance_amount,
+      data.followup_date ,
       data.renewal_amount * 0.18,
       data.last_renewal_date || null,
       data.payment_status,
@@ -97,11 +98,40 @@ const serviceModel = {
     const [rows] = await db.execute(sql, [id]);
     return rows[0];
   },
-
+// get  next  due payment data
   async delete(id) {
     const sql = `UPDATE service_tbl SET is_deleted = 1 WHERE id = ?`;
     await db.execute(sql, [id]);
     return { id, deleted: true };
+  },
+    async upcomingPaymentDue() {
+    const sql = ` WITH upcoming_service_followup_payment AS (
+  SELECT DISTINCT client_id
+  FROM service_payment_tbl
+  WHERE is_deleted = 0
+    AND payment_status = 1
+    AND next_due_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + INTERVAL 30 DAY
+)
+
+SELECT 
+  COUNT(*) AS upcoming_due_clients_count,
+  JSON_ARRAYAGG(client_id) AS upcoming_due_clients_ids
+FROM upcoming_service_followup_payment; `
+    const [rows] = await db.query(sql);
+    // console.log("upcoming due clients", rows[0])
+    const upcoming_due_clients_count = rows[0].upcoming_due_clients_count;
+    const client_ids = rows[0].upcoming_due_clients_ids;
+  // If no clients found, return empty
+  if (!client_ids || client_ids.length === 0) {
+    return [];
+  }
+
+  // Query client details for the given IDs
+  const clientQuery = ` SELECT service_name, client_id, from_date,to_date, service_amount, paid_amount, balance_amount FROM service_tbl 
+   WHERE id IN (${client_ids.map(() => '?').join(',')})    AND is_deleted = 0 `;
+  const [clients] = await db.query(clientQuery, client_ids);
+  // console.log(upcoming_due_clients_count, clients)
+  return { upcoming_due_clients_count, clients };
   },
 
 

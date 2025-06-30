@@ -54,7 +54,18 @@ const serviceController = {
             next(error);
         }
     },
-
+    async upcomingPaymentDue(req,res,next) {
+        try {
+            const data = await serviceModel.upcomingPaymentDue();
+            if (!data || data.length === 0) {
+                return res.status(404).json({ success: false, message: 'No upcoming payments found' });
+            }
+            res.status(200).json({ success: true, data : data.upcoming_due_clients_count, client_ids: data.clients });
+        } catch (error) {
+            next(error);
+        }
+    },
+//
 
     async getAllServices(req, res, next) {
         try {

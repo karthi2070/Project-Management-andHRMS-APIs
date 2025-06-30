@@ -264,3 +264,16 @@
  *       500:
  *         description: Internal server error
  */
+
+/**
+ * @swagger
+ * /api/v1/service/upcoming-payment-summary:
+ *   get:
+ *     summary: Get all upcoming payment due service
+ *     tags: [Service]
+ *     responses:
+ *       200:
+ *         description: List of upcoming payment due services
+ *       404:
+ *         description: No upcoming payments found
+ */
