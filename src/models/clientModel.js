@@ -64,7 +64,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
   FROM invoice_tbl
   WHERE is_deleted = 0
     AND balance_amount <> 0
-    AND followup_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + INTERVAL 30 DAY
+    AND due_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + INTERVAL 30 DAY
 )
 
 SELECT 

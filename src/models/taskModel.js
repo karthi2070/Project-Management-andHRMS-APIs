@@ -31,7 +31,7 @@ const taskModel = {
     async getAllTasksBySprintId(sprint_id) {
 
         const sql = `SELECT t.project_id, p.name as project_name, p.project_code,t.sprint_id, s.name as sprint_name, t.id as task_id,  t.title as task_name, t.description, t.priority, t.label,
-         t.start_date, t.end_date, t.due_date, t.status, t.team, t.assignee, t.rca, t.acceptance, t.issue_type, t.story_points, t.attachments,
+        t.creater_name, t.start_date, t.end_date, t.due_date, t.status, t.team, t.assignee, t.rca, t.acceptance, t.issue_type, t.story_points, t.attachments,
           t.is_deleted, t.created_at, t.updated_at FROM task_tbl t
            LEFT JOIN sprint_tbl s ON t.sprint_id = s.id
          LEFT JOIN project_tbl p ON t.project_id = p.id
@@ -42,7 +42,7 @@ const taskModel = {
     async getAllTasksByProjectId(Project_id) {
 
         const sql = `SELECT t.project_id, p.name as project_name, p.project_code,t.sprint_id, s.name as sprint_name, t.id as task_id,  t.title as task_name, t.description, t.priority, t.label,
-         t.start_date, t.end_date, t.due_date, t.status, t.team, t.assignee, t.rca, t.acceptance, t.issue_type, t.story_points, t.attachments,
+        t.creater_name, t.start_date, t.end_date, t.due_date, t.status, t.team, t.assignee, t.rca, t.acceptance, t.issue_type, t.story_points, t.attachments,
           t.is_deleted, t.created_at, t.updated_at FROM task_tbl t
            LEFT JOIN sprint_tbl s ON t.sprint_id = s.id
          LEFT JOIN project_tbl p ON t.project_id = p.id
@@ -53,9 +53,9 @@ const taskModel = {
 
     async getTaskById(sprint_id, task_id) {
 
-        const sql = `SELECT  t.project_id, p.name as project_name, p.project_code,t.sprint_id, s.name as sprint_name, t.id as task_id,  t.title as task_name, t.description, t.priority, t.label,
-         t.start_date, t.end_date, t.due_date, t.status, t.team, t.assignee, t.rca, t.acceptance, t.issue_type, t.story_points, t.attachments,
-          t.is_deleted, t.created_at, t.updated_at FROM task_tbl t
+        const sql = `SELECT  t.project_id, p.name as project_name, p.project_code,t.sprint_id, s.name as sprint_name, t.id as task_id,  t.title as task_name,
+        t.creater_name, t.description, t.priority, t.label,t.start_date, t.end_date, t.due_date, t.status, t.team, t.assignee, t.rca, t.acceptance,
+         t.issue_type, t.story_points, t.attachments,t.is_deleted, t.created_at, t.updated_at FROM task_tbl t
            LEFT JOIN sprint_tbl s ON t.sprint_id = s.id
          LEFT JOIN project_tbl p ON t.project_id = p.id
           WHERE t.is_deleted = 0 AND t.sprint_id = ? AND t.id = ?;  `

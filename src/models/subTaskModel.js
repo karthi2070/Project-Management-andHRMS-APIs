@@ -34,7 +34,7 @@ const employee =await EmployeeModel.getEmployeeByUserId(user_id);
     async getAllSubTasks(parentId) {
             //const sql = `SELECT * FROM sub_task_tbl WHERE is_deleted = 0 AND parent_task_id = ?`
     const sql = `SELECT  s.project_id, p.name AS project_name,s.project_code, s.sprint_id, sp.name AS sprint_name, s.parent_task_id, t.title AS task_name,
-      s.id as sub_task_id ,s.title as sub_task_name , s.description, s.priority, s.label, s.start_date, s.end_date, s.due_date, s.status, s.team, s.assignee, s.rca,
+      s.id as sub_task_id ,s.title as sub_task_name ,s.creater_name, s.description, s.priority, s.label, s.start_date, s.end_date, s.due_date, s.status, s.team, s.assignee, s.rca,
       s.acceptance, s.issue_type, s.story_points, s.attachments, s.is_deleted, s.created_at, s.updated_at 
       FROM sub_task_tbl s
        LEFT JOIN project_tbl p ON s.project_id = p.id 
@@ -47,7 +47,7 @@ const employee =await EmployeeModel.getEmployeeByUserId(user_id);
     async getTaskById(parent_id,id) {
        
             const sql =`SELECT  s.project_id, p.name AS project_name,s.project_code, s.sprint_id, sp.name AS sprint_name, s.parent_task_id, t.title AS task_name,
-     s.id as sub_task_id, s.title as sub_task_name , s.description, s.priority, s.label, s.start_date, s.end_date, s.due_date, s.status, s.team, s.assignee, s.rca,
+     s.id as sub_task_id, s.title as sub_task_name ,s.creater_name, s.description, s.priority, s.label, s.start_date, s.end_date, s.due_date, s.status, s.team, s.assignee, s.rca,
       s.acceptance, s.issue_type, s.story_points, s.attachments, s.is_deleted, s.created_at, s.updated_at 
       FROM sub_task_tbl s
        LEFT JOIN project_tbl p ON s.project_id = p.id 
@@ -60,7 +60,7 @@ const employee =await EmployeeModel.getEmployeeByUserId(user_id);
 
     async getTasksBySprintId(id) {
             const sql =`SELECT  s.project_id, p.name AS project_name,s.project_code, s.sprint_id, sp.name AS sprint_name, s.parent_task_id, t.title AS task_name,
-      s.id as sub_task_id ,s.title as sub_task_name , s.description, s.priority, s.label, s.start_date, s.end_date, s.due_date, s.status, s.team, s.assignee, s.rca,
+      s.id as sub_task_id ,s.title as sub_task_name ,s.creater_name, s.description, s.priority, s.label, s.start_date, s.end_date, s.due_date, s.status, s.team, s.assignee, s.rca,
       s.acceptance, s.issue_type, s.story_points, s.attachments, s.is_deleted, s.created_at, s.updated_at 
       FROM sub_task_tbl s
        LEFT JOIN project_tbl p ON s.project_id = p.id 
