@@ -6,16 +6,16 @@ const { logTaskFieldChanges } = require('../helper/taskActivityLog');
 
 const taskModel = {
     async createTask(taskData) {
-        const { sprint_id, project_id, user_id, creater_name, project_code, title, description, priority, label, start_date, end_date, due_date, status, team, assignee, rca,
+        const {  user_id, creater_name,project_id,sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date, status, team, assignee, rca,
             acceptance, issue_type, story_points, attachments } = taskData;
 
         const sql = `
         INSERT INTO task_tbl (
-            sprint_id,project_id,user_id,creater_name,  project_code, title, description, priority, label, 
+            user_id,creater_name,project_id,sprint_id,  project_code, title, description, priority, label, 
             start_date, end_date, due_date,status, team, assignee, rca,acceptance, issue_type,
             story_points, attachments ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?) `;
 
-        const values = [sprint_id, project_id, user_id, creater_name, project_code, title, description, priority, label, start_date, end_date, due_date, status, team, assignee, rca,
+        const values = [user_id, creater_name, project_id, sprint_id, project_code, title, description, priority, label, start_date, end_date, due_date, status, team, assignee, rca,
             acceptance, issue_type, story_points, JSON.stringify(attachments)]
 
         const [taskResult] = await db.query(sql, values);
@@ -30,13 +30,18 @@ const taskModel = {
     },
     async getAllTasksBySprintId(sprint_id) {
 
-        const sql = `SELECT * FROM task_tbl WHERE sprint_id =? AND is_deleted = 0 `
+        const sql = `SELECT t.project_id, p.name as project_name, p.project_code,t.sprint_id, s.name as sprint_name, t.id as task_id,  t.title as task_name, t.description, t.priority, t.label,
+         t.start_date, t.end_date, t.due_date, t.status, t.team, t.assignee, t.rca, t.acceptance, t.issue_type, t.story_points, t.attachments,
+          t.is_deleted, t.created_at, t.updated_at FROM task_tbl t
+           LEFT JOIN sprint_tbl s ON t.sprint_id = s.id
+         LEFT JOIN project_tbl p ON t.project_id = p.id
+          WHERE t.is_deleted = 0     AND t.sprint_id = ?;`
         const [rows] = await db.execute(sql, [sprint_id]);
         return rows;
     },
     async getAllTasksByProjectId(Project_id) {
 
-        const sql = `SELECT t.id, t.sprint_id, s.name, t.project_id, p.name, p.project_code, t.title, t.description, t.priority, t.label,
+        const sql = `SELECT t.project_id, p.name as project_name, p.project_code,t.sprint_id, s.name as sprint_name, t.id as task_id,  t.title as task_name, t.description, t.priority, t.label,
          t.start_date, t.end_date, t.due_date, t.status, t.team, t.assignee, t.rca, t.acceptance, t.issue_type, t.story_points, t.attachments,
           t.is_deleted, t.created_at, t.updated_at FROM task_tbl t
            LEFT JOIN sprint_tbl s ON t.sprint_id = s.id
@@ -48,7 +53,7 @@ const taskModel = {
 
     async getTaskById(sprint_id, task_id) {
 
-        const sql = `SELECT t.id, t.sprint_id, s.name, t.project_id, p.name, p.project_code, t.title, t.description, t.priority, t.label,
+        const sql = `SELECT  t.project_id, p.name as project_name, p.project_code,t.sprint_id, s.name as sprint_name, t.id as task_id,  t.title as task_name, t.description, t.priority, t.label,
          t.start_date, t.end_date, t.due_date, t.status, t.team, t.assignee, t.rca, t.acceptance, t.issue_type, t.story_points, t.attachments,
           t.is_deleted, t.created_at, t.updated_at FROM task_tbl t
            LEFT JOIN sprint_tbl s ON t.sprint_id = s.id
@@ -65,28 +70,25 @@ const taskModel = {
     },
     async updateTask(id, taskData) {
         const {
-            sprint_id, project_id, user_id, creater_name, project_code, title, description, priority, label,
+            user_id, creater_name, project_id, sprint_id, project_code, title, description, priority, label,
             start_date, end_date, due_date, status, team, assignee, rca,
             acceptance, issue_type, story_points, attachments
         } = taskData;
 
-        const [task_data] = await db.execute(`
-        SELECT status, assignee, due_date, priority
-        FROM task_tbl WHERE id = ?
-    `, [id]);
+        const [task_data] = await db.execute(` SELECT status, assignee, due_date, priority FROM task_tbl WHERE id = ?`, [id]);
 
         if (!task_data.length) return json({ message: 'Task not found' });
 
         const sql = `
         UPDATE task_tbl SET
-            sprint_id = ?, project_id = ?, user_id = ?, creater_name = ?, project_code = ?, title = ?, description = ?, priority = ?, label = ?,
+             user_id = ?, creater_name = ?, project_id = ?, sprint_id = ? ,project_code = ?, title = ?, description = ?, priority = ?, label = ?,
             start_date = ?, end_date = ?, due_date = ?, status = ?, team = ?, assignee = ?, rca = ?,
             acceptance = ?, issue_type = ?, story_points = ?, attachments = ?
         WHERE id = ?
     `;
 
         const values = [
-            sprint_id, project_id, user_id, creater_name, project_code, title, description, priority, label,
+            user_id, creater_name, project_id, sprint_id, project_code, title, description, priority, label,
             start_date, end_date, due_date, status, team, assignee, rca,
             acceptance, issue_type, story_points, JSON.stringify(attachments), id
         ];

@@ -11,18 +11,18 @@
  *     Tasks:
  *       type: object
  *       properties:
- *         sprint_id:
- *           type: integer
- *           example: 2
- *         project_id:
- *           type: integer
- *           example: 2
  *         user_id:
  *           type: integer
  *           example: 2
  *         creater_name:
  *           type: string
  *           example: admin
+ *         project_id:
+ *           type: integer
+ *           example: 2
+ *         sprint_id:
+ *           type: integer
+ *           example: 2
  *         project_code:
  *           type: string
  *           example: "PRJ001"

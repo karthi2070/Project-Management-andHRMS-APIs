@@ -13,8 +13,7 @@ const  subTaskModel  = {
             user_id,creater_name,project_id,sprint_id, parent_task_id, project_code, title, description, priority, label, 
             start_date, end_date, due_date,status, team, assignee, rca,acceptance, issue_type,
             story_points, attachments
-        ) VALUES (?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?,?)
-    `;
+        ) VALUES (?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?,?) `;
 
      const values =[user_id,creater_name,project_id,sprint_id, parent_task_id, project_code, title, description, priority, label, start_date, end_date, due_date,status, team, assignee, rca,
         acceptance, issue_type,story_points, JSON.stringify(attachments), parent_task_id  ]
@@ -34,8 +33,8 @@ const employee =await EmployeeModel.getEmployeeByUserId(user_id);
     },
     async getAllSubTasks(parentId) {
             //const sql = `SELECT * FROM sub_task_tbl WHERE is_deleted = 0 AND parent_task_id = ?`
-    const sql = `SELECT s.id, s.project_id, p.name AS project_name, s.sprint_id, sp.name AS sprint_name, s.parent_task_id, t.title AS task_name,
-     s.project_code, s.title, s.description, s.priority, s.label, s.start_date, s.end_date, s.due_date, s.status, s.team, s.assignee, s.rca,
+    const sql = `SELECT  s.project_id, p.name AS project_name,s.project_code, s.sprint_id, sp.name AS sprint_name, s.parent_task_id, t.title AS task_name,
+      s.id as sub_task_id ,s.title as sub_task_name , s.description, s.priority, s.label, s.start_date, s.end_date, s.due_date, s.status, s.team, s.assignee, s.rca,
       s.acceptance, s.issue_type, s.story_points, s.attachments, s.is_deleted, s.created_at, s.updated_at 
       FROM sub_task_tbl s
        LEFT JOIN project_tbl p ON s.project_id = p.id 
@@ -47,13 +46,27 @@ const employee =await EmployeeModel.getEmployeeByUserId(user_id);
     },
     async getTaskById(parent_id,id) {
        
-            const sql =`SELECT * FROM sub_task_tbl WHERE is_deleted = 0 AND parent_task_id = ? AND id = ? `
+            const sql =`SELECT  s.project_id, p.name AS project_name,s.project_code, s.sprint_id, sp.name AS sprint_name, s.parent_task_id, t.title AS task_name,
+     s.id as sub_task_id, s.title as sub_task_name , s.description, s.priority, s.label, s.start_date, s.end_date, s.due_date, s.status, s.team, s.assignee, s.rca,
+      s.acceptance, s.issue_type, s.story_points, s.attachments, s.is_deleted, s.created_at, s.updated_at 
+      FROM sub_task_tbl s
+       LEFT JOIN project_tbl p ON s.project_id = p.id 
+       LEFT JOIN sprint_tbl sp ON s.sprint_id = sp.id 
+       LEFT JOIN task_tbl t ON s.parent_task_id = t.id 
+       WHERE s.is_deleted = 0 AND s.parent_task_id = ? AND s.id = ?;  `
              const [rows] = await db.execute(sql, [parent_id,id]);
         return rows;
     },
 
     async getTasksBySprintId(id) {
-            const sql =`SELECT * FROM sub_task_tbl WHERE sprint_id = ?`
+            const sql =`SELECT  s.project_id, p.name AS project_name,s.project_code, s.sprint_id, sp.name AS sprint_name, s.parent_task_id, t.title AS task_name,
+      s.id as sub_task_id ,s.title as sub_task_name , s.description, s.priority, s.label, s.start_date, s.end_date, s.due_date, s.status, s.team, s.assignee, s.rca,
+      s.acceptance, s.issue_type, s.story_points, s.attachments, s.is_deleted, s.created_at, s.updated_at 
+      FROM sub_task_tbl s
+       LEFT JOIN project_tbl p ON s.project_id = p.id 
+       LEFT JOIN sprint_tbl sp ON s.sprint_id = sp.id 
+       LEFT JOIN task_tbl t ON s.parent_task_id = t.id 
+       WHERE s.is_deleted = 0 AND s.sprint_id = ?;`
             const [rows] = await db.query(sql, [id]);
         return rows;
     },
