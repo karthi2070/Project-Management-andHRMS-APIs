@@ -89,14 +89,24 @@ const EmployeeController = {
            next(error);        }
     },
        async relievingEmployee(req, res, next) {
-        try {
-            console.log("Relieving employee with ID:", req.params.id);
-            console.log("Relieving data:", req.body);
-            const updatedEmployee = await EmployeeModel.relievingEmployee(req.params.id, req.body);
-            res.status(200).json(updatedEmployee);
-        } catch (error) {
-           next(error);        }
-    },
+    try {
+        const { id } = req.params;
+        if (!id) {
+            return res.status(400).json({ message: 'Employee ID is required' });
+        }
+
+        const { status, status_reason, status_desc, relieving_date } = req.body;
+        const result = await EmployeeModel.relievingEmployee(id, status, status_reason, status_desc, relieving_date);
+        
+        if (!result) {
+            return res.status(404).json({ message: 'No employee found ' });
+        }
+
+        res.status(200).json(result);
+    } catch (error) {
+        next(error);
+    }
+},
 
     async softDeleteEmployee(req, res, next) {
         try {

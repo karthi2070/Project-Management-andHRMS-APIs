@@ -78,13 +78,16 @@ const pool = require('../config/db');
              await pool.query(sql, [...Object.values(data), id]);
              return { id, ...data };
      },
-     async relievingEmployee(id, data){
+async relievingEmployee(id, status, status_reason, status_desc, relieving_date) {
+
+    const sql = `
+        UPDATE employee_tbl 
+        SET status = ?, status_reason = ?, status_desc = ?, relieving_date = ?
+        WHERE id = ? AND is_deleted = 0`;
     
-             const sql = `UPDATE employee_tbl SET  status=?, status_reason=?, status_desc=?,relieving_date=?
-                          WHERE user_id = ? AND is_deleted = 0`;
-            const [result] = await pool.query(sql, [...Object.values(data), id]);
-             return result.affectedRows > 0 ? { id, ...data } : null;
-     },
+    const [result] = await pool.query(sql, [status, status_reason, status_desc, relieving_date, id]);
+    return result.affectedRows > 0 ? { id, status, status_reason, status_desc, relieving_date } : null;
+},
  
      async softDeleteEmployee(id) {
          try {
