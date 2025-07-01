@@ -11,6 +11,10 @@ router.get('/service/get-by-client-id/:clientId', serviceController.getClientByI
 router.get('/service/payment-filter/:status', serviceController.paymentFilter);
 router.patch('/service/delete-service/:id', serviceController.deleteService);
 
+router.get('/service/get-service-payment-history-clientId-serviceId/:client_id/:service_id',serviceController.GetServicePaymentByClientIdServiceId);
+router.get('/service/get-service-payment-history-serviceId-id/:service_id/:id', serviceController.GetServicePaymentByServiceIdandId);
+
+//
 router.get('/service/upcoming-payment-summary', serviceController.upcomingPaymentDue);
 
 router.post('/service/due-payment/:service_id', serviceController.recordServiceEMIPayment);

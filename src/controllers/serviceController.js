@@ -157,7 +157,31 @@ user_id =  1; // Assuming user_id is from the authenticated user, defaulting to 
     next(err); 
   }
 
-}
+},
+    async GetServicePaymentByClientIdServiceId(req, res, next) {
+        try {
+            const {client_id,service_id} =req.params
+            const service = await serviceModel.getFollowupPaymentId(client_id,service_id);
+            if (!service) {
+                return res.status(404).json({ message: 'Invoice not found' });
+            }
+            res.status(200).json(service);
+        } catch (error) {
+            next(error);
+        }
+    },
+        async GetServicePaymentByServiceIdandId(req, res, next) {
+        try {
+            const {service_id,id} =req.params
+            const service = await serviceModel.getFollowupPaymentServiceId(service_id,id);
+            if (!service) {
+                return res.status(404).json({ message: 'Invoice not found' });
+            }
+            res.status(200).json(service);
+        } catch (error) {
+            next(error);
+        }
+    },
 };
 
 module.exports = serviceController;

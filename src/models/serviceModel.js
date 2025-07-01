@@ -146,6 +146,19 @@ FROM upcoming_service_followup_payment; `
     );
     return result;
   },
+
+   async getFollowupPaymentId(client_id, service_id) {
+    const query = `SELECT * FROM service_payment_tbl WHERE client_id = ? AND service_id = ? AND is_deleted = 0`;
+    const [rows] = await db.query(query, [client_id,  service_id]);
+    return rows;
+
+  },
+  async getFollowupPaymentServiceId(service_id, id) {
+
+    const query = `SELECT * FROM service_payment_tbl WHERE service_id = ? AND id = ? AND is_deleted = 0 `
+    const [rows] = await db.query(query, [ service_id, id]);
+    return rows;
+  },
 };
 
 module.exports = serviceModel;

@@ -277,3 +277,55 @@
  *       404:
  *         description: No upcoming payments found
  */
+
+/**
+ * @swagger
+ * /api/v1/service/get-service-payment-history-clientId-serviceId/{client_id}/{service_id}:
+ *   get:
+ *     summary: Get service_history payment through client_id and service_id
+ *     tags: [Service]
+ *     parameters:
+ *       - in: path
+ *         name: client_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Client Id
+ *       - in: path
+ *         name: service_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Service ID
+ *     responses:
+ *       200:
+ *         description: Invoice data
+ *       404:
+ *         description: Invoice not found
+ */
+
+/**
+ * @swagger
+ * /api/v1/service/get-service-payment-history-serviceId-id/{service_id}/{id}:
+ *   get:
+ *     summary: Get service payment history by ID
+ *     tags: [Service]
+ *     parameters:
+ *       - in: path
+ *         name: service_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Service Id
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Service ID
+ *     responses:
+ *       200:
+ *         description: Service data
+ *       404:
+ *         description: Service not found
+ */
