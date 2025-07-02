@@ -77,8 +77,8 @@ async getClientDashboard(req, res, next) {
       res.status(200).json({
         total_clients: totalClients ? totalClients : 0,
         total_pending_payment: pendingPayments.total_pending_payment ? pendingPayments.total_pending_payment : 0,
-        upcoming_due_clients: upcomingClientsCount ? upcomingClientsCount : 0,
-        renewalClientsCount: getRenewalClients ? getRenewalClients : 0,
+        upcoming_due_clients: Array.isArray(upcomingClientsCount?.clients) ? upcomingClientsCount.clients.length : 0,
+        renewalClientsCount: Array.isArray(getRenewalClients?.clients) ? getRenewalClients.clients.length : 0
       });
     } catch (error) {
       next(error);
@@ -196,15 +196,13 @@ async getClientDashboard(req, res, next) {
 async recordEMIPayment   (req, res, next)  {
   try {
     const invoice_id = parseInt(req.params.invoice_id);
-    const { client_id, payment_amount,payment_date, payment_method, payment_status, notes } = req.body;
-
+    const {user_id, client_id, payment_amount,payment_date, payment_method, payment_status, notes } = req.body;
     // Step 1: Fetch invoice
     const invoice = await ClientModel.getInvoiceById(invoice_id);
-    console.log(invoice)
+    
     if (!invoice) {
       return res.status(404).json({ message: 'Invoice not found' });
     }
-//client_id, invoice_number, invoice_amount, paid_amount, balance_amount,status_id, invoice_date, due_date, payment_method, notes
     const invoiceAmount = Number(invoice.invoice_amount);
     const currentPaid = Number(invoice.paid_amount);
     const newTotalPaid = currentPaid + Number(payment_amount);
@@ -215,9 +213,10 @@ async recordEMIPayment   (req, res, next)  {
       extra_amount = Math.abs(balanceAmount);
       balanceAmount = 0;
     }
-
+console.log("extra_amount",extra_amount)
     // Step 2: Insert payment
     await ClientModel.insertPayment({
+        user_id,
       client_id,
       invoice_id,
       payment_amount,
@@ -230,9 +229,14 @@ async recordEMIPayment   (req, res, next)  {
 
     // Step 3: Update invoice only if payment is successful (e.g., 1 = success)
     if (Number(payment_status) === 1) {
-      const newStatusId = newTotalPaid >= invoiceAmount ? 2 : 3; // 2 = partial, 3 = paid
+      const newStatusId = newTotalPaid >= invoiceAmount ? 3 : 2; // 2 = partial, 3 = paid
 
-    const  updateInvoiseData={paid_amount: newTotalPaid,balance_amount: balanceAmount,extra_amount:extra_amount,status_id: newStatusId,id :invoice_id}
+    const  updateInvoiseData={
+        paid_amount: newTotalPaid,
+        balance_amount: balanceAmount,
+        extra_amount:extra_amount,
+        status_id: newStatusId,
+        id :invoice_id}
       await ClientModel.updateInvoiceTotals(updateInvoiseData);
     }
 

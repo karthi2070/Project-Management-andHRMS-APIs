@@ -54,18 +54,18 @@ const serviceController = {
             next(error);
         }
     },
-    async upcomingPaymentDue(req,res,next) {
+    async upcomingPaymentDue(req, res, next) {
         try {
             const data = await serviceModel.upcomingPaymentDue();
             if (!data || data.length === 0) {
                 return res.status(404).json({ success: false, message: 'No upcoming payments found' });
             }
-            res.status(200).json({ success: true, data : data.upcoming_due_clients_count, client_ids: data.clients });
+            res.status(200).json({ success: true, data: data.upcoming_due_clients_count, client_ids: data.clients });
         } catch (error) {
             next(error);
         }
     },
-//
+    //
 
     async getAllServices(req, res, next) {
         try {
@@ -99,69 +99,79 @@ const serviceController = {
 
     // record EMI payment
 
-    async recordServiceEMIPayment   (req, res, next)  {
-  try {
-    const service_id = parseInt(req.params.service_id);
-    const { client_id, payment_amount,payment_date, payment_method, payment_status,next_due_date, notes } = req.body;
+    async recordServiceEMIPayment(req, res, next) {
+        try {
+            const service_id = parseInt(req.params.service_id);
+            // const user_id = parseInt(req.params.user_id);
+            if (!service_id) {
+                return res.status(400).json({ message: 'Service ID  required' });
+            }
+            const { user_id, client_id, payment_amount, payment_date, payment_method, payment_status, next_due_date, notes, } = req.body;
+            console.log("recordServiceEMIPayment", req.body)
+            const service = await serviceModel.getById(service_id);
+            if (!service) {
+                return res.status(404).json({ message: 'service not found' });
+            }
+            const serviceAmount = Number(service.service_amount);
+            const currentPaid = Number(service.paid_amount);
+            const newTotalPaid = currentPaid + Number(payment_amount);
+            let balanceAmount = serviceAmount - newTotalPaid;
 
-    // Step 1: Fetch invoice
-    const service = await serviceModel.getById(service_id);
-    console.log(service)
-    if (!service) {
-      return res.status(404).json({ message: 'service not found' });
-    }
-//client_id, invoice_number, invoice_amount, paid_amount, balance_amount,status_id, invoice_date, due_date, payment_method, notes
-    const serviceAmount = Number(service.service_amount);
-    const currentPaid = Number(service.paid_amount);
-    const newTotalPaid = currentPaid + Number(payment_amount);
-    let balanceAmount = serviceAmount - newTotalPaid;
+            let extra_amount = 0;
+            if (balanceAmount < 0) {
+                extra_amount = Math.abs(balanceAmount);
+                balanceAmount = 0;
+            }
+            // user_id = 1; // Assuming user_id is from the authenticated user, defaulting to 1 if not available
+            // Step 2: Insert payment
+            await serviceModel.insertServicePayment({
+                user_id,
+                client_id,
+                service_id,
+                payment_amount,
+                payment_date,
+                payment_method,
+                payment_status,
+                next_due_date,
+                notes,
+                extra_amount
+            });
+            console.log("payment_status", extra_amount)
 
-    let extra_amount = 0;
-    if (balanceAmount < 0) {
-      extra_amount = Math.abs(balanceAmount);
-      balanceAmount = 0;
-    }
-user_id =  1; // Assuming user_id is from the authenticated user, defaulting to 1 if not available
-    // Step 2: Insert payment
-    await serviceModel.insertServicePayment({
-        user_id:user_id,
-      client_id,
-      service_id,
-      payment_amount,
-      payment_date,
-      payment_method,
-      payment_status,
-      next_due_date, // Assuming next_due_date is part of the service model
-      notes,
-      extra_amount
-    });
+            // Step 3: Update service only if payment is successful (e.g., 1 = success)
+            if ((Number(payment_status) === 1) ) {
+                console.log(payment_status)
+                const newStatusId = newTotalPaid >= serviceAmount ? 3 : 3; //1 = unpaid, 2 = partial, 3 = paid
 
-    // Step 3: Update service only if payment is successful (e.g., 1 = success)
-    if (Number(payment_status) === 1) {
-      const newStatusId = newTotalPaid >= serviceAmount ? 2 : 3; // 2 = partial, 3 = paid
+                const updateServiceData = {
+                    user_id,
+                    paid_amount: newTotalPaid,
+                    balance_amount: balanceAmount,
+                    payment_status: newStatusId,
+                    id: service_id
+                }
+                await serviceModel.updateServiceTotals(updateServiceData);
+            }
 
-    const  updateServiceData={paid_amount: newTotalPaid,balance_amount: balanceAmount,extra_amount:extra_amount,status_id: newStatusId,id :service_id}
-      await serviceModel.updateServiceTotals(updateServiceData);
-    }
+            return res.status(200).json({
+                message: 'Payment recorded',
+                paid_amount: newTotalPaid,
+                balance_amount: balanceAmount,
+                payment_date,
+                payment_status,
+                extra_amount
+                
+            });
 
-    return res.status(200).json({
-      message: 'Payment recorded',
-      paid_amount: newTotalPaid,
-      balance_amount: balanceAmount,
-      payment_date,
-      extra_amount,
-      payment_status
-    });
+        } catch (err) {
+            next(err);
+        }
 
-  } catch (err) {
-    next(err); 
-  }
-
-},
+    },
     async GetServicePaymentByClientIdServiceId(req, res, next) {
         try {
-            const {client_id,service_id} =req.params
-            const service = await serviceModel.getFollowupPaymentId(client_id,service_id);
+            const { client_id, service_id } = req.params
+            const service = await serviceModel.getFollowupPaymentId(client_id, service_id);
             if (!service) {
                 return res.status(404).json({ message: 'Invoice not found' });
             }
@@ -170,10 +180,10 @@ user_id =  1; // Assuming user_id is from the authenticated user, defaulting to 
             next(error);
         }
     },
-        async GetServicePaymentByServiceIdandId(req, res, next) {
+    async GetServicePaymentByServiceIdandId(req, res, next) {
         try {
-            const {service_id,id} =req.params
-            const service = await serviceModel.getFollowupPaymentServiceId(service_id,id);
+            const { service_id, id } = req.params
+            const service = await serviceModel.getFollowupPaymentServiceId(service_id, id);
             if (!service) {
                 return res.status(404).json({ message: 'Invoice not found' });
             }

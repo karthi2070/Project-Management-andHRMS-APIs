@@ -212,12 +212,13 @@ FROM clients_renewal; `
 
   async insertPayment(data) {
     const { user_id, client_id, invoice_id, payment_amount, payment_date, payment_method, payment_status, notes, extra_amount } = data;
-    const [result] = await pool.query(
-      `INSERT INTO invoice_payment_tbl 
+   
+     const query= `INSERT INTO invoice_payment_tbl 
        (user_id,client_id, invoice_id, payment_amount,payment_date, payment_method, payment_status, notes, extra_amount)
-       VALUES (?,?, ?, ?, ?, ?, ?,?, ?)`,
-      [user_id, client_id, invoice_id, payment_amount, payment_date, payment_method, payment_status, notes, extra_amount]
-    );
+       VALUES (?,?, ?, ?, ?, ?, ?,?, ?)` 
+    const values = [
+      user_id, client_id, invoice_id, payment_amount, payment_date, payment_method, payment_status, notes, extra_amount ];
+    const [result] = await pool.query(query,values);
     return result;
   },
 
@@ -245,12 +246,12 @@ FROM clients_renewal; `
 
   async updateInvoiceTotals(updateInvoiseData) {
 
-    const { user_id, paid_amount, balance_amount, extra_amount, status_id, id } = updateInvoiseData
+    const {  paid_amount, balance_amount, extra_amount, payment_status, id } = updateInvoiseData
 
     const query = `UPDATE invoice_tbl 
-       SET user_id =?,paid_amount = ?, balance_amount = ?, extra_amount=?, status_id = ?
+       SET paid_amount = ?, balance_amount = ?, extra_amount=?, payment_status = ?
        WHERE id = ? AND is_deleted = 0`
-    const [result] = await pool.query(query, [user_id, paid_amount, balance_amount, extra_amount, status_id, id]
+    const [result] = await pool.query(query, [ paid_amount, balance_amount, extra_amount, payment_status, id]
     );
     return result;
   }

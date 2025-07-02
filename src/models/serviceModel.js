@@ -31,14 +31,12 @@ const serviceModel = {
   },
 
   async updateServiceTotals(updateServiceData) {
-
     const { user_id, paid_amount, balance_amount, payment_status, id } = updateServiceData
 
     const query = `UPDATE service_tbl 
        SET user_id =?,paid_amount = ?, balance_amount = ?,  payment_status = ?
        WHERE id = ? AND is_deleted = 0`
-    const [result] = await db.query(query, [user_id, paid_amount, balance_amount,  payment_status, id]
-    );
+    const [result] = await db.query(query, [user_id, paid_amount, balance_amount,  payment_status, id])
     return result;
   },
   async update(id, data) {
@@ -130,7 +128,7 @@ FROM upcoming_service_followup_payment; `
   const clientQuery = ` SELECT service_name, client_id, from_date,to_date, service_amount, paid_amount, balance_amount FROM service_tbl 
    WHERE id IN (${client_ids.map(() => '?').join(',')})    AND is_deleted = 0 `;
   const [clients] = await db.query(clientQuery, client_ids);
-  // console.log(upcoming_due_clients_count, clients)
+
   return { upcoming_due_clients_count, clients };
   },
 
@@ -148,7 +146,7 @@ FROM upcoming_service_followup_payment; `
   },
 
    async getFollowupPaymentId(client_id, service_id) {
-    const query = `SELECT * FROM service_payment_tbl WHERE client_id = ? AND service_id = ? AND is_deleted = 0`;
+    const query = `SELECT * FROM service_payment_tbl WHERE client_id = ? AND service_id = ? AND is_deleted = 0 ORDER BY created_at DESC`;
     const [rows] = await db.query(query, [client_id,  service_id]);
     return rows;
 
