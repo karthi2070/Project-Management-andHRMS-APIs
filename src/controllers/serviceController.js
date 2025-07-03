@@ -139,14 +139,15 @@ const serviceController = {
             console.log("payment_status", extra_amount)
 
             // Step 3: Update service only if payment is successful (e.g., 1 = success)
-            if ((Number(payment_status) === 1) ) {
+            if  ([2, 3, 4].includes(Number(payment_status))) {
                 console.log(payment_status)
-                const newStatusId = newTotalPaid >= serviceAmount ? 3 : 3; //1 = unpaid, 2 = partial, 3 = paid
+                const newStatusId = newTotalPaid >= serviceAmount ? 3 : 2 ; //1 = unpaid, 2 = partial, 3 = paid
 
                 const updateServiceData = {
                     user_id,
                     paid_amount: newTotalPaid,
                     balance_amount: balanceAmount,
+                    due_date: next_due_date,
                     payment_status: newStatusId,
                     id: service_id
                 }
