@@ -1,4 +1,4 @@
-const db = require('../config/db'); // adjust DB import if needed
+const db = require('../config/db'); 
 
 const serviceModel = {
   async create(data) {
@@ -108,7 +108,8 @@ const serviceModel = {
   FROM service_payment_tbl
   WHERE is_deleted = 0
     AND payment_status = 1
-    AND next_due_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + INTERVAL 30 DAY
+    AND next_due_date BETWEEN 
+    () AND CURRENT_DATE() + INTERVAL 30 DAY
 )
 
 SELECT 
@@ -135,13 +136,13 @@ FROM upcoming_service_followup_payment; `
 
 //
   async insertServicePayment(data) {
-    const { user_id, client_id, service_id, payment_amount, payment_date, payment_method, payment_status,next_due_date, notes, extra_amount } = data;
-    const [result] = await db.query(
-      `INSERT INTO service_payment_tbl 
-       (user_id,client_id, service_id, payment_amount,payment_date, payment_method, payment_status,next_due_date, notes, extra_amount)
-       VALUES (?,?,?,?,?,?,?,?,?,?)`,
-      [user_id, client_id, service_id, payment_amount, payment_date, payment_method, payment_status,next_due_date, notes, extra_amount]
-    );
+    const { user_id, client_id, service_id, payment_amount, payment_date, payment_method, payment_status,next_due_date,followup_date, notes, extra_amount } = data;
+   
+     const query = `INSERT INTO service_payment_tbl 
+       (user_id,client_id, service_id, payment_amount,payment_date, payment_method, payment_status,next_due_date, followup_date, notes, extra_amount)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+     const values= [user_id, client_id, service_id, payment_amount, payment_date, payment_method, payment_status,next_due_date,followup_date, notes, extra_amount]
+    const [result] = await db.query(query, values);
     return result;
   },
 

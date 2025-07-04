@@ -106,7 +106,7 @@ const serviceController = {
             if (!service_id) {
                 return res.status(400).json({ message: 'Service ID  required' });
             }
-            const { user_id, client_id, payment_amount, payment_date, payment_method, payment_status, next_due_date, notes, } = req.body;
+            const { user_id, client_id, payment_amount, payment_date, payment_method, payment_status, next_due_date,followup_date, notes, } = req.body;
             console.log("recordServiceEMIPayment", req.body)
             const service = await serviceModel.getById(service_id);
             if (!service) {
@@ -133,6 +133,7 @@ const serviceController = {
                 payment_method,
                 payment_status,
                 next_due_date,
+                followup_date,
                 notes,
                 extra_amount
             });
