@@ -14,6 +14,7 @@
  *       required:
  *         - user_id
  *         - name
+ *         - employee_id
  *         - phone
  *         - mail
  *         - dob
@@ -21,6 +22,7 @@
  *         - department
  *         - designation
  *         - salary
+ *         - status
  *         - pan
  *         - aadhar
  *         - education    
@@ -31,60 +33,92 @@
  *       properties:
  *         user_id:
  *           type: integer
+ *           example: 7
  *         name:
  *           type: string
+ *           example: "Karthi Keyan"
  *         phone:
  *           type: string
+ *           example: "9876543210"
  *         mail:
  *           type: string
+ *           format: email
+ *           example: "karthi@namuvi.com"
  *         dob:
  *           type: string
  *           format: date
+ *           example: "1995-05-12"
  *         doj:
  *           type: string
  *           format: date
+ *           example: "2021-01-01"
  *         department:
  *           type: string
+ *           example: "Engineering"
  *         designation:
  *           type: string
+ *           example: "Software Developer"
  *         salary:
  *           type: number
+ *           example: 85000
  *         status:
  *           type: string
- *         status_reson:
+ *           example: "Active"
+ *         status_reason:
  *           type: string
+ *           nullable: true
+ *           example: ""
  *         status_desc:
  *           type: string
+ *           nullable: true
+ *           example: ""
  *         relieving_date:
  *           type: string
+ *           format: date
+ *           nullable: true
+ *           example: null
  *         pan:
  *           type: string
+ *           example: "ABCDE1234F"
  *         aadhar:
  *           type: string
+ *           example: "123456789012"
  *         education:
- *           type: string    
+ *           type: string
+ *           example: "B.Tech Computer Science"
  *         address:
  *           type: string
+ *           example: "123 Tech Park Road"
  *         city:
  *           type: string
+ *           example: "Chennai"
  *         state:
  *           type: string
+ *           example: "Tamil Nadu"
  *         pincode:
  *           type: string
+ *           example: "600001"
  *         p_address:
  *           type: string
+ *           example: "456 Family Street"
  *         p_city:
  *           type: string
+ *           example: "Salem"
  *         p_state:
  *           type: string
+ *           example: "Tamil Nadu"
  *         p_pincode:
  *           type: string
+ *           example: "636007"
  *         emergency_name:
  *           type: string
+ *           example: "Ravi Kumar"
  *         emergency_phone:
  *           type: string
+ *           example: "9876512345"
  *         emergency_relation:
  *           type: string
+ *           example: "Brother"
  */
 
 

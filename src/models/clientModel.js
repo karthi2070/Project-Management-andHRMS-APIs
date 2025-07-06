@@ -29,13 +29,24 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     const [clients] = await pool.query(sql, [id]);
     return clients;
   },
+// id, user_id, name, company_name, client_id, mail, phone1, phone2, phone3, gst_num, address, city, state, pincode, is_deleted
+async updateClient(
+  id , user_id, name, company_name, mail,
+  phone1, phone2, phone3, gst_num,
+  address, city, state, pincode
+) {
+  const sql = `UPDATE client_tbl 
+    SET user_id=?, name=?, company_name=?, mail=?, phone1=?, phone2=?, phone3=?, 
+        gst_num=?, address=?, city=?, state=?, pincode=?, updated_at = NOW()
+    WHERE id=? AND is_deleted = 0  `;
 
-  async updateClient(id, data) {
-    const sql = `UPDATE client_tbl SET user_id=?,name=?, company_name=?, mail=?, phone1=?, phone2=?, phone3=?, gst_num=?, address=? ,
-                    city =? , state = ? ,pincode= ? WHERE id = ? AND is_deleted = 0`;
-    await pool.query(sql, [...Object.values(data), id]);
-    return { id, ...data };
-  },
+  const [result] = await pool.query(sql, [
+    user_id, name, company_name, mail,
+    phone1, phone2, phone3, gst_num,
+    address, city, state, pincode, id 
+  ]);
+  return result.affectedRows > 0;
+},
 
   async softDeleteClient(id) {
     const sql = `UPDATE client_tbl SET is_deleted = 1 WHERE id = ?`;
