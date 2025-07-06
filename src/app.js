@@ -8,13 +8,7 @@ const passport = require('passport');
 const app = express();
 const allowedOrigins = [
   'https://www.n1suite.namuvi.com',
-  'https://n1suite.namuvi.com',
-  'https://api.sellero2.com',
-  'https://api.sellero2.com/n1suite',
-  'https://api.sellero2.com/n1suite/api-docs',
-  'https://api.sellero2.com/n1suite/api-docs/',
-  'http://localhost:5173',
-  'http://localhost:3002',
+  'https://n1suite.namuvi.com'
 ];
 
 
@@ -27,11 +21,6 @@ console.log('CORS Origin:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true,
-}));
-
-app.use(cors({
-  origin: '*',
   credentials: true,
 }));
 
