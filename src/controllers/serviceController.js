@@ -4,7 +4,52 @@ const { getClientById } = require('./clientController');
 const serviceController = {
     async createService(req, res, next) {
         try {
-            const data = await serviceModel.create(req.body);
+            const { client_id, service_name, from_date, to_date, service_amount, paid_amount, balance_amount, renewal_amount, last_renewal_date,
+                payment_status } = req.body;
+            // const service_amount = 10000; // for 1 month = 30 days
+            // const renewal_amount = 5000;  // just as example
+            const totalDays = Math.ceil((new Date(to_date) - new Date(from_date)) / (1000 * 60 * 60 * 24));
+            console.log("totalDays", totalDays);
+
+            if (totalDays <= 0) {
+                return res.status(400).json({ success: false, message: 'Invalid date range' });
+            }
+
+            const oneMonthDays = 30;
+
+            // Get full months and remaining days
+            const fullMonths = Math.floor(totalDays / oneMonthDays);
+            const extraDays = totalDays % oneMonthDays;
+            // console.log("fullMonths", fullMonths);
+            // console.log("extraDays", extraDays);
+
+            // Per day amount
+            const perDayAmount = service_amount / oneMonthDays;
+            const monthAmount = fullMonths * service_amount;
+            const extraAmount = extraDays * perDayAmount;
+            const totalAmount = monthAmount + extraAmount;
+            const balanceAmount = totalAmount * 1.18; // Add 18% GST
+            const renewalAmount = renewal_amount * 1.18;
+
+            // console.log("monthAmount", monthAmount);
+            // console.log("extraAmount", extraAmount);
+            // console.log("totalAmount", totalAmount);
+            // console.log("balanceAmount (with GST)", balanceAmount);
+            // console.log("renewalAmount (with GST)", renewalAmount);
+
+            const serviceData = {
+                client_id,
+                service_name,
+                from_date,
+                to_date,
+                service_amount,
+                paid_amount,
+                balance_amount: balanceAmount,
+                renewal_amount: renewalAmount,
+                last_renewal_date,
+                payment_status
+            };
+            const data = await serviceModel.create(serviceData);
             res.status(201).json({ success: true, message: 'Service created', data });
         } catch (error) {
             next(error);
@@ -98,7 +143,15 @@ const serviceController = {
     },
 
     // record EMI payment
-
+     // const serviceAmount = Number(service.service_amount);
+            // const currentPaid = Number(service.paid_amount);
+            // const newTotalPaid = currentPaid + Number(payment_amount);
+            // let balanceAmount = serviceAmount - newTotalPaid;
+            // let extra_amount = 0;
+            // if (balanceAmount < 0) {
+            //     extra_amount = Math.abs(balanceAmount);
+            //     balanceAmount = 0;
+            // }
     async recordServiceEMIPayment(req, res, next) {
         try {
             const service_id = parseInt(req.params.service_id);
@@ -106,47 +159,44 @@ const serviceController = {
             if (!service_id) {
                 return res.status(400).json({ message: 'Service ID  required' });
             }
-            const { user_id, client_id, payment_amount, payment_date, payment_method, payment_status, next_due_date,followup_date, notes, } = req.body;
+            const { user_id, client_id, payment_amount,paid_amount, payment_date, payment_method, payment_status, next_due_date, followup_date, notes, } = req.body;
             console.log("recordServiceEMIPayment", req.body)
             const service = await serviceModel.getById(service_id);
             if (!service) {
                 return res.status(404).json({ message: 'service not found' });
             }
-            const serviceAmount = Number(service.service_amount);
-            const currentPaid = Number(service.paid_amount);
-            const newTotalPaid = currentPaid + Number(payment_amount);
-            let balanceAmount = serviceAmount - newTotalPaid;
+        
+             const result = (paid_amount <= payment_amount) ? paid_amount : payment_amount;
 
-            let extra_amount = 0;
-            if (balanceAmount < 0) {
-                extra_amount = Math.abs(balanceAmount);
-                balanceAmount = 0;
-            }
-            // user_id = 1; // Assuming user_id is from the authenticated user, defaulting to 1 if not available
+            // service table calculating
+
+            const currentPaid = Number(service.paid_amount);
+            const service_balance_amount = Number(service.balance_amount);
+            const paidAmount = currentPaid + result;
+            const  balanceAmount =service_balance_amount- result  ;
             // Step 2: Insert payment
             await serviceModel.insertServicePayment({
                 user_id,
                 client_id,
                 service_id,
                 payment_amount,
+                paid_amount,
+                balance_amount:(payment_amount - result === 0) ? 0 : (payment_amount - result),
                 payment_date,
                 payment_method,
                 payment_status,
                 next_due_date,
                 followup_date,
-                notes,
-                extra_amount
-            });
-            console.log("payment_status", extra_amount)
-
+                notes
+            })
             // Step 3: Update service only if payment is successful (e.g., 1 = success)
-            if  ([2, 3, 4].includes(Number(payment_status))) {
+            if ([1,2, 3].includes(Number(payment_status))) {
                 console.log(payment_status)
-                const newStatusId = newTotalPaid >= serviceAmount ? 3 : 2 ; //1 = unpaid, 2 = partial, 3 = paid
-
+                const newStatusId = paidAmount < service_balance_amount ? 2 : 3; //1 = unpaid, 2 = partial, 3 = paid
+                
                 const updateServiceData = {
                     user_id,
-                    paid_amount: newTotalPaid,
+                    paid_amount: paidAmount,
                     balance_amount: balanceAmount,
                     due_date: next_due_date,
                     payment_status: newStatusId,
@@ -154,21 +204,20 @@ const serviceController = {
                 }
                 await serviceModel.updateServiceTotals(updateServiceData);
             }
-
             return res.status(200).json({
                 message: 'Payment recorded',
-                paid_amount: newTotalPaid,
-                balance_amount: balanceAmount,
+                Due_payment:payment_amount,
+                paid_amount: result,
+                balance_amount: result,
                 payment_date,
                 payment_status,
-                extra_amount
-                
+                service_paid_amount:paidAmount,
+                service_balance_amount:balanceAmount
             });
 
         } catch (err) {
             next(err);
         }
-
     },
     async GetServicePaymentByClientIdServiceId(req, res, next) {
         try {

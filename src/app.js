@@ -11,7 +11,7 @@ const allowedOrigins = [
   'https://n1suite.namuvi.com',
   'https://api.sellero2.com/n1suite',
   'http://localhost:3002',
-  'http://localhost:5167',
+  'http://localhost:5173',
 ];
 
 

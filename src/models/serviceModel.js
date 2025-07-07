@@ -7,34 +7,33 @@ const serviceModel = {
     //  payment_status, is_deleted, created_at, updated_at
     const sql = `INSERT INTO service_tbl 
       (client_id, service_name, from_date, to_date,service_amount, paid_amount, balance_amount, renewal_amount,last_renewal_date, payment_status,notes) 
-      VALUES ( ?, ?, ?, ?, ?, ?, ?, ?,?,?,  ?)`;
+      VALUES ( ?, ?, ?, ?, ?, ?, ?, ?,?, ?,  ?)`;
       console.log("data", data);
-    const serviceAmountWithTax = data.service_amount * 1.18;
-    const renewalAmountWithTax = data.renewal_amount * 1.18;
+    // const serviceAmountWithTax = data.service_amount * 1.18;
+    // const renewalAmountWithTax = data.renewal_amount * 1.18;
 
     const [result] = await db.execute(sql, [
       data.client_id,
       data.service_name,
       data.from_date,
       data.to_date,
-      serviceAmountWithTax,
+      data.service_amount,
       data.paid_amount,
       data.balance_amount,
-      renewalAmountWithTax,
+      data.renewal_amount || null,
       data.last_renewal_date || null,
       data.payment_status || 0,
       data.notes || null
     ]);
-    console.log("amount", serviceAmountWithTax, "renamount", renewalAmountWithTax);
     console.log(result);
     return { id: result.insertId, ...data };
   },
 
   async updateServiceTotals(updateServiceData) {
     const { user_id, paid_amount, balance_amount, due_date, payment_status, id } = updateServiceData
-
+console.log(updateServiceData)
     const query = `UPDATE service_tbl 
-       SET user_id =?,paid_amount = ?, balance_amount = ?, due_date = ?, payment_status = ?
+       SET user_id =?, paid_amount = ?, balance_amount = ?, due_date = ?, payment_status = ?
        WHERE id = ? AND is_deleted = 0`
     const [result] = await db.query(query, [user_id, paid_amount, balance_amount, due_date, payment_status, id])
     return result;
@@ -136,12 +135,13 @@ FROM upcoming_service_followup_payment; `
 
 //
   async insertServicePayment(data) {
-    const { user_id, client_id, service_id, payment_amount, payment_date, payment_method, payment_status,next_due_date,followup_date, notes, extra_amount } = data;
+    console.log(data)
+    const { user_id, client_id, service_id, payment_amount,paid_amount,balance_amount, payment_date, payment_method, payment_status,next_due_date,followup_date, notes, extra_amount } = data;
    
      const query = `INSERT INTO service_payment_tbl 
-       (user_id,client_id, service_id, payment_amount,payment_date, payment_method, payment_status,next_due_date, followup_date, notes, extra_amount)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-     const values= [user_id, client_id, service_id, payment_amount, payment_date, payment_method, payment_status,next_due_date,followup_date, notes, extra_amount]
+       (user_id,client_id, service_id,payment_amount ,paid_amount,balance_amount,payment_date, payment_method, payment_status,next_due_date, followup_date, notes, extra_amount)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?, ?)`
+     const values= [user_id, client_id, service_id, payment_amount,paid_amount,balance_amount, payment_date, payment_method, payment_status,next_due_date,followup_date, notes, extra_amount]
     const [result] = await db.query(query, values);
     return result;
   },

@@ -239,6 +239,14 @@
  *                 type: number
  *                 format: float
  *                 example: 2000.00
+ *               paid_amount:
+ *                 type: number
+ *                 format: float
+ *                 example: 1000.00
+ *               balance_amount:
+ *                 type: number
+ *                 format: float
+ *                 example: 1000.00
  *               payment_date:
  *                 type: string
  *                 format: date
