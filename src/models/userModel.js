@@ -34,7 +34,14 @@ updatePassword: async (userId, newPassword) => {
   getUserRole: async (roleId) => {
     const [rows] = await db.execute('SELECT id, role_name FROM role_tbl WHERE id = ?', [roleId]);
     return rows;
-  }
+  },
+  resetPassword: async ( hashedPassword,email) => {
+    const [result] = await db.execute(
+      'UPDATE user_tbl SET password = ? WHERE email = ?',
+      [hashedPassword, email]
+    );
+    return result.affectedRows;
+  },
 };
 
 module.exports = User;

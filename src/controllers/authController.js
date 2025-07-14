@@ -2,10 +2,13 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const Employee =require('../models/empolyeeModel')
+const transporter =require('../config/nodemailer')
+const otpStore =require('../helper/otpStore')
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 require('../config/passport'); // Load Passport config
-
+ const genrateOtp = ()=>Math.floor(100000+Math.random()*900000).toString();
+ 
 module.exports = {
     login: async (req, res, next) => {
     try {
@@ -151,5 +154,66 @@ module.exports = {
     } catch (error) {
       next({ status: 500, message: 'Internal Server Error', error: error.message });
     }
+  },
+
+  sendOtp: async(req,res,next)=>{
+    try{
+      const {email} =req.body
+      // console.log('mail',email)
+      if (!email){
+        return res.status(400).json({success :false ,message :'mail Id required'})
+      }
+      const user = await User.getUserByEmail(email);
+      // console.log(user)
+      if (!user) {
+        return res.status(404).json({ success: false, message: 'User not found' });
+      }
+      const otp =genrateOtp();
+      console.log("otp",otp)
+      otpStore[email]={otp,createAt:Date.now()}
+
+      await transporter.sendMail({
+        from :process.env.SMTP_MAIL,
+        to: email,
+        subject :'password reset',
+        text : `Your OTP is: ${otp}. It is valid for 5 minute.`
+
+     } )
+     return res.status(200).json({sucess :true, message: 'otp send sucessfully'})
+
+    }catch(error){
+      next(error)
+    }
+  },
+  resetPassword : async (req,res,next)=>{
+    try{
+    const {otp,email,NewPassword}=req.body
+    // console.log(otp,email,NewPassword)
+    // console.log("otpstore",otpStore)
+    const otpData = otpStore[email];
+    // console.log("otpData", otpData)
+    if (!otpData) {
+      return { staus: 400, msg: 'otp data not found' }
+    }
+    const {otp:storedOtp,createdAt} =otpData
+    console.log("otp data",otpData)
+    if (Date.now- createdAt > 6000000){
+        // delete otpStore[email]
+      return res.status(400).json({message:'otp expried'})
+
+    }
+    if (otp !== storedOtp ){
+      return res.status(400).json({message:'invalid otp '})
+    }
+    const hashedPassword = await bcrypt.hash(NewPassword, 10);
+     await User.resetPassword(hashedPassword,email)
+        delete otpStore[email]
+    return res.status(200).json({success:true,message:'password update successfully'})
+
+
+  }catch(error){
+    next(error)
   }
+}
+
 };

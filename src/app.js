@@ -48,6 +48,7 @@ const holiday = require('./routers/holidayRoute.js'); // Holiday Routes
 const comments = require('./routers/commentsRoute.js')
 const activityLog = require('./routers/activityLogRoutes.js')
 const openAi = require('./routers/openAiRute.js'); // OpenAI Routes
+const salarySlip =require('./routers/paySlipRoute.js')
 
 
 const authRoutes = require('./routers/authRoute');
@@ -75,6 +76,7 @@ app.use('/api/v1', subTask); // Task Routes
 app.use('/api/v1', leave); // Leave Routes
 app.use('/api/v1', comments);
 app.use('/api/v1', holiday); // Holiday Routes
+app.use('/',salarySlip)
 
 app.use('/api/v1', activityLog);
 app.use('/api/v1', openAi); // OpenAI Routes

@@ -74,6 +74,7 @@ const EmployeeModel = {
     },
 
     async updateEmployee(id, data) {
+        console.log(data)
 
         const sql = `UPDATE employee_tbl SET user_id=?, name=?, phone=?,mail=?, dob=?, doj=?, department=?, designation=?, salary=?,
              pan=?, aadhar=?, education=?, address=?, city=?, state=?, pincode=?,
@@ -84,6 +85,7 @@ const EmployeeModel = {
             data.pan, data.aadhar, data.education, data.address, data.city, data.state, data.pincode,
             data.p_address, data.p_city, data.p_state, data.p_pincode, data.emergency_name, data.emergency_phone, data.emergency_relation, id]
         const [result] = await pool.query(sql, values);
+        console.log(result)
         return result.affectedRows > 0 ? { id, ...data } : null;
     },
     async relievingEmployee(id, status, status_reason, status_desc, relieving_date) {

@@ -82,9 +82,13 @@ async getAttendanceByUserId (req, res, next)  {
     }
 },
  async getTotalWorkingDays (req, res, next)  {
-
     try {
-        const rows = await attendanceModel.getTotalWorkingDays();
+            const { startDate, endDate, id } = req.query;
+
+    if (!startDate && !endDate && !user_id) {
+      return res.status(400).json({ message: "user_id,startDate and endDate are required." });
+    }
+        const rows = await attendanceModel.getTotalWorkingDays(startDate, endDate, id);
         res.status(200).json(rows);
     } catch (error) {
         next(error)

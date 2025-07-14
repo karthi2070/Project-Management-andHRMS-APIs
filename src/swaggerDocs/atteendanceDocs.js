@@ -182,6 +182,22 @@
  *   get:
  *     summary: Get total working days per employee
  *     tags: [Attendance]
+ *     parameters:
+ *       - in: query
+ *         name: startDate
+ *         schema:
+ *           type: string
+ *           format: date
+ *       - in: query
+ *         name: endDate
+ *         schema:
+ *           type: string
+ *           format: date
+ *       - in: query
+ *         name: id
+ *         schema:
+ *           type: integer
+ *           description: Category ID to filter expenses user id
  *     responses:
  *       200:
  *         description: A list of employees with total working days
