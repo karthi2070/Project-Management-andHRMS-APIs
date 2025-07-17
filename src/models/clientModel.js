@@ -55,7 +55,7 @@ async updateClient(
   },
 
   async getTotalClients() {
-    const sql = `SELECT COUNT(*) AS count FROM client_tbl WHERE is_deleted = 0 `
+    const sql = `SELECT COUNT(*) AS count FROM client_tbl  `
     const [rows] = await pool.query(sql);
     return rows[0].count;
   },

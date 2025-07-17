@@ -1,4 +1,4 @@
-const User = require('../models/userModel');
+const User = require('../models/authModel');
 const Permission = require('../models/permissionModel');
 const clientModel =require('../models/clientModel')
 const employeeModel =require('../models/empolyeeModel')

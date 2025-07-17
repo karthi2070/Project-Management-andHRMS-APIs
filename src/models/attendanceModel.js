@@ -55,7 +55,8 @@ async getTotalWorkingDays  (startDate, endDate,id)  {
       user_id, employee_name; `;
   //WHERE login IS NOT NULL AND date BETWEEN '2025-06-01' AND '2025-06-30' BETWEEN ? AND ?
     const [rows] = await db.query(query,[startDate, endDate, id]);
-    console.log(rows,rows[0].total_working_days)
+    console.log(rows)
+    // console.log(rows[0].total_working_days)
     return rows
 
 },

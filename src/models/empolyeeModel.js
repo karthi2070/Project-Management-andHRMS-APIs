@@ -98,15 +98,23 @@ const EmployeeModel = {
         const [result] = await pool.query(sql, [status, status_reason, status_desc, relieving_date, id]);
         return result.affectedRows > 0 ? { id, status, status_reason, status_desc, relieving_date } : null;
     },
+    async insertUserId(employee_id, user_id) {
+
+        const sql = 'UPDATE employee_tbl SET user_id = ? WHERE id = ?'
+        const [result] = await pool.query(sql, [user_id, employee_id])
+        return result.affectedRows > 0 ? result.affectedRows : null
+    },
+    async updateSalaryDetails(user_id, salary, salary_template_id) {
+        const sql = 'UPDATE employee_tbl SET salary=?,salary_template_id =? WHERE user_id =? and is_deleted =0 '
+        const [result] = await pool.query(sql, [salary, salary_template_id, user_id])
+        return result.affectedRows > 0 ? { id: result.affectedRows, salary, salary_template_id } : null;
+    },
 
     async softDeleteEmployee(id) {
-        try {
-            const sql = `UPDATE employee_tbl SET is_deleted = 1 WHERE id = ?`;
-            await pool.query(sql, [id]);
-            return { id, deleted: true };
-        } catch (error) {
-            throw error;
-        }
+        const sql = `UPDATE employee_tbl SET is_deleted = 1 WHERE id = ?`;
+        await pool.query(sql, [id]);
+        return { id, deleted: true };
+
     },
 
     async getFiltereddepart(depart) {
@@ -141,12 +149,12 @@ const EmployeeModel = {
 
 
     // Bank Details Methods
-    async createBankDetails(data) {
+    async createBankDetails(employee_id, acc_holder_name, account_number, ifsc_code, bank_name, pf_account_number, uan_number) {
 
-        const sql = `INSERT INTO bank_details_tbl (employee_id, acc_holder_name,  account_number, ifsc_code, bank_name)
-                         VALUES (?, ?, ?, ? , ?)`;
-        const [result] = await pool.query(sql, Object.values(data));
-        return { id: result.insertId, ...data };
+        const sql = `INSERT INTO bank_details_tbl (employee_id, acc_holder_name, account_number, ifsc_code, bank_name,pf_account_number, uan_number)
+                         VALUES (?, ?, ?, ?, ?, ?, ?)`;
+        const [result] = await pool.query(sql, [employee_id, acc_holder_name, account_number, ifsc_code, bank_name, pf_account_number, uan_number]);
+        return { id: result.insertId };
 
     },
 
@@ -164,16 +172,57 @@ const EmployeeModel = {
         const [banks] = await pool.query(sql, [id]);
         return banks[0] || null;
 
+    },// models/bank.model.js
+    async updateBankDetailsByEmployeeId(employee_id,data) {
+        const {
+            acc_holder_name,
+            account_number,
+            ifsc_code,
+            bank_name,
+            pf_account_number,
+            uan_number
+        } = data;
+
+        const sql = `
+      UPDATE bank_details_tbl 
+      SET acc_holder_name = ?, account_number = ?, ifsc_code = ?, bank_name = ?, pf_account_number = ?, uan_number = ?
+      WHERE employee_id = ? AND is_deleted = 0
+    `;
+
+        const values = [acc_holder_name, account_number, ifsc_code, bank_name, pf_account_number, uan_number, employee_id];
+        const [result] = await pool.query(sql, values);
+        return result.affectedRows > 0 ? { message: 'Updated by employee_id' } : null;
     },
 
-    async updateBankDetails(id, data) {
+    async updateBankDetailsById(id,data) {
+        const {
+            employee_id,
+            acc_holder_name,
+            account_number,
+            ifsc_code,
+            bank_name,
+            pf_account_number,
+            uan_number } = data;
 
-        const sql = `UPDATE bank_details_tbl SET acc_holder_name=?, account_number= ?,  ifsc_code= ?, bank_name=? 
-                         WHERE employee_id = ? AND is_deleted = 0`;
-        await pool.query(sql, [...Object.values(data), id]);
-        return { id, ...data };
+        const sql = `
+      UPDATE bank_details_tbl 
+      SET employee_id=?, acc_holder_name = ?, account_number = ?, ifsc_code = ?, bank_name = ?, pf_account_number = ?, uan_number = ?
+      WHERE id = ? AND is_deleted = 0
+    `;
 
+        const values = [employee_id,acc_holder_name, account_number, ifsc_code, bank_name, pf_account_number, uan_number, id];
+        const [result] = await pool.query(sql, values);
+        return result.affectedRows > 0 ? { message: 'Updated by id' } : null;
     },
+
+    //     async updateBankDetails(id, employee_id, acc_holder_name, account_number, ifsc_code,bank_name,pf_account_number, uan_number) {
+    // console.log(id, employee_id, acc_holder_name, account_number, ifsc_code,bank_name,pf_account_number, uan_number)
+    //         const sql = `UPDATE bank_details_tbl SET acc_holder_name=?, account_number= ?,  ifsc_code= ?, bank_name=?,pf_account_number=?, uan_number=?
+    //                          WHERE employee_id = ? AND is_deleted = 0`;
+    //        const [result]= await pool.query(sql, [employee_id, acc_holder_name, account_number, ifsc_code,bank_name,pf_account_number, uan_number, id]);
+    //         return result.affectedRows > 0 ? data :null ;
+
+    //     },
 
     async softDeleteBankDetails(id) {
 
@@ -182,9 +231,6 @@ const EmployeeModel = {
         return { id, deleted: true };
 
     },
-
-
-
 
 
 };

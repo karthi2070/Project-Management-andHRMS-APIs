@@ -1,6 +1,6 @@
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
-const User = require('../models/userModel');
+const User = require('../models/authModel');
 const Employee =require('../models/empolyeeModel')
 const transporter =require('../config/nodemailer')
 const otpStore =require('../helper/otpStore')
@@ -93,8 +93,8 @@ module.exports = {
   },
   createUser: async (req, res, next) => {
     try {
-      const { email, password, role_id } = req.body;
-      console.log(email, password, role_id)
+      const { email, password,employee_id, role_id } = req.body;
+      console.log(req.body)
       if (!email || !password || !role_id) {
         return res.status(400).json({ success: false, message: 'Email, password, and role_id required' });
       }
@@ -103,18 +103,18 @@ module.exports = {
         return res.status(409).json({ success: false, message: 'Email already exists' });
       }
       const userId = await User.createUser(email, password, role_id);
-      console.log(userId)
-      res.status(201).json({
-        success: true,
-        userId,
-        email,
+      console.log("userId",userId)
+      const result =await Employee.insertUserId(employee_id,userId)
+      console.log("result",result)
+      res.status(201).json({ success: true,userId,email,
         roleId: role_id,
-        message: 'User created successfully'
-      });
+        //employee_id:result\
+        message: 'User created successfully' });
     } catch (error) {
       next({ status: 500, message: 'Internal Server Error', error: error.message });
     }
   },
+
   getUserByEmail: async (req, res, next) => {
     try {
       const { email } = req.params;
@@ -169,7 +169,7 @@ module.exports = {
         return res.status(404).json({ success: false, message: 'User not found' });
       }
       const otp =genrateOtp();
-      console.log("otp",otp)
+      // console.log("otp",otp)
       otpStore[email]={otp,createAt:Date.now()}
 
       await transporter.sendMail({

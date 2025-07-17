@@ -16,4 +16,10 @@ router.post('/compoents/create-compoents', controller.insertComponents);
 router.put('/componts/update-compoents/:id', controller.updateComponent);
 router.patch('/componts/delete-compoents/:id', controller.softDeleteComponent);
 
+router.post('/salary-history', controller.createSalaryHistory);
+router.put('/salary-history-update/:id',controller. updateSalaryHistory);
+router.get('/get-salary-history-user-id/:id',controller.getSalaryHistoryByUserId)
+
+router.post('/payslip/genpayslip',controller.genpayslip)
+
 module.exports = router;

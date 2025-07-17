@@ -1,11 +1,12 @@
+const EmployeeModel = require('../models/empolyeeModel');
 const paySlipModel = require('../models/paySlipModel');
 
-
-
 const PayslipController = {
+
   async createPayslipTemplateWithComponents(req, res) {
     try {
       const { template, components } = req.body;
+      console.log(req.body)
 
       // Validate
       if (!template || !components || !Array.isArray(components)) {
@@ -13,6 +14,7 @@ const PayslipController = {
       }
 
       const { template_name, total_percentage } = template;
+      console.log("template",template)
 
       if (!template_name || typeof total_percentage !== 'number') {
         return res.status(400).json({ error: 'Missing template fields' });
@@ -29,7 +31,6 @@ const PayslipController = {
 
       // Step 2: Map Components with inserted template_id
       const mappedComponents = components.map((c, index) => ({
-        id: undefined, // Let DB auto-increment or you can generate if needed
         template_id,
         comp_name: c.Comp_name,
         type: c.Type,
@@ -83,19 +84,6 @@ const PayslipController = {
       const template = await paySlipModel.getTemplateById(id);
       if (!template) 
         return res.status(404).json({ error: 'Template not found' });
-
-      // const components = await paySlipModel.getAllComponentsByTemplateId(id);
-
-      // const response = {
-      //   template: template.template_name,
-      //   components: components.map(c => ({
-      //     Comp_name: c.comp_name,
-      //     Type: c.type,
-      //     Percentage: c.percentage,
-      //     Applicable: c.applicable
-      //   })),
-      //   total_percentage: template.total_percentage
-      // };
 
       res.status(200).json(template);
     } catch (err) {      
@@ -190,6 +178,31 @@ const PayslipController = {
       next(err)
     }
   },
+   async genpayslip (req,res,next){
+    try{
+      const {salary, salary_template_id, user_id } =req.body;
+      if (!salary && !salary_template_id && !user_id){
+        return res.status(400).json({message:'requried folleing fileds salary, template_id, user_id '})
+
+      }
+      const user = await EmployeeModel.getEmployeeByUserId(user_id)
+      if(! user){
+        return res.status(400).json({message:'user not found or user deleted'})
+      }
+      const updateSalaryDetails = await EmployeeModel.updateSalaryDetails(user_id,salary, salary_template_id)
+      if(! updateSalaryDetails ){
+        return res.status(400).json({message:'salary and template_id not update'})
+      } 
+
+     const formattedResponse = await paySlipModel.genpaySlip(user_id)
+      if (!formattedResponse) {
+        return res.status(404).json({ success: false, message: "Data not found" });
+      }
+      res.status(200).json({ success: true, data: formattedResponse });
+    }catch(err){
+      next(err)
+    }
+  },
   async getgenpayslip (req,res,next){
     try{
       const {startDate, endDate, id } =req.query;
@@ -200,6 +213,38 @@ const PayslipController = {
       res.status(200).json({ success: true, data: formattedResponse });
     }catch(err){
       next(err)
+    }
+  },
+
+  // salary history 
+
+    async createSalaryHistory(req, res, next) {
+    try {
+      const data = req.body;
+      const result = await paySlipModel.createSalaryHistory(data);
+      res.status(201).json({ success: true, message: 'Salary history created', id: result.insertId });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async updateSalaryHistory(req, res, next) {
+    try {
+      const { id } = req.params;
+      const data = req.body;
+      const result = await paySlipModel.updateSalaryHistory(id, data);
+      res.status(200).json({ success: true, message: 'Salary history updated', result });
+    } catch (error) {
+      next(error);
+    }
+  },
+  async getSalaryHistoryByUserId(req,res,next){
+    try{
+      const {id}=req.params
+      const rows =await paySlipModel.getSalaryHistoyByUserId(id);
+      res.status(200).json({success :true ,rows });
+    }catch(error){
+      next(error)
     }
   }
 };

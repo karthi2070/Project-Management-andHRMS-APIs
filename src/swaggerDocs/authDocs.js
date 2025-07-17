@@ -4,7 +4,7 @@
  *   post:
  *     summary: User login with email and password
  *     description: Authenticates a user and returns a JWT token with user details.
- *     tags: [User Management]
+ *     tags: [auth]
  *     requestBody:
  *       required: true
  *       content:
@@ -59,7 +59,7 @@
  *   post:
  *     summary: Register a new user
  *     description: Creates a user with email, password, and role ID.
- *     tags: [User Management]
+ *     tags: [auth]
  *     requestBody:
  *       required: true
  *       content:
@@ -78,6 +78,9 @@
  *               password:
  *                 type: string
  *                 example: NewUser@123
+ *               employee_id:
+ *                 type: integer
+ *                 example: 3 
  *               role_id:
  *                 type: integer
  *                 example: 3
@@ -96,7 +99,7 @@
  *   get:
  *     summary: Get user by email
  *     description: Retrieves user details for the specified email.
- *     tags: [User Management]
+ *     tags: [auth]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -136,7 +139,7 @@
  *   post:
  *     summary: Create a new user
  *     description: Creates a new user in the system. Requires admin privileges and JWT authentication.
- *     tags: [User Management]
+ *     tags: [auth]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -159,23 +162,6 @@
  *     responses:
  *       200:
  *         description: User created successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: User created successfully
- *                 user:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: integer
- *                     email:
- *                       type: string
- *                     role_id:
- *                       type: integer
  *       400:
  *         description: Invalid input
  *       401:
@@ -193,7 +179,7 @@
  *   put:
  *     summary: Update user information
  *     description: Updates the authenticated user's email and/or role ID.
- *     tags: [User Management]
+ *     tags: [auth]
  *     security:
  *       - bearerAuth: []
  *     requestBody:

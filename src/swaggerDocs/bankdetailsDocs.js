@@ -28,6 +28,12 @@
  *         bank_name:
  *           type: string
  *           description: Name of the bank
+ *         pf_account_number:
+ *           type: string
+ *           description: pf account number
+ *         uan_number:
+ *           type: string
+ *           description: uan number
  */
 
 /**
@@ -60,7 +66,7 @@
 
 /**
  * @swagger
- * /api/v1/bank/get-acc-em-id/{id}:
+ * /api/v1/bank/get-acc-emp-id/{id}:
  *   get:
  *     summary: Get bank details by ID
  *     tags: [BankDetails]
@@ -79,7 +85,30 @@
 
 /**
  * @swagger
- * /api/v1/bank/update-acc-em-id/{id}:
+ * /api/v1/bank/update-acc-emp-id/{employee_id}:
+ *   put:
+ *     summary: Update bank details
+ *     tags: [BankDetails]
+ *     parameters:
+ *       - in: path
+ *         name: employee_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/BankDetails'
+ *     responses:
+ *       200:
+ *         description: Bank details updated successfully
+ */
+
+/**
+ * @swagger
+ * /api/v1/bank/update-acc-id/{id}:
  *   put:
  *     summary: Update bank details
  *     tags: [BankDetails]
@@ -102,7 +131,7 @@
 
 /**
  * @swagger
- * /api/v1/bank/delete-acc-em-id/{id}:
+ * /api/v1/bank/delete-acc-emp-id/{id}:
  *   patch:
  *     summary: Soft delete bank details
  *     tags: [BankDetails]

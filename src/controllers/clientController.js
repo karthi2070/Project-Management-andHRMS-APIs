@@ -6,7 +6,7 @@ const ClientController = {
             const { user_id, name, company_name, mail, phone1, phone2, phone3, gst_num, address, city, state, pincode } = req.body
 
             const count = await ClientModel.getTotalClients()
-            console.log("count", count)
+           // console.log("count", count)
             const client_id = `CLI000${count + 1}`
             const client_data = { user_id, user_id, name, company_name, client_id, mail, phone1, phone2, phone3, gst_num, address, city, state, pincode }
             const client = await ClientModel.createClient(client_data);

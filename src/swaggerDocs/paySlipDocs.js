@@ -7,6 +7,92 @@
 
 /**
  * @swagger
+ * /payslip/genpayslip:
+ *   post:
+ *     summary: Generate payslip and update employee salary/template
+ *     description: Receives salary, template_id, and user_id. Updates employee details and returns generated payslip.
+ *     tags: [Templates]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - salary
+ *               - template_id
+ *               - user_id
+ *             properties:
+ *               salary:
+ *                 type: number
+ *                 example: 50000
+ *               salary_template_id:
+ *                 type: integer
+ *                 example: 2
+ *               user_id:
+ *                 type: integer
+ *                 example: 1
+ *     responses:
+ *       200:
+ *         description: Payslip generated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     Employee details:
+ *                       type: object
+ *                       properties:
+ *                         name:
+ *                           type: string
+ *                         employee_id:
+ *                           type: string
+ *                         department:
+ *                           type: string
+ *                         mail:
+ *                           type: string
+ *                         designation:
+ *                           type: string
+ *                         Date_of_Joining:
+ *                           type: string
+ *                           format: date
+ *                         pan_number:
+ *                           type: string
+ *                         acc_holder_name:
+ *                           type: string
+ *                         account_number:
+ *                           type: string
+ *                         bank_name:
+ *                           type: string
+ *                         pf_account_number:
+ *                           type: string
+ *                         uan_number:
+ *                           type: string
+ *                     payslip deatils:
+ *                       type: object
+ *                       properties:
+ *                         salary:
+ *                           type: number
+ *                         template_name:
+ *                           type: string
+ *                         components:
+ *                           type: array
+ *                           items:
+ *                             type: object
+ *                             properties:
+ *                               comp_name:
+ *                                 type: string
+ */
+
+
+/**
+ * @swagger
  * /templates/payslip/get-by-userid:
  *   get:
  *     summary: Get total working days per employee

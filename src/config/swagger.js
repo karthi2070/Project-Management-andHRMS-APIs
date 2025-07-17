@@ -5,7 +5,7 @@ const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Employee API',
+      title: 'N1 SUITE APIs',
       version: '1.0.0',
       description: 'API for managing employees',
     },

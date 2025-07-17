@@ -20,9 +20,10 @@ router.get('/employee/get-by-empid/:employee_id', EmployeeController.getEmployee
 // Bank Details Routes
 router.post('/bank/create-acc', EmployeeController.createBankDetails);
 router.get('/bank/get-acc-list', EmployeeController.getAllBankDetails);
-router.get('/bank/get-acc-em-id/:id', EmployeeController.getBankDetailsById);
-router.put('/bank/update-acc-em-id/:id', EmployeeController.updateBankDetails);
-router.patch('/bank/delete-acc-em-id/:id', EmployeeController.softDeleteBankDetails);
+router.get('/bank/get-acc-emp-id/:id', EmployeeController.getBankDetailsById);
+router.put('/bank/update-acc-emp-id/:employee_id', EmployeeController.updateBankDetailsByEmployeeId);
+router.put('/bank/update-acc-id/:id', EmployeeController.updateBankDetailsById);
+router.patch('/bank/delete-acc-emp-id/:id', EmployeeController.softDeleteBankDetails);
 
 
 module.exports = router;
