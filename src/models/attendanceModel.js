@@ -42,7 +42,8 @@ async getAttendanceByDate (strat_date,end_date) {
     );
     return rows;
 },
-async getTotalWorkingDays  (startDate, endDate,id)  {
+async getTotalWorkingDays  (startDate, endDate, id)  {
+  console.log("data",startDate, endDate,id)
   const query = ` SELECT 
       user_id,
       employee_name,
@@ -55,10 +56,9 @@ async getTotalWorkingDays  (startDate, endDate,id)  {
       user_id, employee_name; `;
   //WHERE login IS NOT NULL AND date BETWEEN '2025-06-01' AND '2025-06-30' BETWEEN ? AND ?
     const [rows] = await db.query(query,[startDate, endDate, id]);
-    console.log(rows)
-    // console.log(rows[0].total_working_days)
+     const total_working_days = rows.length ? rows[0].total_working_days : 0;
+  console.log("attendance", total_working_days);
     return rows
-
 },
 async getPresentEmployeeIds(date){
         const query =`SELECT DISTINCT user_id FROM employee_attendance_tbl WHERE date= ? `

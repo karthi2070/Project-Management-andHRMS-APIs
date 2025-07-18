@@ -1,5 +1,6 @@
 const EmployeeModel = require('../models/empolyeeModel');
 const paySlipModel = require('../models/paySlipModel');
+const PayslipService =require('../services/payslipService')
 
 const PayslipController = {
 
@@ -178,9 +179,11 @@ const PayslipController = {
       next(err)
     }
   },
+
+  //genrate payslip 
    async genpayslip (req,res,next){
     try{
-      const {salary, salary_template_id, user_id } =req.body;
+      const { user_id,salary, salary_template_id,start_date, end_date } =req.body;
       if (!salary && !salary_template_id && !user_id){
         return res.status(400).json({message:'requried folleing fileds salary, template_id, user_id '})
 
@@ -194,7 +197,7 @@ const PayslipController = {
         return res.status(400).json({message:'salary and template_id not update'})
       } 
 
-     const formattedResponse = await paySlipModel.genpaySlip(user_id)
+     const formattedResponse = await PayslipService.genpaySlip(user_id,start_date, end_date)
       if (!formattedResponse) {
         return res.status(404).json({ success: false, message: "Data not found" });
       }

@@ -1,5 +1,6 @@
 const pool = require('../config/db');
 const attendanceModel = require('../models/attendanceModel');
+const leaveModel = require('../models/leaveModel')
 
 const salarySlipsModel = {
 
@@ -90,22 +91,15 @@ const salarySlipsModel = {
     return rows.length > 0 ? formattedResponse : null;
   },
 
-  // async insertTemplate(template_name, total_percentage) {
-  //   const sql = `INSERT INTO salary_templates ( template_name, total_percentage)
-  //                VALUES ( ?, ?)`;
-  //   const values = [template_name, total_percentage];
-  //   const [result] = await pool.query(sql, values);
-  //   return { id: result.insertId };
-  // },
-async insertTemplate(data) {
-  const {template_name, total_percentage}=data
-  const sql = `INSERT INTO salary_templates (template_name, total_percentage)
+  async insertTemplate(data) {
+    const { template_name, total_percentage } = data
+    const sql = `INSERT INTO salary_templates (template_name, total_percentage)
                VALUES (?, ?)`;
-  const values = [template_name, total_percentage];
-  const [result] = await pool.query(sql, values);
-  return { id: result.insertId, template_name, total_percentage };
-}
-,
+    const values = [template_name, total_percentage];
+    const [result] = await pool.query(sql, values);
+    return { id: result.insertId, template_name, total_percentage };
+  }
+  ,
   async updateTemplate(id, data) {
     const sql = `UPDATE salary_templates
                  SET template_name = ?, total_percentage = ?, updated_at = CURRENT_TIMESTAMP
@@ -120,70 +114,163 @@ async insertTemplate(data) {
     const [result] = await pool.query(sql, [id]);
     return { affectedRows: result.affectedRows };
   },
-  async genpaySlip(user_id){
-    const sql = ` SELECT 
-e.id, e.employee_id,e.name, e.department,e.mail,e.designation,e.doj,e.salary,e.pan,
-b.acc_holder_name, b.account_number,b.bank_name,b.pf_account_number,uan_number,
-t.template_name,c.template_id,c.comp_name, c.type, c.percentage, c.applicable
-FROM employee_tbl e
-JOIN user_tbl u on e.user_id = u.id 
-JOIN bank_details_tbl b ON e.id = b.employee_id
-JOIN salary_templates t ON e.salary_template_id = t.id
-JOIN salary_components c ON t.id = c.template_id 
-where u.id = ?;  `
 
+// TypeError: Cannot read properties of undefined (reading 'salary') 
+// if throw this error check you have uesr id and user id map in to employee_tbl and employee_tbl id shoud be map in to bank_details _tbl
+ 
+// generate payslip
+
+//   async genpaySlip(user_id, start_date, end_date) {
+//     const sql = ` SELECT 
+// u.id as userId, e.id as employeeId, e.employee_id,e.name, e.department,e.mail,e.designation,e.doj,e.salary,e.pan,
+// b.id as bankId, b.acc_holder_name, b.account_number,b.bank_name,b.pf_account_number,b.uan_number,
+// t.id as templateId, t.template_name,c.template_id,c.id as component_id,c.comp_name, c.type, c.percentage, c.applicable
+// FROM employee_tbl e
+// JOIN user_tbl u on e.user_id = u.id 
+// JOIN bank_details_tbl b ON e.id = b.employee_id
+// JOIN salary_templates t ON e.salary_template_id = t.id
+// JOIN salary_components c ON t.id = c.template_id 
+// where u.id = ?;  `
+
+//     const [result] = await pool.query(sql, [user_id]);
+
+//     const { earnings, deductions } = result.reduce((acc, crr) => {
+//       if (crr.type == 1) acc.earnings += crr.percentage;
+//       else if (crr.type == 2) acc.deductions += crr.percentage;
+
+//       return acc;
+//     }, { earnings: 0, deductions: 0 })
+
+//     const total_percentage = earnings + deductions
+//     console.log(total_percentage)
+
+//     if (total_percentage > 100) {
+//       throw new Error("Total percentage exceeds 100%");
+//     }
+//     function getTotalDays(start_date, end_date) {
+//       const startDate = new Date(start_date);
+//       const endDate = new Date(end_date);
+//       return Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+//     }
+
+//     const attendance = await attendanceModel.getTotalWorkingDays(start_date, end_date, user_id);
+//     const total_days_present = attendance.length ? Number(attendance[0].total_working_days) : 0;
+
+//     const leave = await leaveModel.getUserLeavesByDateRange(user_id, start_date, end_date);
+//     const pay_leave = leave.length ? Number(leave[0].leave_days) : 0;
+
+//     const totalDays = getTotalDays(start_date, end_date);
+//     console.log(result)
+
+//     const totalDaysAbsent = totalDays - (total_days_present + parseInt(pay_leave));
+//     const salary = Number(result[0].salary); //destructure salary 
+//     const per_day_amount = salary / totalDays
+//     const absent_days_deductions = per_day_amount * totalDaysAbsent
+
+//     const gross_amount = (salary * earnings) / 100
+//     const deductions_amount = (salary * deductions) / 100
+//     const net_paymnet = salary - deductions_amount
+
+//     // insert 
+//           const query = `INSERT INTO emp_salary_history ( user_id, employee_id, bank_details_id,salary_date, salary_template_id,
+//         components, total_salary, gross_amount, deductions_amount, net_payment ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+// const components =result.map(row => ({
+//       component_id: row.component_id,
+//       component_name: row.comp_name,
+//       type: row.type,
+//       percentage: row.percentage,
+//       salary_amount: (salary * row.percentage) / 100,
+//       applicable: row.applicable
+//     }))
+//     toDayDate=new Date()
+//     console.log(components)
+//     const values = [result[0].userId, result[0].employeeId, result[0].bankId, toDayDate, result[0].templateId,JSON.stringify(components)
+//     ,salary,gross_amount,deductions_amount,net_paymnet]
+
+//     console.log(values)
+//    await pool.query(query, values);
+//     //     const salary
+//     console.log({
+//       "salary": salary,
+//       "per_day_amount": per_day_amount,
+//       "totalDays": totalDays,
+//       "total_days_present": total_days_present,
+//       "pay_leave": pay_leave,
+//       "totalDaysAbsent": totalDaysAbsent,
+//       "absent_days_deductions": absent_days_deductions
+//     });
+//     console.log(earnings, deductions)
+
+//     console.log(result)
+
+//     console.log(salary)
+//     const formatedResponce = {
+//       "Employee details": {
+//         name: result[0].name,
+//         employee_id: result[0].employee_id,
+//         Date_of_Joining: result[0].doj,
+//         department: result[0].department,
+//         mail: result[0].mail,
+//         designation: result[0].designation,
+//       }, "Account Details": {
+//         pan_number: result[0].pan,
+//         acc_holder_name: result[0].acc_holder_name,
+//         account_number: result[0].account_number,
+//         bank_name: result[0].bank_name,
+//         pf_account_number: result[0].pf_account_number,
+//         uan_number: result[0].uan_number
+
+//       }, "Attendance Details": {
+//         total_working_days: totalDays,
+//         total_days_present: total_days_present,
+//         total_pay_leave: pay_leave,
+//         totalDaysAbsent: totalDaysAbsent,
+//       },
+//       "payslip deatils": {
+//         salary: result[0].salary,
+//         template_name: result[0].template_name,
+//         components: result.map(row => ({
+//           comp_name: row.comp_name,
+//           type: row.type,
+//           percentage: row.percentage,
+//           salary_amount: (salary * row.percentage) / 100,
+//           applicable: row.applicable
+//         }))
+//       }, "salary_details": {
+//         gross_amount: gross_amount,
+//         deductions_amount: deductions_amount,
+//         net_paymnet: net_paymnet
+
+//       }
+//     }
+//     return formatedResponce;
+
+//   },
+  async getEmployeePayslipData(user_id) {
+    const sql = `
+      SELECT 
+        u.id as userId, e.id as employeeId, e.employee_id,e.name, e.department,e.mail,e.designation,e.doj,e.salary,e.pan,
+        b.id as bankId, b.acc_holder_name, b.account_number,b.bank_name,b.pf_account_number,b.uan_number,
+        t.id as templateId, t.template_name,c.template_id,c.id as component_id,c.comp_name, c.type, c.percentage, c.applicable
+      FROM employee_tbl e
+      JOIN user_tbl u on e.user_id = u.id 
+      JOIN bank_details_tbl b ON e.id = b.employee_id
+      JOIN salary_templates t ON e.salary_template_id = t.id
+      JOIN salary_components c ON t.id = c.template_id 
+      WHERE u.id = ?;
+    `;
     const [result] = await pool.query(sql, [user_id]);
+    return result;
+  },
 
-    const {earnings ,deductions}=result.reduce((acc,crr)=>{
-      if (crr.type ==1 ) acc.earnings += crr.percentage;
-      else if(crr.type==2) acc.deductions += crr.percentage;
-
-      return acc; },{earnings :0,deductions:0})
-
-      const total_percentage =earnings +deductions
-      console.log(total_percentage)
-
-      if(total_percentage >100){
-        throw new Error("Total percentage exceeds 100%");
-      }
-console.log(earnings ,deductions)
-      console.log(result)
-    const salary = result[0].salary;
-console.log(salary)
-    const formatedResponce = {
-      "Employee details": {
-        name: result[0].name,
-        employee_id: result[0].employee_id,
-        Date_of_Joining: result[0].doj,
-        department: result[0].department,
-        mail: result[0].mail,
-        designation: result[0].designation,
-        // working_days: attendance[0].total_working_days,
-        pan_number: result[0].pan,
-        acc_holder_name: result[0].acc_holder_name,
-        account_number: result[0].account_number,
-        bank_name: result[0].bank_name,
-        pf_account_number: result[0].pf_account_number,
-        uan_number: result[0].uan_number
-      }, "payslip deatils": {
-        salary: result[0].salary,
-        template_name: result[0].template_name,
-        components: result.map(row => ({
-          comp_name: row.comp_name,
-          type: row.type,
-          percentage: row.percentage,
-          salary_percentage: (salary * row.percentage) / 100,
-          applicable: row.applicable
-        }))
-      }, "salary_details": {
-        gross_amount: (salary * earnings) / 100,
-        deductions_amount: (salary * deductions) / 100,
-        net_paymnet: (salary * total_percentage) / 100
-
-      }
-    }
-    return formatedResponce;
-
+  async insertSalaryHistory(values) {
+    const query = `
+      INSERT INTO emp_salary_history (
+        user_id, employee_id, bank_details_id, salary_date, salary_template_id,
+        components, total_salary, gross_amount, deductions_amount, net_payment
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+    await pool.query(query, values);
   },
 
   //get payslilp
@@ -219,10 +306,12 @@ where e.id = ?;  `
     // const totalDays = getTotalDays(startDate, endDate);
     // const totalDaysPresent = totalDays - (present_days + permission_leaves);
 
-    // const attendance= await attendanceModel.getTotalWorkingDays(startDate, endDate, id);
-    // console.log(attendance,attendance[0].total_working_days)
+    const attendance = await attendanceModel.getTotalWorkingDays(startDate, endDate, id);
+    console.log(attendance, attendance[0].total_working_days)
 
-    console.log({ earnings, deductions })
+    const leave = await leaveModel.
+
+      console.log({ earnings, deductions })
     console.log(result)
     const salary = result[0].salary;
     const formatedResponce = {
@@ -247,13 +336,13 @@ where e.id = ?;  `
           comp_name: row.comp_name,
           type: row.type,
           percentage: row.percentage,
-          salary_percentage: (salary * row.percentage) / 100,
+          salary_amount: (salary * row.percentage) / 100,
           applicable: row.applicable
         }))
       }, "salary_details": {
         gross_amount: (salary * earnings) / 100,
         deductions_amount: (salary * deductions) / 100,
-        net_paymnet: (salary * totalPercentage) / 100
+        net_paymnet: (gross_amount - deductions_amount)
 
       }
     }
@@ -274,10 +363,8 @@ where e.id = ?;  `
       net_payment,
     } = data;
 
-    const sql = `INSERT INTO emp_salary_history (
-        user_id, employee_id, bank_details_id, salary_template_id,
-        components, total_salary, gross_amount, deductions_amount, net_payment
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
+    const sql = `INSERT INTO emp_salary_history ( user_id, employee_id, bank_details_id, salary_template_id,
+        components, total_salary, gross_amount, deductions_amount, net_payment ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
     const values = [
       user_id,
       employee_id,

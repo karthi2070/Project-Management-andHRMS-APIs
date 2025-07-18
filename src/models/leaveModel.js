@@ -45,6 +45,20 @@ async getemployeeLeaves(userId, is_applicable) {
     const [result] = await pool.query(sql, [id]);
     return result[0];
   },
+  async getUserLeavesByDateRange(user_id, start_date, end_date){
+
+    const sql =` select id,user_id,
+sum(datediff(least(end_date,?),greatest(start_date,?))+1) as leave_days from employee_leave_req_tbl 
+where is_deleted =0 
+and is_applicable =1
+and user_id = ?
+and  start_date <= ?
+and  end_date >= ?; `
+const values=[end_date,start_date,user_id,end_date,start_date]
+const [result]= await pool.query(sql,values)
+  result[0].leave_days = Number(result[0].leave_days);
+return result
+  },
 
   async updateLeave(id, data) {
     const sql = `UPDATE employee_leave_req_tbl SET user_id =?,leave_type_id=?, start_date=?, end_date=?, reason=? WHERE id=?`;

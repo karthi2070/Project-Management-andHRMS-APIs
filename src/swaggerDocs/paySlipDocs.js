@@ -23,71 +23,30 @@
  *               - template_id
  *               - user_id
  *             properties:
+ *               user_id:
+ *                 type: integer
+ *                 example: 1
  *               salary:
  *                 type: number
  *                 example: 50000
  *               salary_template_id:
  *                 type: integer
  *                 example: 2
- *               user_id:
- *                 type: integer
- *                 example: 1
+ *               start_date:
+ *                  type: string
+ *                  format: date
+ *                  example: 2025-06-01
+ *               end_date:
+ *                  type: string
+ *                  format: date
+ *                  example: 2025-06-30
  *     responses:
  *       200:
  *         description: Payslip generated successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 data:
- *                   type: object
- *                   properties:
- *                     Employee details:
- *                       type: object
- *                       properties:
- *                         name:
- *                           type: string
- *                         employee_id:
- *                           type: string
- *                         department:
- *                           type: string
- *                         mail:
- *                           type: string
- *                         designation:
- *                           type: string
- *                         Date_of_Joining:
- *                           type: string
- *                           format: date
- *                         pan_number:
- *                           type: string
- *                         acc_holder_name:
- *                           type: string
- *                         account_number:
- *                           type: string
- *                         bank_name:
- *                           type: string
- *                         pf_account_number:
- *                           type: string
- *                         uan_number:
- *                           type: string
- *                     payslip deatils:
- *                       type: object
- *                       properties:
- *                         salary:
- *                           type: number
- *                         template_name:
- *                           type: string
- *                         components:
- *                           type: array
- *                           items:
- *                             type: object
- *                             properties:
- *                               comp_name:
- *                                 type: string
+ *       500:
+ *         description: Server error TypeError Cannot read properties of undefined (reading 'salary')  
+ *                      if throw this error check you have uesr id and user id map in to employee_tbl and employee_tbl id shoud be map in to bank_details _tbl
+ *                       if you follow the flow you wont get this error TypeError Cannot read properties of undefined (reading 'salary')  
  */
 
 
