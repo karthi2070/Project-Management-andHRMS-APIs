@@ -38,7 +38,7 @@
  *           format: date
  *         payment_status:
  *           type: integer
- *           default: 0
+ *           default: 1
  */
 
 /**
@@ -256,7 +256,7 @@
  *                 example: "UPI"
  *               payment_status:
  *                 type: integer
- *                 example: 1
+ *                 example: 2
  *               next_due_date:
  *                 type: string
  *                 format: date

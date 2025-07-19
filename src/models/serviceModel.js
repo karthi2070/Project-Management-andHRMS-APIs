@@ -8,25 +8,25 @@ const serviceModel = {
     const sql = `INSERT INTO service_tbl 
       (client_id, service_name, from_date, to_date,service_amount, paid_amount, balance_amount, renewal_amount,last_renewal_date, payment_status,notes) 
       VALUES ( ?, ?, ?, ?, ?, ?, ?, ?,?, ?,  ?)`;
-      console.log("data", data);
-    // const serviceAmountWithTax = data.service_amount * 1.18;
-    // const renewalAmountWithTax = data.renewal_amount * 1.18;
+      
+    const serviceAmountWithTax = data.service_amount * 1.18;
+    const renewalAmountWithTax = data.renewal_amount * 1.18;
 
     const [result] = await db.execute(sql, [
       data.client_id,
       data.service_name,
       data.from_date,
       data.to_date,
-      data.service_amount,
+      serviceAmountWithTax,
       data.paid_amount,
       data.balance_amount,
-      data.renewal_amount || null,
+      renewalAmountWithTax || null,
       data.last_renewal_date || null,
-      data.payment_status || 0,
+      data.payment_status || 1,
       data.notes || null
     ]);
     console.log(result);
-    return { id: result.insertId, ...data };
+    return { id: result.insertId };
   },
 
   async updateServiceTotals(updateServiceData) {
@@ -107,14 +107,13 @@ console.log(updateServiceData)
   FROM service_payment_tbl
   WHERE is_deleted = 0
     AND payment_status = 1
-    AND next_due_date BETWEEN 
-    () AND CURRENT_DATE() + INTERVAL 30 DAY
+    AND followup_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + INTERVAL 30 DAY
 )
-
 SELECT 
   COUNT(*) AS upcoming_due_clients_count,
   JSON_ARRAYAGG(client_id) AS upcoming_due_clients_ids
-FROM upcoming_service_followup_payment; `
+FROM upcoming_service_followup_payment;
+ `
     const [rows] = await db.query(sql);
     // console.log("upcoming due clients", rows[0])
     const upcoming_due_clients_count = rows[0].upcoming_due_clients_count;

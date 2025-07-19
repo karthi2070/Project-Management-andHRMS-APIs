@@ -1,56 +1,12 @@
 const serviceModel = require('../models/serviceModel');
-const { getClientById } = require('./clientController');
 
 const serviceController = {
     async createService(req, res, next) {
         try {
-            const { client_id, service_name, from_date, to_date, service_amount, paid_amount, balance_amount, renewal_amount, last_renewal_date,
-                payment_status } = req.body;
-            // const service_amount = 10000; // for 1 month = 30 days
-            // const renewal_amount = 5000;  // just as example
-            const totalDays = Math.ceil((new Date(to_date) - new Date(from_date)) / (1000 * 60 * 60 * 24));
-            console.log("totalDays", totalDays);
+            const data = req.body;
 
-            if (totalDays <= 0) {
-                return res.status(400).json({ success: false, message: 'Invalid date range' });
-            }
-
-            const oneMonthDays = 30;
-
-            // Get full months and remaining days
-            const fullMonths = Math.floor(totalDays / oneMonthDays);
-            const extraDays = totalDays % oneMonthDays;
-            // console.log("fullMonths", fullMonths);
-            // console.log("extraDays", extraDays);
-
-            // Per day amount
-            const perDayAmount = service_amount / oneMonthDays;
-            const monthAmount = fullMonths * service_amount;
-            const extraAmount = extraDays * perDayAmount;
-            const totalAmount = monthAmount + extraAmount;
-            const balanceAmount = totalAmount * 1.18; // Add 18% GST
-            const renewalAmount = renewal_amount * 1.18;
-
-            // console.log("monthAmount", monthAmount);
-            // console.log("extraAmount", extraAmount);
-            // console.log("totalAmount", totalAmount);
-            // console.log("balanceAmount (with GST)", balanceAmount);
-            // console.log("renewalAmount (with GST)", renewalAmount);
-
-            const serviceData = {
-                client_id,
-                service_name,
-                from_date,
-                to_date,
-                service_amount,
-                paid_amount,
-                balance_amount: balanceAmount,
-                renewal_amount: renewalAmount,
-                last_renewal_date,
-                payment_status
-            };
-            const data = await serviceModel.create(serviceData);
-            res.status(201).json({ success: true, message: 'Service created', data });
+            const service = await serviceModel.create(data);
+            res.status(201).json({ success: true, message: 'Service created', service });
         } catch (error) {
             next(error);
         }
