@@ -4,12 +4,11 @@ const leaveModel = require('../models/leaveModel')
 
 const salarySlipsModel = {
 
-  async getAllComponentsByTemplateId(id) {
+  async getAllComponentsByTemplateId(template_id) {
     const sql = `SELECT id, template_id, comp_name, type, percentage, applicable
                  FROM salary_components 
                  WHERE template_id = ? AND is_deleted = 0`;
-    const values = [id];
-    const [result] = await pool.query(sql, values);
+    const [result] = await pool.query(sql, [template_id]);
     return result;
   },
 
@@ -23,9 +22,10 @@ const salarySlipsModel = {
     c.percentage,
     c.applicable
     ]);
+    console.log(values)
 
-    const [result] = await pool.query(sql, [values]);
-    return { affectedRows: result.affectedRows };
+    const [result] = await pool.query(sql, values);
+    return { result: result.insertId };
   },
 
   async updateComponent(id, data) {

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/paySlipController');
-
+router.get('/templates/get-all',controller.listAllTemplates)
 router.get('/templates/get-by-id/:id', controller.getTemplateById);
 router.get('/templates/get-by-id-temp-comp/:id', controller.getTemplateByIdWithComponents);
 router.post('/templates/create-template', controller.insertTemplate);
@@ -11,10 +11,10 @@ router.post('/templates/salary-template',controller.createPayslipTemplateWithCom
 router.get('/templates/payslip/get-by-userid', controller.getgenpayslip);
 
 
-router.get('/componets/get-by-id/:id', controller.getAllComponentsByTemplateId);
-router.post('/compoents/create-compoents', controller.insertComponents);
-router.put('/componts/update-compoents/:id', controller.updateComponent);
-router.patch('/componts/delete-compoents/:id', controller.softDeleteComponent);
+router.get('/components/get-by-id/:template_id', controller.getAllComponentsByTemplateId);
+router.post('/components/create-components', controller.insertComponents);
+router.put('/components/update-components/:id', controller.updateComponent);
+router.patch('/components/delete-components/:id', controller.softDeleteComponent);
 
 router.post('/salary-history', controller.createSalaryHistory);
 router.put('/salary-history-update/:id',controller. updateSalaryHistory);

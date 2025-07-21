@@ -1,4 +1,5 @@
 const serviceModel = require('../models/serviceModel');
+const service =require('../services/serviceService')
 
 const serviceController = {
     async createService(req, res, next) {
@@ -55,18 +56,29 @@ const serviceController = {
             next(error);
         }
     },
-    async upcomingPaymentDue(req, res, next) {
-        try {
-            const data = await serviceModel.upcomingPaymentDue();
-            if (!data || data.length === 0) {
-                return res.status(404).json({ success: false, message: 'No upcoming payments found' });
-            }
-            res.status(200).json({ success: true, data: data.upcoming_due_clients_count, client_ids: data.clients });
-        } catch (error) {
-            next(error);
-        }
-    },
-    //
+
+async upcomingPaymentDue (req, res, next)  {
+  try {
+     const days = parseInt(req.query.days) || 30; 
+    if (typeof days !== 'number' || days <= 0){
+          return res.status(400).json({ success: false, message: 'Invalid days value' }); }
+   // fallback to 30 if not provided
+    const { clientCount, clients } = await service.getUpcomingPayments(days);
+
+    if (!clients || clients.length === 0) {
+      return res.status(404).json({ success: false, message: 'No upcoming payments found' });
+    }
+
+    return res.status(200).json({
+      success: true,
+      upcoming_due_clients_count: clientCount,
+      client_data: clients
+    });
+  } catch (error) {
+    next(error);
+  }
+},
+
 
     async getAllServices(req, res, next) {
         try {

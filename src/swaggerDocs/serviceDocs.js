@@ -283,6 +283,12 @@
  *   get:
  *     summary: Get all upcoming payment due service
  *     tags: [Service]
+ *     parameters:
+ *       - in: query
+ *         name: days
+ *         schema:
+ *           type: number
+ *           description: number for next forward days 
  *     responses:
  *       200:
  *         description: List of upcoming payment due services

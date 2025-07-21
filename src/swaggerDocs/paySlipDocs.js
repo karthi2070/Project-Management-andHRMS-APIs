@@ -166,6 +166,18 @@
  *         description: Internal server error
  */
 
+/**
+ * @swagger
+ * /templates/get-all:
+ *   get:
+ *     summary: Get template by ID
+ *     tags: [Templates]
+ *     responses:
+ *       200:
+ *         description: Template found
+ *       404:
+ *         description: Template not found
+ */
 
 /**
  * @swagger
@@ -271,7 +283,7 @@
 
 /**
  * @swagger
- * /componets/get-by-id/{template_id}:
+ * /components/get-by-id/{template_id}:
  *   get:
  *     summary: Get components by template ID
  *     tags: [Components]
@@ -287,7 +299,7 @@
 
 /**
  * @swagger
- * /compoents/create-compoents:
+ * /components/create-components:
  *   post:
  *     summary: Insert components
  *     tags: [Components]
@@ -315,7 +327,7 @@
 
 /**
  * @swagger
- * /componts/update-compoents/{id}:
+ * /components/update-components/{id}:
  *   put:
  *     summary: Update a component
  *     tags: [Components]
@@ -342,7 +354,7 @@
 
 /**
  * @swagger
- * /componts/delete-compoents/{id}:
+ * /components/delete-components/{id}:
  *   patch:
  *     summary: Soft delete a component
  *     tags: [Components]

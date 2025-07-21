@@ -54,6 +54,17 @@ const PayslipController = {
     }
   },
 
+async listAllTemplates(req, res,next) {
+    try {
+      const templates = await paySlipModel.getAllTemplates();
+console.log(templates)
+         res.status(200).json(templates);
+    } catch (err) {
+      next(err)
+
+    }
+  },
+
   async getAllTemplates(req, res,next) {
     try {
       const templates = await paySlipModel.getAllTemplates();
@@ -141,8 +152,8 @@ const PayslipController = {
 // commponts
   async getAllComponentsByTemplateId(req, res,next) {
     try {
-      const { id } = req.params;
-      const components = await paySlipModel.getAllComponentsByTemplateId(id);
+      const { template_id } = req.params;
+      const components = await paySlipModel.getAllComponentsByTemplateId(template_id);
       res.status(200).json(components);
     } catch (err) {
   next(err)
@@ -150,8 +161,13 @@ const PayslipController = {
   },
 
   async insertComponents(req, res,next) {
-    try {
-      const components = req.body;
+      try {
+        console.log("requestbody",req.body)
+    const components = Array.isArray(req.body) ? req.body : [req.body];
+    if (!components.length) {
+      return res.status(400).json({ message: 'No components provided' });
+    } 
+    console.log("components",components)
       const result = await paySlipModel.insertComponents(components);
       res.status(201).json({ message: 'Components inserted', ...result });
     } catch (err) {

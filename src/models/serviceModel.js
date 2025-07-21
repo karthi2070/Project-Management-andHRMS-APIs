@@ -101,35 +101,47 @@ console.log(updateServiceData)
     await db.execute(sql, [id]);
     return { id, deleted: true };
   },
-    async upcomingPaymentDue() {
-    const sql = ` WITH upcoming_service_followup_payment AS (
-  SELECT DISTINCT client_id
-  FROM service_payment_tbl
-  WHERE is_deleted = 0
-    AND payment_status = 1
-    AND followup_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + INTERVAL 30 DAY
-)
-SELECT 
-  COUNT(*) AS upcoming_due_clients_count,
-  JSON_ARRAYAGG(client_id) AS upcoming_due_clients_ids
-FROM upcoming_service_followup_payment;
- `
-    const [rows] = await db.query(sql);
-    // console.log("upcoming due clients", rows[0])
-    const upcoming_due_clients_count = rows[0].upcoming_due_clients_count;
-    const client_ids = rows[0].upcoming_due_clients_ids;
-  // If no clients found, return empty
-  if (!client_ids || client_ids.length === 0) {
-    return [];
-  }
 
-  // Query client details for the given IDs
-  const clientQuery = ` SELECT service_name, client_id, from_date,to_date, service_amount, paid_amount, balance_amount FROM service_tbl 
-   WHERE id IN (${client_ids.map(() => '?').join(',')})    AND is_deleted = 0 `;
-  const [clients] = await db.query(clientQuery, client_ids);
 
-  return { upcoming_due_clients_count, clients };
-  },
+async getUpcomingClientCount  (days) {
+  const sql = `
+    SELECT COUNT(DISTINCT sp.client_id) AS client_count
+    FROM service_payment_tbl sp
+    WHERE sp.is_deleted = 0
+      AND sp.payment_status = 1
+      AND sp.followup_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + INTERVAL ? DAY;
+  `;
+  const [rows] = await db.query(sql,[days]);
+  return rows[0]?.client_count || 0;
+},
+
+async getUpcomingClientDetails (days) {
+  console.log(days)
+  const sql = `
+    SELECT 
+  
+      c.client_id,
+      c.name AS client_name,
+      s.id AS service_id,
+      s.service_name,
+      s.from_date,
+      s.to_date,
+      s.service_amount,
+      s.paid_amount,
+      s.balance_amount,
+      s.payment_status,
+      sp.id AS service_payment_id,
+      sp.followup_date
+    FROM service_payment_tbl sp
+    JOIN service_tbl s ON sp.service_id = s.id
+    JOIN client_tbl c ON s.client_id = c.id
+    WHERE sp.is_deleted = 0
+      AND sp.payment_status = 1
+      AND sp.followup_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + INTERVAL ? DAY;
+  `;
+  const [rows] = await db.query(sql,[days]);
+  return rows;
+},
 
 
 //
