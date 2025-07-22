@@ -227,9 +227,11 @@
  *             type: object
  *             required:
  *               - client_id
- *               - payment_amount
+ *               - paid_amount
+ *               - payment_date
  *               - payment_method
  *               - payment_status
+ *               - followup_date
  *             properties:
  *               user_id:
  *                 type: integer
@@ -237,15 +239,7 @@
  *               client_id:
  *                 type: integer
  *                 example: 45
- *               payment_amount:
- *                 type: number
- *                 format: float
- *                 example: 2000.00
  *               paid_amount:
- *                 type: number
- *                 format: float
- *                 example: 1000.00
- *               balance_amount:
  *                 type: number
  *                 format: float
  *                 example: 1000.00
@@ -259,10 +253,6 @@
  *               payment_status:
  *                 type: integer
  *                 example: 2
- *               next_due_date:
- *                 type: string
- *                 format: date
- *                 example: "2025-06-11"
  *               followup_date:
  *                 type: string
  *                 format: date

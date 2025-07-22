@@ -135,46 +135,41 @@ const serviceController = {
             if (!service_id) {
                 return res.status(400).json({ message: 'Service ID  required' });
             }
-            const { user_id, client_id, payment_amount, paid_amount, payment_date, payment_method, payment_status, next_due_date, followup_date, notes, } = req.body;
+            const { user_id, client_id, paid_amount, payment_date, payment_method, payment_status,  followup_date, notes } = req.body;
             console.log("recordServiceEMIPayment", req.body)
             const service = await serviceModel.getById(service_id);
             if (!service) {
                 return res.status(404).json({ message: 'service not found' });
             }
-
-            const result = (paid_amount <= payment_amount) ? paid_amount : payment_amount;
-
-            // service table calculating
-
-            const currentPaid = Number(service.paid_amount);
-            const service_balance_amount = Number(service.balance_amount);
-            const paidAmount = currentPaid + result;
-            const balanceAmount = service_balance_amount - result;
+// console.log(service)
+            const perviousPaid = Number(service.paid_amount);
+            const paidAmount = paid_amount + perviousPaid;
+            const balanceAmount = service.service_amount - paidAmount ;
+    //         console.log(`Payment Details:
+    // "perviousPaid": ${perviousPaid}, "service_balance_amount": ${service_balance_amount}, "paidAmount": ${paidAmount}, "balanceAmount": ${balanceAmount}`);
             // Step 2: Insert payment
             await serviceModel.insertServicePayment({
                 user_id,
                 client_id,
                 service_id,
-                payment_amount,
                 paid_amount,
-                balance_amount: (payment_amount - result === 0) ? 0 : (payment_amount - result),
                 payment_date,
                 payment_method,
                 payment_status,
-                next_due_date,
                 followup_date,
                 notes
             })
             // Step 3: Update service only if payment is successful (e.g., 1 = success)
             if ([1, 2, 3].includes(Number(payment_status))) {
                 console.log(payment_status)
-                const newStatusId = paidAmount < service_balance_amount ? 2 : 3; //1 = unpaid, 2 = partial, 3 = paid
+               // const newStatusId = paidAmount <= service.service_amount ? 2 : 3; //1 = unpaid, 2 = partial, 3 = paid
+                const newStatusId =paidAmount === 0 ? 1 : paidAmount < service.service_amount ? 2 : 3 ;
+// console.log(newStatusId)
 
                 const updateServiceData = {
                     user_id,
                     paid_amount: paidAmount,
                     balance_amount: balanceAmount,
-                    due_date: next_due_date,
                     payment_status: newStatusId,
                     id: service_id
                 }
@@ -182,12 +177,9 @@ const serviceController = {
             }
             return res.status(200).json({
                 message: 'Payment recorded',
-                Due_payment: payment_amount,
-                paid_amount: result,
-                balance_amount: result,
-                payment_date,
-                payment_status,
-                service_paid_amount: paidAmount,
+                paid_now_amount: paid_amount,
+                payment_date:payment_date,
+                service_total_paid_amount: paidAmount,
                 service_balance_amount: balanceAmount
             });
 
