@@ -96,23 +96,22 @@ console.log(updateServiceData)
   },
 
 
-async getUpcomingClientCount  (days) {
+async getUpcomingServiceCount  (days) {
   const sql = `
-    SELECT COUNT(DISTINCT sp.client_id) AS client_count
+    SELECT COUNT(DISTINCT sp.service_id) AS service_count
     FROM service_payment_tbl sp
     WHERE sp.is_deleted = 0
-      AND sp.payment_status = 1
+      AND sp.payment_status = 2
       AND sp.followup_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + INTERVAL ? DAY;
   `;
   const [rows] = await db.query(sql,[days]);
-  return rows[0]?.client_count || 0;
+  return rows[0]?.service_count || 0;
 },
 
-async getUpcomingClientDetails (days) {
+async getUpcomingServiceDetails (days) {
   console.log(days)
   const sql = `
-    SELECT 
-  
+   SELECT 
       c.client_id,
       c.name AS client_name,
       s.id AS service_id,
@@ -127,12 +126,14 @@ async getUpcomingClientDetails (days) {
       sp.followup_date
     FROM service_payment_tbl sp
     JOIN service_tbl s ON sp.service_id = s.id
-    JOIN client_tbl c ON s.client_id = c.id
+    JOIN client_tbl c ON sp.client_id = c.id
     WHERE sp.is_deleted = 0
-      AND sp.payment_status = 1
+      AND sp.payment_status = 2
       AND sp.followup_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + INTERVAL ? DAY;
   `;
+  console.log("sql",sql)
   const [rows] = await db.query(sql,[days]);
+    console.log(rows)
   return rows;
 },
 

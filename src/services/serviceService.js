@@ -3,14 +3,14 @@ const ServiceModel = require('../models/serviceModel');
 const  service={
 
 async getUpcomingPayments  (days)  {
-  const clientCount = await ServiceModel.getUpcomingClientCount(days);
-
-  if (clientCount === 0) {
-    return { clientCount: 0, clients: [] };
+  const serviceCount = await ServiceModel.getUpcomingServiceCount(days);
+console.log("serviceCount",serviceCount)
+  if (serviceCount === 0) {
+    return { serviceCount: 0, services: [] };
   }
 
-  const clients = await ServiceModel.getUpcomingClientDetails(days);
-  return { clientCount, clients };
+  const services = await ServiceModel.getUpcomingServiceDetails(days);
+  return { serviceCount, services };
 }
 
 }

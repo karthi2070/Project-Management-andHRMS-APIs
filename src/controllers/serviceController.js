@@ -71,16 +71,16 @@ const serviceController = {
                 return res.status(400).json({ success: false, message: 'Invalid days value' });
             }
             // fallback to 30 if not provided
-            const { clientCount, clients } = await service.getUpcomingPayments(days);
+            const { serviceCount, services } = await service.getUpcomingPayments(days);
 
-            if (!clients || clients.length === 0) {
+            if (!services || services.length === 0) {
                 return res.status(404).json({ success: false, message: 'No upcoming payments found' });
             }
 
             return res.status(200).json({
                 success: true,
-                upcoming_due_clients_count: clientCount,
-                client_data: clients
+                upcoming_due_service_count: serviceCount,
+                service_data: services
             });
         } catch (error) {
             next(error);

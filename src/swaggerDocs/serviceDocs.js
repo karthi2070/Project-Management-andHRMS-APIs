@@ -238,7 +238,7 @@
  *                 example: 102
  *               client_id:
  *                 type: integer
- *                 example: 45
+ *                 example: 24
  *               paid_amount:
  *                 type: number
  *                 format: float
