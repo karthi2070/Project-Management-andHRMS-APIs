@@ -1,10 +1,13 @@
 const serviceModel = require('../models/serviceModel');
-const service =require('../services/serviceService')
+const service = require('../services/serviceService')
 
 const serviceController = {
     async createService(req, res, next) {
         try {
             const data = req.body;
+            if (!data.user_id || !data.client_id || !data.service_name || !data.from_date || !data.to_date || !data.service_amount) {
+                return res.status(400).json({ success: false, message: 'Required fields are missing' });
+            }
 
             const service = await serviceModel.create(data);
             res.status(201).json({ success: true, message: 'Service created', service });
@@ -16,8 +19,12 @@ const serviceController = {
     async updateService(req, res, next) {
         try {
             const { id } = req.params;
-            const data = await serviceModel.update(id, req.body);
-            res.status(200).json({ success: true, message: 'Service updated', data });
+            const data = req.body;
+            if (!data.user_id || !data.client_id || !data.service_name || !data.from_date || !data.to_date || !data.service_amount) {
+                return res.status(400).json({ success: false, message: 'Required fields are missing' });
+            }
+            const updateService = await serviceModel.update(id, data);
+            res.status(200).json({ success: true, message: 'Service updated', updateService });
         } catch (error) {
             next(error);
         }
@@ -57,27 +64,28 @@ const serviceController = {
         }
     },
 
-async upcomingPaymentDue (req, res, next)  {
-  try {
-     const days = parseInt(req.query.days) || 30; 
-    if (typeof days !== 'number' || days <= 0){
-          return res.status(400).json({ success: false, message: 'Invalid days value' }); }
-   // fallback to 30 if not provided
-    const { clientCount, clients } = await service.getUpcomingPayments(days);
+    async upcomingPaymentDue(req, res, next) {
+        try {
+            const days = parseInt(req.query.days) || 30;
+            if (typeof days !== 'number' || days <= 0) {
+                return res.status(400).json({ success: false, message: 'Invalid days value' });
+            }
+            // fallback to 30 if not provided
+            const { clientCount, clients } = await service.getUpcomingPayments(days);
 
-    if (!clients || clients.length === 0) {
-      return res.status(404).json({ success: false, message: 'No upcoming payments found' });
-    }
+            if (!clients || clients.length === 0) {
+                return res.status(404).json({ success: false, message: 'No upcoming payments found' });
+            }
 
-    return res.status(200).json({
-      success: true,
-      upcoming_due_clients_count: clientCount,
-      client_data: clients
-    });
-  } catch (error) {
-    next(error);
-  }
-},
+            return res.status(200).json({
+                success: true,
+                upcoming_due_clients_count: clientCount,
+                client_data: clients
+            });
+        } catch (error) {
+            next(error);
+        }
+    },
 
 
     async getAllServices(req, res, next) {
@@ -111,15 +119,15 @@ async upcomingPaymentDue (req, res, next)  {
     },
 
     // record EMI payment
-     // const serviceAmount = Number(service.service_amount);
-            // const currentPaid = Number(service.paid_amount);
-            // const newTotalPaid = currentPaid + Number(payment_amount);
-            // let balanceAmount = serviceAmount - newTotalPaid;
-            // let extra_amount = 0;
-            // if (balanceAmount < 0) {
-            //     extra_amount = Math.abs(balanceAmount);
-            //     balanceAmount = 0;
-            // }
+    // const serviceAmount = Number(service.service_amount);
+    // const currentPaid = Number(service.paid_amount);
+    // const newTotalPaid = currentPaid + Number(payment_amount);
+    // let balanceAmount = serviceAmount - newTotalPaid;
+    // let extra_amount = 0;
+    // if (balanceAmount < 0) {
+    //     extra_amount = Math.abs(balanceAmount);
+    //     balanceAmount = 0;
+    // }
     async recordServiceEMIPayment(req, res, next) {
         try {
             const service_id = parseInt(req.params.service_id);
@@ -127,21 +135,21 @@ async upcomingPaymentDue (req, res, next)  {
             if (!service_id) {
                 return res.status(400).json({ message: 'Service ID  required' });
             }
-            const { user_id, client_id, payment_amount,paid_amount, payment_date, payment_method, payment_status, next_due_date, followup_date, notes, } = req.body;
+            const { user_id, client_id, payment_amount, paid_amount, payment_date, payment_method, payment_status, next_due_date, followup_date, notes, } = req.body;
             console.log("recordServiceEMIPayment", req.body)
             const service = await serviceModel.getById(service_id);
             if (!service) {
                 return res.status(404).json({ message: 'service not found' });
             }
-        
-             const result = (paid_amount <= payment_amount) ? paid_amount : payment_amount;
+
+            const result = (paid_amount <= payment_amount) ? paid_amount : payment_amount;
 
             // service table calculating
 
             const currentPaid = Number(service.paid_amount);
             const service_balance_amount = Number(service.balance_amount);
             const paidAmount = currentPaid + result;
-            const  balanceAmount =service_balance_amount- result  ;
+            const balanceAmount = service_balance_amount - result;
             // Step 2: Insert payment
             await serviceModel.insertServicePayment({
                 user_id,
@@ -149,7 +157,7 @@ async upcomingPaymentDue (req, res, next)  {
                 service_id,
                 payment_amount,
                 paid_amount,
-                balance_amount:(payment_amount - result === 0) ? 0 : (payment_amount - result),
+                balance_amount: (payment_amount - result === 0) ? 0 : (payment_amount - result),
                 payment_date,
                 payment_method,
                 payment_status,
@@ -158,10 +166,10 @@ async upcomingPaymentDue (req, res, next)  {
                 notes
             })
             // Step 3: Update service only if payment is successful (e.g., 1 = success)
-            if ([1,2, 3].includes(Number(payment_status))) {
+            if ([1, 2, 3].includes(Number(payment_status))) {
                 console.log(payment_status)
                 const newStatusId = paidAmount < service_balance_amount ? 2 : 3; //1 = unpaid, 2 = partial, 3 = paid
-                
+
                 const updateServiceData = {
                     user_id,
                     paid_amount: paidAmount,
@@ -174,13 +182,13 @@ async upcomingPaymentDue (req, res, next)  {
             }
             return res.status(200).json({
                 message: 'Payment recorded',
-                Due_payment:payment_amount,
+                Due_payment: payment_amount,
                 paid_amount: result,
                 balance_amount: result,
                 payment_date,
                 payment_status,
-                service_paid_amount:paidAmount,
-                service_balance_amount:balanceAmount
+                service_paid_amount: paidAmount,
+                service_balance_amount: balanceAmount
             });
 
         } catch (err) {

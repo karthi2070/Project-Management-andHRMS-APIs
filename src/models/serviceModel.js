@@ -3,16 +3,15 @@ const db = require('../config/db');
 const serviceModel = {
   async create(data) {
 
-    //id, client_id, service_name, from_date, to_date, service_amount, paid_amount, balance_amount, renewal_amount, last_renewal_date,
-    //  payment_status, is_deleted, created_at, updated_at
+    //id, user_id, client_id, service_name, from_date, to_date, service_amount, paid_amount, balance_amount, payment_status, notes
     const sql = `INSERT INTO service_tbl 
-      (client_id, service_name, from_date, to_date,service_amount, paid_amount, balance_amount, renewal_amount,last_renewal_date, payment_status,notes) 
-      VALUES ( ?, ?, ?, ?, ?, ?, ?, ?,?, ?,  ?)`;
+      (user_id ,client_id, service_name, from_date, to_date,service_amount, paid_amount, balance_amount, payment_status,notes) 
+      VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
       
     const serviceAmountWithTax = data.service_amount * 1.18;
-    const renewalAmountWithTax = data.renewal_amount * 1.18;
 
     const [result] = await db.execute(sql, [
+      data.user_id,
       data.client_id,
       data.service_name,
       data.from_date,
@@ -20,45 +19,39 @@ const serviceModel = {
       serviceAmountWithTax,
       data.paid_amount,
       data.balance_amount,
-      renewalAmountWithTax || null,
-      data.last_renewal_date || null,
       data.payment_status || 1,
-      data.notes || null
-    ]);
+      data.notes ]);
     console.log(result);
     return { id: result.insertId };
   },
 
   async updateServiceTotals(updateServiceData) {
-    const { user_id, paid_amount, balance_amount, due_date, payment_status, id } = updateServiceData
+    const { user_id, paid_amount, balance_amount, payment_status, id } = updateServiceData
 console.log(updateServiceData)
     const query = `UPDATE service_tbl 
-       SET user_id =?, paid_amount = ?, balance_amount = ?, due_date = ?, payment_status = ?
+       SET user_id =?, paid_amount = ?, balance_amount = ?, payment_status = ?
        WHERE id = ? AND is_deleted = 0`
     const [result] = await db.query(query, [user_id, paid_amount, balance_amount, due_date, payment_status, id])
     return result;
   },
   async update(id, data) {
     const sql = `UPDATE service_tbl SET 
-      client_id = ?, service_name = ?, from_date = ?, to_date = ?,service_amount=?, paid_amount=?, balance_amount=?,followup_date=?, renewal_amount=?,
-      last_renewal_date=?, payment_status = ? ,notes = ?
+      user_id = ?, client_id = ?, service_name = ?, from_date = ?, to_date = ?,service_amount=?, paid_amount=?, balance_amount=?, payment_status = ? ,notes = ?
       WHERE id = ? AND is_deleted = 0`;
-    await db.execute(sql, [
+    const [result] =await db.execute(sql, [
+      data.user_id,
       data.client_id,
       data.service_name,
       data.from_date,
       data.to_date,
-      data.service_amount * 0.18,
+      data.service_amount * 1.18,
       data.paid_amount,
       data.balance_amount,
-      data.followup_date ,
-      data.renewal_amount * 0.18,
-      data.last_renewal_date || null,
       data.payment_status,
-      data.notes || null,
+      data.notes ,
       id
     ]);
-    return { id, ...data };
+    return result.affectedRows > 0 ? { id } : null  ;
   },
   async paymentUpdate(id, status) {// payment date,amount,
     const sql = `UPDATE service_tbl SET  payment_status = ? WHERE id = ? AND is_deleted = 0`;

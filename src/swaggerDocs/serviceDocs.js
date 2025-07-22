@@ -12,10 +12,15 @@
  *     Service:
  *       type: object
  *       properties:
+ *         user_id:
+ *           type: integer
+ *           example: 3
  *         client_id:
  *           type: integer
+ *           example: 24
  *         service_name:
  *           type: string
+ *           example: "Web Development"
  *         from_date:
  *           type: string
  *           format: date
@@ -30,15 +35,12 @@
  *         balance_amount:
  *           type: number
  *           format: float
- *         renewal_amount:
- *           type: number
- *           format: float
- *         last_renewal_date:
- *           type: string
- *           format: date
  *         payment_status:
  *           type: integer
  *           default: 1
+ *         notes:
+ *           type: string
+ *           example: "Service notes"
  */
 
 /**
