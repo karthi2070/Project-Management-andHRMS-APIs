@@ -15,7 +15,6 @@ const PayslipController = {
       }
 
       const { template_name, total_percentage } = template;
-      console.log("template",template)
 
       if (!template_name || typeof total_percentage !== 'number') {
         return res.status(400).json({ error: 'Missing template fields' });
@@ -38,6 +37,7 @@ const PayslipController = {
         percentage: c.Percentage,
         applicable: c.Applicable
       }));
+      console.log("Mapped Components:", mappedComponents);
 
       // Step 3: Insert components
       await paySlipModel.insertComponents(mappedComponents);
@@ -160,20 +160,51 @@ console.log(templates)
     }
   },
 
-  async insertComponents(req, res,next) {
-      try {
-        console.log("requestbody",req.body)
-    const components = Array.isArray(req.body) ? req.body : [req.body];
-    if (!components.length) {
+// Controller - insertComponents
+async insertComponents(req, res, next) {
+  try {
+    const raw = req.body.components;
+
+    if (!raw || (Array.isArray(raw) && raw.length === 0)) {
       return res.status(400).json({ message: 'No components provided' });
-    } 
-    console.log("components",components)
-      const result = await paySlipModel.insertComponents(components);
-      res.status(201).json({ message: 'Components inserted', ...result });
-    } catch (err) {
-      next(err)
     }
-  },
+
+    const components = Array.isArray(raw) ? raw : [raw];
+
+    const mappedComponents = components.map(c => ({
+      template_id: c.template_id ,
+      comp_name: c.Comp_name,
+      type: c.Type,
+      percentage: c.Percentage,
+      applicable: c.Applicable
+    }));
+console.log("Mapped Components:", mappedComponents);
+    // Validate
+    for (const c of mappedComponents) {
+      if (
+        !c.template_id ||
+        !c.comp_name ||
+        c.type === undefined ||
+        c.percentage === undefined ||
+        c.applicable === undefined
+      ) {
+        return res.status(400).json({
+          message: 'Missing required fields in one or more components',
+        });
+      }
+    }
+
+    const result = await paySlipModel.insertComponents(mappedComponents);
+
+    res.status(201).json({
+      message: 'Components inserted successfully',
+      ...result,
+    });
+  } catch (err) {
+    console.error('Insert Components Error:', err);
+    next(err);
+  }
+},
 
   async updateComponent(req, res,next) {
     try {
@@ -222,10 +253,22 @@ console.log(templates)
       next(err)
     }
   },
-  async getgenpayslip (req,res,next){
+    async getAllPayslip (req,res,next){
     try{
-      const {startDate, endDate, id } =req.query;
-     const formattedResponse = await paySlipModel.getgenpayslip(startDate, endDate, id);
+      const {user_id } =req.query;
+     const formattedResponse = await paySlipModel.getpayslip(user_id);
+      if (!formattedResponse) {
+        return res.status(404).json({ success: false, message: "Data not found" });
+      }
+      res.status(200).json({ success: true, data: formattedResponse });
+    }catch(err){
+      next(err)
+    }
+  },
+  async getpayslipByMonth (req,res,next){
+    try{
+      const {user_id,month,year } =req.query;
+     const formattedResponse = await paySlipModel.getpayslipByMonth(user_id,month,year);
       if (!formattedResponse) {
         return res.status(404).json({ success: false, message: "Data not found" });
       }

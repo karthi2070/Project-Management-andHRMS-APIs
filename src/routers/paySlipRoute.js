@@ -8,7 +8,8 @@ router.post('/templates/create-template', controller.insertTemplate);
 router.put('/templates/update-template/:id', controller.updateTemplate);
 router.patch('/templates/delete-template/:id', controller.softDeleteTemplate); 
 router.post('/templates/salary-template',controller.createPayslipTemplateWithComponents)
-router.get('/templates/payslip/get-by-userid', controller.getgenpayslip);
+router.get('/templates/payslip/get-by-userid', controller.getAllPayslip);
+router.get('/templates/payslip/get-by-userid-month', controller.getpayslipByMonth);
 
 
 router.get('/components/get-by-id/:template_id', controller.getAllComponentsByTemplateId);

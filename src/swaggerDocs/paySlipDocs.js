@@ -49,7 +49,6 @@
  *                       if you follow the flow you wont get this error TypeError Cannot read properties of undefined (reading 'salary')  
  */
 
-
 /**
  * @swagger
  * /templates/payslip/get-by-userid:
@@ -58,36 +57,38 @@
  *     tags: [Templates]
  *     parameters:
  *       - in: query
- *         name: startDate
+ *         name: user_id
  *         schema:
- *           type: string
- *           format: date
- *       - in: query
- *         name: endDate
- *         schema:
- *           type: string
- *           format: date
- *       - in: query
- *         name: id
- *         schema:
- *           type: integer
- *           description: Category ID to filter expenses user id
+ *           type: number
  *     responses:
  *       200:
- *         description: A list of employees with total working days
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   employee_id:
- *                     type: string
- *                   employee_name:
- *                     type: string
- *                   total_working_days:
- *                     type: integer
+ *         description: A list of employees payslips
+ *       500:
+ *         description: Server error
+ */
+
+/**
+ * @swagger
+ * /templates/payslip/get-by-userid-month:
+ *   get:
+ *     summary: Get total working days per employee
+ *     tags: [Templates]
+ *     parameters:
+ *       - in: query
+ *         name: user_id
+ *         schema:
+ *           type: number
+ *       - in: query
+ *         name: month
+ *         schema:
+ *           type: number
+ *       - in: query
+ *         name: year
+ *         schema:
+ *           type: number
+ *     responses:
+ *       200:
+ *         description: A list of employees payslip
  *       500:
  *         description: Server error
  */
@@ -301,7 +302,8 @@
  * @swagger
  * /components/create-components:
  *   post:
- *     summary: Insert components
+ *     summary: Insert one or more salary components
+ *     description: Insert a list of salary components (or a single component) associated with a salary template.
  *     tags: [Components]
  *     requestBody:
  *       required: true
@@ -314,15 +316,48 @@
  *                 type: array
  *                 items:
  *                   type: object
+ *                   required:
+ *                     - template_id 
+ *                     - Comp_name
+ *                     - Type
+ *                     - Percentage
+ *                     - Applicable
  *                   properties:
- *                     template_id: { type: integer }
- *                     comp_name: { type: string }
- *                     type: { type: integer }
- *                     percentage: { type: integer }
- *                     applicable: { type: integer }
+ *                     template_id:
+ *                       type: integer
+ *                       example: 1
+ *                     Comp_name:
+ *                       type: string
+ *                       example: basic
+ *                     Type:
+ *                       type: integer
+ *                       example: 1
+ *                       description: 1 = Earning, 2 = Deduction
+ *                     Percentage:
+ *                       type: number
+ *                       example: 80
+ *                     Applicable:
+ *                       type: integer
+ *                       example: 1
+ *                       description: 1 = Yes, 0 = No
  *     responses:
  *       201:
- *         description: Components inserted
+ *         description: Components inserted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Components inserted successfully
+ *                 affectedRows:
+ *                   type: integer
+ *                   example: 2
+ *       400:
+ *         description: Bad request due to invalid or missing fields
+ *       500:
+ *         description: Internal server error
  */
 
 /**
