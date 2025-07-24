@@ -15,6 +15,7 @@ const PayslipService = {
       }, { earnings: 0, deductions: 0 });
 
       const total_percentage = earnings + deductions;
+      console.log(total_percentage);
       if (total_percentage > 100) {
         throw new Error("Total percentage exceeds 100%");
       }
