@@ -9,11 +9,11 @@ const adminController = {
 dashboardCount: async (req, res, next) => {
   try {
     const date = req.body || new Date();
-    const [employeeCount, clientCount, upcomingDueClientsCount, getRenewalClients, projectCount, attendance] = await Promise.all([
+    const [employeeCount, clientCount, upcomingDueClientsCount, projectCount, attendance] = await Promise.all([
       employeeModel.getEmployeeCount(),
       clientModel.getTotalClients(),
       clientModel.upcomingDueClients(),
-      clientModel.getRenewalClients(),
+      // clientModel.getRenewalClients(),
       projectModel.projectCount(),
       getAttendanceSummaryData(date)
     ]);
@@ -23,7 +23,7 @@ dashboardCount: async (req, res, next) => {
       employee: employeeCount,
       project: projectCount,
       upcomingDueClientsCount,
-      renewalClientsCount: getRenewalClients,
+      // renewalClientsCount: getRenewalClients,
       attendance
     });
   } catch (error) {

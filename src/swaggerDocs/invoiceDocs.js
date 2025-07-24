@@ -13,11 +13,14 @@
  *       type: object
  *       properties:
  *         user_id:
- *           type: integer
+ *           type: number
+ *           example: 2
+ *           description: Unique identifier for the user creating the invoice
  *         service_name:
  *           type: string
  *         client_id:
  *           type: number
+ *           example: 23
  *           description: Unique identifier for the client
  *         invoice_amount:
  *           type: number
@@ -30,25 +33,27 @@
  *           description: Remaining balance amount
  *         extra_amount:
  *           type: number
+ *           description: Any additional charges or fees
+ *         payment_status:
+ *           type: number
+ *           example: 1
+ *           description: Status of the payment 
+ *         payment_method:
+ *           type: string
+ *           example: "UPI"
+ *           description: Method of payment 
  *         invoice_date:
  *           type: string
  *           format: date
  *           description: Date when the invoice was issued
- *         due_date:
- *           type: string
- *           format: date
- *           description: ue date for the invoice payment
  *         followup_date:
  *           type: string
  *           format: date
  *           description: Due date for the invoice payment
- *         service_renewal_date:
+ *         due_date:
  *           type: string
  *           format: date
- *           description: Date when the service is due for renewal
- *         payment_method:
- *           type: string
- *           description: Method of payment (e.g., cash, credit card, bank transfer)
+ *           description: ue date for the invoice payment
  *         notes:
  *           type: string
  *           description: Additional notes or comments about the invoice

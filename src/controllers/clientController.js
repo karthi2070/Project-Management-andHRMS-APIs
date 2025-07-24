@@ -110,17 +110,19 @@ const ClientController = {
     },
 
     // Invoice Methods
+// id, user_id, service_name, client_id, invoice_number, invoice_amount, paid_amount, balance_amount, extra_amount, payment_status, payment_method, invoice_date, followup_date, due_date, notes, is_deleted, created_at, updated_at
+
     async createInvoice(req, res, next) {
         try {
             const { user_id, service_name, client_id, invoice_amount, paid_amount,
-                balance_amount, status_id, invoice_date, due_date, followup_date, service_renewal_date, payment_method, notes } = req.body;
+                balance_amount, extra_amount, payment_status, payment_method, invoice_date, followup_date, due_date, notes} = req.body;
 
             const count = await ClientModel.getTotalInvoice()
             const invoice_number = `INC000${count + 1}`
 
             const invoiceData = {
                 user_id, service_name, client_id, invoice_number, invoice_amount, paid_amount,
-                balance_amount, status_id, invoice_date, due_date, followup_date, service_renewal_date, payment_method, notes
+                balance_amount, extra_amount, payment_status, payment_method, invoice_date, followup_date, due_date, notes
             }
             const invoiceId = await ClientModel.createInvoice(invoiceData);
             res.status(201).json({ id: invoiceId });
@@ -171,7 +173,35 @@ const ClientController = {
 
     async updateInvoice(req, res, next) {
         try {
-            const affectedRows = await ClientModel.update(req.params.id, req.body);
+            const { user_id, service_name, client_id, invoice_amount, paid_amount, balance_amount, extra_amount,
+                payment_status, payment_method, invoice_date, followup_date, due_date, notes } = req.body;
+            const existingInvoice = await ClientModel.getInvoiceById(req.params.id);
+            console.log("existingInvoice", existingInvoice)
+            if (!existingInvoice) {
+                return res.status(404).json({ message: 'Invoice not found' });
+            }
+            const inoviceAmount = Math.round(invoice_amount * 1.18 * 100) / 100;
+        
+        // const newBalanceAmount = existingInvoice.balance_amount === 0 || existingInvoice.balance_amount === null ? Math.round(invoice_amount * 1.18 * 100) / 100 
+        // : existingInvoice.balance_amount ;
+        // const paidAmount = existingInvoice.paid_amount === 0 || existingInvoice.paid_amount === null ? Math.round(invoice_amount * 1.18 * 100) / 100 
+        // : existingInvoice.paid_amount ;
+    const updatedPayload = { 
+        user_id: user_id,
+        service_name: service_name,
+        client_id: client_id,
+        invoice_amount: inoviceAmount,
+        paid_amount: paid_amount,
+        balance_amount: balance_amount,
+        extra_amount: extra_amount,
+        payment_status: payment_status,
+        payment_method: payment_method,
+        invoice_date: invoice_date,
+        followup_date: followup_date,
+        due_date: due_date,
+        notes: notes };
+        console.log("updatedPayload", updatedPayload)
+            const affectedRows = await ClientModel.update(req.params.id,updatedPayload);
             if (affectedRows === 0) {
                 return res.status(404).json({ message: 'Invoice not found or no changes made' });
             }
@@ -225,21 +255,21 @@ const ClientController = {
             const { user_id, client_id, payment_amount, payment_date, payment_method, payment_status, notes } = req.body;
             // Step 1: Fetch invoice
             const invoice = await ClientModel.getInvoiceById(invoice_id);
-
+            console.log("invoice", invoice)
             if (!invoice) {
                 return res.status(404).json({ message: 'Invoice not found' });
             }
             const invoiceAmount = Number(invoice.invoice_amount);
             const currentPaid = Number(invoice.paid_amount);
             const newTotalPaid = currentPaid + Number(payment_amount);
-            let balanceAmount = invoiceAmount - newTotalPaid;
-
-            let extra_amount = 0;
-            if (balanceAmount < 0) {
-                extra_amount = Math.abs(balanceAmount);
-                balanceAmount = 0;
-            }
-            console.log("extra_amount", extra_amount)
+            const balanceAmount = invoice.balance_amount - payment_amount;
+console.log({"invoiceAmount" :invoiceAmount, "currentPaid": currentPaid, "newTotalPaid": newTotalPaid, "balanceAmount": balanceAmount})
+            // let extra_amount = 0;
+            // if (balanceAmount < 0) {
+            //     extra_amount = Math.abs(balanceAmount);
+            //     balanceAmount = 0;
+            // }
+            // console.log("extra_amount", extra_amount)
             // Step 2: Insert payment
             await ClientModel.insertPayment({
                 user_id,
@@ -249,19 +279,18 @@ const ClientController = {
                 payment_date,
                 payment_method,
                 payment_status,
-                notes,
-                extra_amount
+                notes
             });
 
-            // Step 3: Update invoice only if payment is successful (e.g., 1 = success)
-            if (Number(payment_status) === 1) {
-                const newStatusId = newTotalPaid >= invoiceAmount ? 3 : 2; // 2 = partial, 3 = paid
-
+            if ([1, 2, 3].includes(Number(payment_status))) {
+                console.log(payment_status)
+               // const newStatusId = paidAmount <= service.service_amount ? 2 : 3; //1 = unpaid, 2 = partial, 3 = paid
+                const newStatusId =newTotalPaid === 0 ? 1 : newTotalPaid < invoice.invoice_amount ? 2 : 3 ;
+console.log(newStatusId)
                 const updateInvoiseData = {
                     paid_amount: newTotalPaid,
                     balance_amount: balanceAmount,
-                    extra_amount: extra_amount,
-                    status_id: newStatusId,
+                    payment_status: newStatusId,
                     id: invoice_id
                 }
                 await ClientModel.updateInvoiceTotals(updateInvoiseData);
@@ -272,7 +301,6 @@ const ClientController = {
                 paid_amount: newTotalPaid,
                 balance_amount: balanceAmount,
                 payment_date,
-                extra_amount,
                 payment_status
             });
 

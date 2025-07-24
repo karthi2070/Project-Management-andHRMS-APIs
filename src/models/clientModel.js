@@ -29,7 +29,6 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     const [clients] = await pool.query(sql, [id]);
     return clients;
   },
-// id, user_id, name, company_name, client_id, mail, phone1, phone2, phone3, gst_num, address, city, state, pincode, is_deleted
 async updateClient(
   id , user_id, name, company_name, mail,
   phone1, phone2, phone3, gst_num,
@@ -104,7 +103,7 @@ FROM upcoming_clients; `
   SELECT DISTINCT client_id
   FROM invoice_tbl
   WHERE is_deleted = 0
-    AND service_renewal_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + INTERVAL 30 DAY
+    AND followup_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + INTERVAL 30 DAY
 )
 SELECT 
   COUNT(*) AS renewal_clients_count,
@@ -134,24 +133,26 @@ FROM clients_renewal; `
   },
 
   async createInvoice(invoice) {
-
+// id, user_id, service_name, client_id, invoice_number, invoice_amount, paid_amount, balance_amount, extra_amount, payment_status, payment_method, invoice_date, followup_date, due_date, notes, is_deleted, created_at, updated_at
     const query = `
     INSERT INTO invoice_tbl
-    (user_id,service_name,client_id, invoice_number, invoice_amount, paid_amount, balance_amount, extra_amount, invoice_date,due_date, followup_date,service_renewal_date, payment_method, notes)
+    (user_id,service_name,client_id, invoice_number, invoice_amount, paid_amount, balance_amount,  extra_amount, payment_status, payment_method,  invoice_date, followup_date,due_date, notes)
     VALUES ( ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?);`;
+    const invoiceAmount = Math.round(invoice.invoice_amount * 1.18 * 100) / 100;
+    const balanceAmount =  Math.round(invoice.invoice_amount * 1.18 * 100) / 100;
 
     const values = [
       invoice.user_id, invoice.service_name, invoice.client_id,
       invoice.invoice_number,
-      invoice.invoice_amount* 1.18,
+      invoiceAmount,
       invoice.paid_amount || 0.00,
-      invoice.balance_amount || invoice.invoice_amount,
+      balanceAmount,
       invoice.extra_amount || 0.00,
-      invoice.invoice_date,
-      invoice.due_date ,
-      invoice.followup_date,
-      invoice.service_renewal_date,
+      invoice.payment_status,
       invoice.payment_method,
+      invoice.invoice_date,
+      invoice.followup_date,
+      invoice.due_date ,
       invoice.notes
     ];
 
@@ -159,10 +160,11 @@ FROM clients_renewal; `
     return result.insertId;
   },
   async update(id, invoice) {
+    console.log("update invoice", invoice)
     const query = `
     UPDATE invoice_tbl 
-    SET user_id=?,service_name=?, client_id=?, invoice_number=?, invoice_amount=?, paid_amount=?, balance_amount=?, extra_amount=?,
-        status_id=?, invoice_date=?,due_date=? followup_date=?,service_renewal_date=?, payment_method=?, notes=? 
+    SET user_id=?,service_name=?, client_id=?, invoice_amount=?, paid_amount=?, balance_amount=?, extra_amount=?,
+        payment_status=?,payment_method=?, invoice_date=?,followup_date=?,due_date=?,  notes=? 
     WHERE id = ?;
   `;
 
@@ -170,17 +172,15 @@ FROM clients_renewal; `
       invoice.user_id,
       invoice.service_name,
       invoice.client_id,
-      invoice.invoice_number,
-      invoice.invoice_amount*1.18,
+      invoice.invoice_amount ,
       invoice.paid_amount,
       invoice.balance_amount,
       invoice.extra_amount,
-      invoice.status_id,
+      invoice.payment_status,
+      invoice.payment_method,
       invoice.invoice_date,
       invoice.followup_date,
       invoice.due_date,
-      invoice.service_renewal_date,
-      invoice.payment_method,
       invoice.notes,
       id
     ];
@@ -235,7 +235,7 @@ FROM clients_renewal; `
 
   async getInvoiceById(invoice_id) {
     const [rows] = await pool.query(
-      `SELECT id, invoice_amount, paid_amount FROM invoice_tbl 
+      `SELECT id, invoice_amount, paid_amount, balance_amount FROM invoice_tbl 
        WHERE id = ? AND is_deleted = 0`,
       [invoice_id]
     );
@@ -257,16 +257,15 @@ FROM clients_renewal; `
 
   async updateInvoiceTotals(updateInvoiseData) {
 
-    const {  paid_amount, balance_amount, extra_amount, payment_status, id } = updateInvoiseData
+    const {  paid_amount, balance_amount, payment_status, id } = updateInvoiseData
 
     const query = `UPDATE invoice_tbl 
-       SET paid_amount = ?, balance_amount = ?, extra_amount=?, payment_status = ?
+       SET paid_amount = ?, balance_amount = ?,  payment_status = ?
        WHERE id = ? AND is_deleted = 0`
-    const [result] = await pool.query(query, [ paid_amount, balance_amount, extra_amount, payment_status, id]
+    const [result] = await pool.query(query, [ paid_amount, balance_amount, payment_status, id]
     );
     return result;
   }
-
 };
 
 module.exports = ClientModel;

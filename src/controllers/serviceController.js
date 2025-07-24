@@ -159,7 +159,7 @@ const serviceController = {
                 followup_date,
                 notes
             })
-            // Step 3: Update service only if payment is successful (e.g., 1 = success)
+           
             if ([1, 2, 3].includes(Number(payment_status))) {
                 console.log(payment_status)
                // const newStatusId = paidAmount <= service.service_amount ? 2 : 3; //1 = unpaid, 2 = partial, 3 = paid
