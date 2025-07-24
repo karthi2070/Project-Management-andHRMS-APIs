@@ -10,7 +10,7 @@ const EmployeeModel = {
 
     async createEmployee(data) {
         const {
-            user_id, name, employee_id, phone, mail, dob, doj, department, designation, salary, status,
+            user_id, name, employee_id, emp_role_id, phone, mail, dob, doj, department, designation, salary, status,
             status_reason = null, status_desc = null, relieving_date = null, pan, aadhar, education,
             address, city, state, pincode, p_address, p_city, p_state, p_pincode,
             emergency_name, emergency_phone, emergency_relation
@@ -18,14 +18,14 @@ const EmployeeModel = {
 
         const sql = `
     INSERT INTO employee_tbl (
-      user_id, name, employee_id, phone, mail, dob, doj, department, designation, salary, status,
+      user_id, name, employee_id, emp_role_id, phone, mail, dob, doj, department, designation, salary, status,
       status_reason, status_desc, relieving_date, pan, aadhar, education, address, city, state,
       pincode, p_address, p_city, p_state, p_pincode, emergency_name, emergency_phone, emergency_relation
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
         const values = [
-            user_id, name, employee_id, phone, mail, dob, doj, department, designation, salary, status,
+            user_id, name, employee_id, emp_role_id, phone, mail, dob, doj, department, designation, salary, status,
             status_reason, status_desc, relieving_date, pan, aadhar, education, address, city, state,
             pincode, p_address, p_city, p_state, p_pincode, emergency_name, emergency_phone, emergency_relation
         ];
@@ -44,14 +44,16 @@ const EmployeeModel = {
             throw error;
         }
     },
+    async getEmpDataLoginGenerate(id){
+        const sql = `SELECT id, emp_role_id, mail FROM employee_tbl WHERE is_deleted = 0 AND id =? `;
+            const [rows] = await pool.query(sql,[id]);
+            return rows[0] || null;
+    },
     async getAllEmployeesdash() {
-        try {
             const sql = `SELECT name, employee_id, mail,department,status FROM employee_tbl WHERE is_deleted = 0`;
             const [employees] = await pool.query(sql);
             return employees;
-        } catch (error) {
-            throw error;
-        }
+
     },
     async getEmployeeByEmpId(employee_id) {
         const query = `SELECT * FROM employee_tbl WHERE is_deleted = 0 AND employee_id = ?`;
@@ -64,24 +66,21 @@ const EmployeeModel = {
         return rows[0] || null; // returns single object or null
     },
     async getEmployeeById(id) {
-        try {
             const sql = `SELECT * FROM employee_tbl WHERE id = ? AND is_deleted = 0`;
             const [employees] = await pool.query(sql, [id]);
             return employees[0] || null;
-        } catch (error) {
-            throw error;
-        }
+
     },
 
     async updateEmployee(id, data) {
         console.log(data)
 
-        const sql = `UPDATE employee_tbl SET user_id=?, name=?, phone=?,mail=?, dob=?, doj=?, department=?, designation=?, salary=?,
+        const sql = `UPDATE employee_tbl SET user_id=?, name=?,emp_role_id=?, phone=?,mail=?, dob=?, doj=?, department=?, designation=?, salary=?,
              pan=?, aadhar=?, education=?, address=?, city=?, state=?, pincode=?,
              p_address=?, p_city=?, p_state=?, p_pincode=?,emergency_name=?,emergency_phone=?,emergency_relation=?
                           WHERE id = ? AND is_deleted = 0`;
         const values = [
-            data.user_id, data.name, data.phone, data.mail, data.dob, data.doj, data.department, data.designation, data.salary,
+            data.user_id, data.name, data.emp_role_id, data.phone, data.mail, data.dob, data.doj, data.department, data.designation, data.salary,
             data.pan, data.aadhar, data.education, data.address, data.city, data.state, data.pincode,
             data.p_address, data.p_city, data.p_state, data.p_pincode, data.emergency_name, data.emergency_phone, data.emergency_relation, id]
         const [result] = await pool.query(sql, values);

@@ -83,7 +83,7 @@
  *                 example: 3 
  *               role_id:
  *                 type: integer
- *                 example: 3
+ *                 example: 2
  *     responses:
  *       201:
  *         description: User created successfully
@@ -92,6 +92,37 @@
  *       500:
  *         description: Internal server error
  */
+
+/**
+ * @swagger
+ * /auth/generate-login:
+ *   post:
+ *     summary: Generate login credentials for an employee
+ *     tags: [auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - employee_id
+ *             properties:
+ *               employee_id:
+ *                 type: integer
+ *                 example: 6
+ *                 description: Employee ID to generate credentials for
+ *     responses:
+ *       200:
+ *         description: Login credentials generated successfully
+ *       400:
+ *         description: Employee ID required
+ *       404:
+ *         description: Employee not found
+ *       500:
+ *         description: Internal server error
+ */
+
 
 /**
  * @swagger

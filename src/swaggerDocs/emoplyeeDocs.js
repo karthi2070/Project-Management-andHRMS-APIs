@@ -37,6 +37,9 @@
  *         name:
  *           type: string
  *           example: "Karthi Keyan"
+ *         emp_role_id:
+ *           type: number
+ *           example: 2
  *         phone:
  *           type: string
  *           example: "9876543210"

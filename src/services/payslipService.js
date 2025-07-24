@@ -41,7 +41,7 @@ const PayslipService = {
       const deductions_amount = (salary * deductions) / 100; 
       const net_paymnet = salary - (deductions_amount+absent_days_deductions);
 
-      console.log(net_paymnet)
+      // console.log(net_paymnet)
 
       const components = result.map(row => ({
         component_id: row.component_id,
@@ -51,7 +51,7 @@ const PayslipService = {
         salary_amount: (salary * row.percentage) / 100,
         applicable: row.applicable
       }));
-
+// salary_date
       const toDayDate = new Date();
       const values = [
         result[0].userId, result[0].employeeId, result[0].bankId,
