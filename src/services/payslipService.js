@@ -13,12 +13,14 @@ const PayslipService = {
         else if (crr.type == 2) acc.deductions += crr.percentage;
         return acc;
       }, { earnings: 0, deductions: 0 });
+console.log("earnings",earnings,"deductions", deductions);
+ const total_percentage = Number(earnings) + Number(deductions);
 
-      const total_percentage = earnings + deductions;
+if (total_percentage > 100) {
+  throw new Error("Total percentage exceeds 100%");
+}
+
       console.log(total_percentage);
-      if (total_percentage > 100) {
-        throw new Error("Total percentage exceeds 100%");
-      }
 
       function getTotalDays(start_date, end_date) {
         const startDate = new Date(start_date);
