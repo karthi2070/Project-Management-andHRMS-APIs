@@ -1,4 +1,5 @@
 const ClientModel = require('../models/clientModel');
+const service =require('../services/serviceService');
 
 const ClientController = {
     async createClient(req, res, next) {
@@ -95,14 +96,17 @@ const ClientController = {
         try {
             const totalClients = await ClientModel.getTotalClients();
             const pendingPayments = await ClientModel.getPendingPaymentsValue();
-            const upcomingClientsCount = await ClientModel.upcomingDueClients();
-            const getRenewalClients = await ClientModel.getRenewalClients();
+            const renewalClients = await service.getUpcomingPayments(30);
+
+            // const upcomingClientsCount = await ClientModel.upcomingDueClients();
+            // const getRenewalClients = await ClientModel.getRenewalClients();
 
             res.status(200).json({
                 total_clients: totalClients ? totalClients : 0,
                 total_pending_payment: pendingPayments.total_pending_payment ? pendingPayments.total_pending_payment : 0,
-                upcoming_due_clients: Array.isArray(upcomingClientsCount?.clients) ? upcomingClientsCount.clients.length : 0,
-                renewalClientsCount: Array.isArray(getRenewalClients?.clients) ? getRenewalClients.clients.length : 0
+                renewal_clients: renewalClients ? renewalClients : 0,
+                // upcoming_due_clients: Array.isArray(upcomingClientsCount?.clients) ? upcomingClientsCount.clients.length : 0,
+                // renewalClientsCount: Array.isArray(getRenewalClients?.clients) ? getRenewalClients.clients.length : 0
             });
         } catch (error) {
             next(error);
