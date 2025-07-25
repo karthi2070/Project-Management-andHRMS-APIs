@@ -1,6 +1,7 @@
 const User = require('../models/authModel');
 const Permission = require('../models/permissionModel');
 const clientModel =require('../models/clientModel')
+const service = require('../services/serviceService')
 const employeeModel =require('../models/empolyeeModel')
 const projectModel =require ('../models/projectModel')
 const { getAttendanceSummaryData } = require ('../helper/attedanceDashboard')
@@ -9,11 +10,10 @@ const adminController = {
 dashboardCount: async (req, res, next) => {
   try {
     const date = req.body || new Date();
-    const [employeeCount, clientCount, upcomingDueClientsCount, projectCount, attendance] = await Promise.all([
+    const [employeeCount, clientCount, serviceRenewall, projectCount, attendance] = await Promise.all([
       employeeModel.getEmployeeCount(),
       clientModel.getTotalClients(),
-      clientModel.upcomingDueClients(),
-      // clientModel.getRenewalClients(),
+      service.getUpcomingPayments(30),
       projectModel.projectCount(),
       getAttendanceSummaryData(date)
     ]);
@@ -22,8 +22,7 @@ dashboardCount: async (req, res, next) => {
       client: clientCount,
       employee: employeeCount,
       project: projectCount,
-      upcomingDueClientsCount,
-      // renewalClientsCount: getRenewalClients,
+      serviceRenewall,
       attendance
     });
   } catch (error) {

@@ -131,9 +131,8 @@ async getUpcomingServiceDetails (days) {
       AND sp.payment_status = 2
       AND sp.followup_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + INTERVAL ? DAY;
   `;
-  console.log("sql",sql)
   const [rows] = await db.query(sql,[days]);
-    console.log(rows)
+    // console.log(rows)
   return rows;
 },
 
