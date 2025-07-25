@@ -256,7 +256,7 @@ const ClientController = {
     async recordEMIPayment(req, res, next) {
         try {
             const invoice_id = parseInt(req.params.invoice_id);
-            const { user_id, client_id, payment_amount, payment_date, payment_method, payment_status, notes } = req.body;
+            const { user_id, client_id, payment_amount, payment_date, payment_method, payment_status,followup_date, notes } = req.body;
             // Step 1: Fetch invoice
             const invoice = await ClientModel.getInvoiceById(invoice_id);
             console.log("invoice", invoice)
@@ -283,6 +283,7 @@ console.log({"invoiceAmount" :invoiceAmount, "currentPaid": currentPaid, "newTot
                 payment_date,
                 payment_method,
                 payment_status,
+                followup_date,
                 notes
             });
 

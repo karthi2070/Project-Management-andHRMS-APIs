@@ -16,9 +16,6 @@ const PayslipService = {
 console.log("earnings",earnings,"deductions", deductions);
  const total_percentage = Number(earnings) + Number(deductions);
 
-if (total_percentage > 100) {
-  throw new Error("Total percentage exceeds 100%");
-}
 
       console.log(total_percentage);
 
@@ -36,12 +33,14 @@ if (total_percentage > 100) {
 
       const totalDays = getTotalDays(start_date, end_date);
       const totalDaysAbsent = totalDays - (total_days_present + parseInt(pay_leave));
+
       const salary = Number(result[0].salary);
       const per_day_amount = salary / totalDays;
       const absent_days_deductions = per_day_amount * totalDaysAbsent;
 
       const gross_amount = (salary * earnings) / 100;
       const deductions_amount = (salary * deductions) / 100; 
+
       const net_paymnet = salary - (deductions_amount+absent_days_deductions);
 
       // console.log(net_paymnet)

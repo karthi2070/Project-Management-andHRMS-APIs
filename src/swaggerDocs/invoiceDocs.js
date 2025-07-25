@@ -256,6 +256,10 @@
  *               payment_status:
  *                 type: integer
  *                 example: 1
+ *               followup_date:
+ *                 type: string
+ *                 format: date
+ *                 example: "2025-07-11"
  *               notes:
  *                 type: string
  *                 example: "EMI payment for June"

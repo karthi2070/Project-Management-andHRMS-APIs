@@ -222,13 +222,13 @@ FROM clients_renewal; `
   // insert EMI payment
 
   async insertPayment(data) {
-    const { user_id, client_id, invoice_id, payment_amount, payment_date, payment_method, payment_status, notes, extra_amount } = data;
+    const { user_id, client_id, invoice_id, payment_amount, payment_date, payment_method, payment_status,followup_date, notes, extra_amount } = data;
    
      const query= `INSERT INTO invoice_payment_tbl 
-       (user_id,client_id, invoice_id, payment_amount,payment_date, payment_method, payment_status, notes, extra_amount)
-       VALUES (?,?, ?, ?, ?, ?, ?,?, ?)` 
+       (user_id,client_id, invoice_id, payment_amount,payment_date, payment_method, payment_status,followup_date, notes, extra_amount)
+       VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?)` 
     const values = [
-      user_id, client_id, invoice_id, payment_amount, payment_date, payment_method, payment_status, notes, extra_amount ];
+      user_id, client_id, invoice_id, payment_amount, payment_date, payment_method, payment_status,followup_date, notes, extra_amount ];
     const [result] = await pool.query(query,values);
     return result;
   },
