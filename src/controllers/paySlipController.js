@@ -28,14 +28,14 @@ const PayslipController = {
 
       const result = await paySlipModel.insertTemplate(insertTemplateData);
       const template_id = result.id;
-
+console.log(components)
       // Step 2: Map Components with inserted template_id
       const mappedComponents = components.map((c, index) => ({
         template_id,
-        comp_name: c.Comp_name,
-        type: c.Type,
-        percentage: c.Percentage,
-        applicable: c.Applicable
+        component_name: c.Component_name,
+        component_type: c.Component_type,
+        component_value: c.Component_value,
+        amount_type: c.amount_type
       }));
       console.log("Mapped Components:", mappedComponents);
 
@@ -75,10 +75,10 @@ console.log(templates)
         fullData.push({
           template: template.template_name,
           components: components.map(c => ({
-            Comp_name: c.comp_name,
-            Type: c.type,
-            Percentage: c.percentage,
-            Applicable: c.applicable
+            Component_name: c.Component_name,
+            Component_type: c.Component_type,
+            Component_value: c.Component_value,
+            amount_type: c.amount_type
           })),
           total_percentage: template.total_percentage
         });
@@ -173,20 +173,20 @@ async insertComponents(req, res, next) {
 
     const mappedComponents = components.map(c => ({
       template_id: c.template_id ,
-      comp_name: c.Comp_name,
-      type: c.Type,
-      percentage: c.Percentage,
-      applicable: c.Applicable
+      component_name: c.Component_name,
+      component_type: c.Component_type,
+      component_value: c.Component_value,
+      amount_type: c.amount_type
     }));
 console.log("Mapped Components:", mappedComponents);
     // Validate
     for (const c of mappedComponents) {
       if (
         !c.template_id ||
-        !c.comp_name ||
-        c.type === undefined ||
-        c.percentage === undefined ||
-        c.applicable === undefined
+        !c.component_name ||
+        c.component_type === undefined ||
+        c.component_value === undefined ||
+        c.amount_type === undefined
       ) {
         return res.status(400).json({
           message: 'Missing required fields in one or more components',

@@ -5,7 +5,7 @@ const leaveModel = require('../models/leaveModel')
 const salarySlipsModel = {
 
   async getAllComponentsByTemplateId(template_id) {
-    const sql = `SELECT id, template_id, comp_name, type, percentage, applicable
+    const sql = `SELECT id, template_id, component_name, component_type, component_value, amount_type
                  FROM salary_components 
                  WHERE template_id = ? AND is_deleted = 0`;
     const [result] = await pool.query(sql, [template_id]);
@@ -14,15 +14,10 @@ const salarySlipsModel = {
 
 async insertComponents(components) {
   const sql = `INSERT INTO salary_components 
-    (template_id, comp_name, type, percentage, applicable) VALUES ?`;
-  // Map into array of arrays
+    (template_id, component_name, component_type, component_value, amount_type) VALUES ?`;
+  // Map into array of arrays  id, template_id, component_name, component_type, component_value, amount_type, is_deleted, created_at, updated_at
   const values = components.map(c => [
-    c.template_id,
-    c.comp_name,
-    c.type,
-    c.percentage,
-    c.applicable
-  ]);
+    c.template_id,c.component_name,c.component_type,c.component_value,c.amount_type ]);
 
   const [result] = await pool.query(sql, [values]);
   return { insert_id: result.insertId };
@@ -30,13 +25,13 @@ async insertComponents(components) {
 
   async updateComponent(id, data) {
     const sql = `UPDATE salary_components
-                 SET comp_name = ?, type = ?, percentage = ?, applicable = ?, updated_at = CURRENT_TIMESTAMP
+                 SET component_name =? , component_type = ?, component_value= ?, amount_type = ?
                  WHERE id = ? AND is_deleted = 0`;
     const values = [
-      data.comp_name,
-      data.type,
-      data.percentage,
-      data.applicable,
+      data.component_name,
+      data.component_type,
+      data.component_value,
+      data.amount_type,
       id
     ];
     const [result] = await pool.query(sql, values);
@@ -68,7 +63,7 @@ async insertComponents(components) {
     return result.length > 0 ? result[0] : null;
   },
   async getTemplateByIdWithComponents(id) {
-    const sql = `select t.id,t.template_name,t.total_percentage, c.id, c.template_id, c.comp_name, c.type, c.percentage, c.applicable 
+    const sql = `select t.id,t.template_name,t.total_percentage, c.id, c.template_id, c.component_name, c.component_type, c.component_value, c.amount_type
     from salary_templates as t
     left join salary_components as c on t.id = c.template_id
     where t.id = ? ;`;
@@ -81,10 +76,10 @@ async insertComponents(components) {
         total_percentage: rows[0].total_percentage
       },
       components: rows.map(row => ({
-        Comp_name: row.comp_name,
-        Type: row.type,
-        Percentage: row.percentage,
-        Applicable: row.applicable
+        component_name: row.component_name,
+        component_type: row.component_type,
+        component_value: row.component_value,
+        amount_type: row.amount_type
       }))
     };
     console.log(formattedResponse)
@@ -121,14 +116,13 @@ async insertComponents(components) {
       SELECT 
         u.id as userId, e.id as employeeId, e.employee_id,e.name, e.department,e.mail,e.designation,e.doj,e.salary,e.pan,
         b.id as bankId, b.acc_holder_name, b.account_number,b.bank_name,b.pf_account_number,b.uan_number,
-        t.id as templateId, t.template_name,c.template_id,c.id as component_id,c.comp_name, c.type, c.percentage, c.applicable
+        t.id as templateId, t.template_name,c.template_id,c.id as component_id,c.component_name, c.component_type, c.component_value, c.amount_type
       FROM employee_tbl e
       JOIN user_tbl u on e.user_id = u.id 
       JOIN bank_details_tbl b ON e.id = b.employee_id
       JOIN salary_templates t ON e.salary_template_id = t.id
       JOIN salary_components c ON t.id = c.template_id 
-      WHERE u.id = ?;
-    `;
+      WHERE u.id = ?; `;
     const [result] = await pool.query(sql, [user_id]);
     return result;
   },

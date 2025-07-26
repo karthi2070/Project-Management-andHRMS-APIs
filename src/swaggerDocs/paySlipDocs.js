@@ -127,21 +127,21 @@
  *                 items:
  *                   type: object
  *                   required:
- *                     - Comp_name
- *                     - Type
- *                     - Percentage
- *                     - Applicable
+ *                     - Component_name
+ *                     - Component_type
+ *                     - Component_value
+ *                     - amount_type
  *                   properties:
- *                     Comp_name:
+ *                     Component_name:
  *                       type: string
  *                       example: basic
- *                     Type:
+ *                     Component_type:
  *                       type: integer
  *                       example: 1
- *                     Percentage:
+ *                     Component_value:
  *                       type: integer
- *                       example: 80
- *                     Applicable:
+ *                       example: 40
+ *                     amount_type:
  *                       type: integer
  *                       example: 1
  *     responses:
@@ -318,25 +318,25 @@
  *                   type: object
  *                   required:
  *                     - template_id 
- *                     - Comp_name
- *                     - Type
- *                     - Percentage
- *                     - Applicable
+ *                     - Component_name
+ *                     - Component_type
+ *                     - Component_value
+ *                     - amount_type
  *                   properties:
  *                     template_id:
  *                       type: integer
  *                       example: 1
- *                     Comp_name:
+ *                     Component_name:
  *                       type: string
  *                       example: basic
- *                     Type:
+ *                     Component_type:
  *                       type: integer
  *                       example: 1
  *                       description: 1 = Earning, 2 = Deduction
- *                     Percentage:
+ *                     Component_value:
  *                       type: number
  *                       example: 80
- *                     Applicable:
+ *                     amount_type:
  *                       type: integer
  *                       example: 1
  *                       description: 1 = Yes, 0 = No
