@@ -115,6 +115,14 @@ const ClientController = {
 
     // Invoice Methods
 // id, user_id, service_name, client_id, invoice_number, invoice_amount, paid_amount, balance_amount, extra_amount, payment_status, payment_method, invoice_date, followup_date, due_date, notes, is_deleted, created_at, updated_at
+    async getTotalInvoice(req, res, next) {
+        try {
+            const totalInvoice = await ClientModel.getTotalInvoice();
+            res.status(200).json({ total_invoice: totalInvoice });
+        } catch (error) {
+            next(error);
+        }
+    },
 
     async createInvoice(req, res, next) {
         try {

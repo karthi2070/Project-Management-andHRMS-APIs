@@ -59,6 +59,16 @@
  *           description: Additional notes or comments about the invoice
  */
 
+/**
+ * @swagger
+ * /api/v1/invoice/get-total-invoice:
+ *   get:
+ *     summary: Get all total invoices
+ *     tags: [Invoice]
+ *     responses:
+ *       200:
+ *         description: total invoices count
+ */
 
 /**
  * @swagger

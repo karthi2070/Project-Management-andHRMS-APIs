@@ -117,6 +117,7 @@ async getUpcomingServiceDetails (days) {
   console.log(days)
   const sql = `
    SELECT 
+     c.id AS CLIENT_ID,
       c.client_id,
       c.name AS client_name,
       s.id AS service_id,
@@ -134,7 +135,8 @@ async getUpcomingServiceDetails (days) {
     JOIN client_tbl c ON sp.client_id = c.id
     WHERE sp.is_deleted = 0
       AND sp.payment_status = 2
-      AND sp.followup_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + INTERVAL ? DAY;
+      AND sp.followup_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + INTERVAL ? DAY
+      ORDER BY sp.followup_date ASC;
   `;
   const [rows] = await db.query(sql,[days]);
     // console.log(rows)
