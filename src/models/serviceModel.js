@@ -9,6 +9,8 @@ const serviceModel = {
       VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
       
     const serviceAmountWithTax = data.service_amount * 1.18;
+    const balanceAmount= data.service_amount * 1.18 - data.paid_amount;
+    console.log(balanceAmount)
 
     const [result] = await db.execute(sql, [
       data.user_id,
@@ -18,7 +20,7 @@ const serviceModel = {
       data.to_date,
       serviceAmountWithTax,
       data.paid_amount,
-      data.balance_amount,
+      balanceAmount,
       data.payment_status || 1,
       data.notes ]);
     console.log(result);
@@ -38,15 +40,18 @@ console.log(updateServiceData)
     const sql = `UPDATE service_tbl SET 
       user_id = ?, client_id = ?, service_name = ?, from_date = ?, to_date = ?,service_amount=?, paid_amount=?, balance_amount=?, payment_status = ? ,notes = ?
       WHERE id = ? AND is_deleted = 0`;
+      const serviceAmountWithTax = data.service_amount * 1.18;
+      const balanceAmount= data.service_amount * 1.18 - data.paid_amount;
+
     const [result] =await db.execute(sql, [
       data.user_id,
       data.client_id,
       data.service_name,
       data.from_date,
       data.to_date,
-      data.service_amount * 1.18,
+      serviceAmountWithTax,
       data.paid_amount,
-      data.balance_amount,
+      balanceAmount,
       data.payment_status,
       data.notes ,
       id
