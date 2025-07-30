@@ -1,4 +1,5 @@
 const pool = require('../config/db');
+const {formatToMySQLDate} = require('../helper/dateformate');
 
 const ExpenseModel = {
   async createExpense(data) {
@@ -72,14 +73,24 @@ const ExpenseModel = {
 
 async getFilteredExpenses(startDate, endDate, category_id) {
 
+  const formattedStartDate = formatToMySQLDate(startDate);
+const formattedEndDate = formatToMySQLDate(endDate);
+
+if (!formattedStartDate || !formattedEndDate) {
+  return res.status(400).json({ message: 'Invalid date format.' });
+}
+
   let categoryName = null;
 
   if (category_id) {
-    const category = await this.getById(category_id);
+    const [category] = await this.getById(category_id);
+    console.log('Category:', category);
     if (!category) {
       
       // Category ID not found
       return {
+        message : 'Category not found',
+        category_name: category.name || null,
         filtered_expenses: [],
         total_expense: 0,
         average_expense: 0,
@@ -99,15 +110,17 @@ async getFilteredExpenses(startDate, endDate, category_id) {
     WHERE e.date BETWEEN ? AND ?
   `;
 
-  const params = [startDate, endDate];
+  const params = [formattedStartDate, formattedEndDate];
 
   if (category_id) {
     filterQuery += ` AND e.category_id = ?`;
     params.push(category_id);
   }
-
+  console.log('Filter Query:', filterQuery);
+  
+console.log(params)
   const [expenses] = await pool.query(filterQuery, params);
-
+console.log('Filtered Expenses:', expenses);
   // Total & average
   const totalExpense = expenses.reduce((sum, exp) => sum + parseFloat(exp.amount), 0);
   const averageExpense = expenses.length ? (totalExpense / expenses.length).toFixed(2) : 0;
@@ -145,10 +158,7 @@ async getFilteredExpenses(startDate, endDate, category_id) {
 },
   //expences status
 async getById(id) {
-  const [rows] = await pool.execute(
-    'SELECT * FROM expense_category_tbl WHERE id = ? AND is_deleted = 0',
-    [id]
-  );
+  const [rows] = await pool.execute( 'SELECT * FROM expense_category_tbl WHERE id = ? AND is_deleted = 0', [id]);
   return rows; // this returns a single object
 },
   async create(name) {

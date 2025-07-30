@@ -7,7 +7,6 @@ const PayslipController = {
   async createPayslipTemplateWithComponents(req, res) {
     try {
       const { template, components } = req.body;
-      console.log(req.body)
 
       // Validate
       if (!template || !components || !Array.isArray(components)) {
@@ -28,7 +27,6 @@ const PayslipController = {
 
       const result = await paySlipModel.insertTemplate(insertTemplateData);
       const template_id = result.id;
-console.log(components)
       // Step 2: Map Components with inserted template_id
       const mappedComponents = components.map((c, index) => ({
         template_id,
@@ -37,7 +35,6 @@ console.log(components)
         component_value: c.Component_value,
         amount_type: c.amount_type
       }));
-      console.log("Mapped Components:", mappedComponents);
 
       // Step 3: Insert components
       await paySlipModel.insertComponents(mappedComponents);
@@ -108,8 +105,7 @@ console.log(templates)
       const template = await paySlipModel.getTemplateByIdWithComponents(id);
       console.log(template)
       if (!template) 
-        return res.status(404).json({ error: 'Template not found' });
-
+        return res.status(404).json({ error: 'Template not found' })
 
       res.status(200).json(template);
     } catch (err) {      

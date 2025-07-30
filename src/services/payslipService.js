@@ -6,50 +6,71 @@ const PayslipService = {
 
   async  genpaySlip(user_id, start_date, end_date) {
     console.log("Generating payslip for user:", user_id, "from", start_date, "to", end_date);
-  const result = await PayslipModel.getEmployeePayslipData(user_id);
-  if (!result || result.length === 0) throw new Error("No data found for user");
-console.log("Employee Payslip Data:", result);
-  const employeeInfo = result[0];
-  const gross_salary = Number(employeeInfo.salary);
 
-  const components = result.map(row => ({
-    component_id: row.component_id,
-    Component_name: row.component_name,
-    Component_type: row.component_type,
-    Component_value: parseFloat(row.component_value),
-    amount_type: row.amount_type
-  }));
+    const result = await PayslipModel.getEmployeePayslipData(user_id);
+if (!result || result.length === 0) throw new Error("No data found for user");
 
-  const earnings = [];
-  const deductions = [];
-  const earningsMap = {};
-  let total_earning_percentage = 0;
-  let gross_amount = 0;
-  let total_deductions = 0;
+const employeeInfo = result[0];
+const gross_salary = Number(employeeInfo.salary);
 
-  // Earnings
-  for (const comp of components) {
-    if (comp.Component_type === 1) {
-      const amount = (gross_salary * comp.Component_value) / 100;
-      gross_amount += amount;
-      console.log(`Earning Component: ${comp.Component_name}, Amount: ${amount},${comp.Component_value}`);
-      total_earning_percentage += comp.Component_value;
+// Map components
+const components = result.map(row => ({
+  component_id: row.component_id,
+  Component_name: row.component_name,
+  Component_type: row.component_type,
+  Component_value: parseFloat(row.component_value),
+  amount_type: row.amount_type
+}));
 
-      earningsMap[comp.Component_name.toLowerCase()] = amount;
+const earnings = [];
+const deductions = [];
+const earningsMap = {};
+let total_deductions = 0;
 
-      earnings.push({
-        name: comp.Component_name,
-        component_value: comp.Component_value,
-        amount_type: comp.amount_type,
-        salary_amount: parseFloat(amount.toFixed(2))
-      });
-    }
+// 🔹 Step 1: Split earnings
+const fixedEarnings = components.filter(c => c.Component_type === 1 && c.amount_type === 2); // fixed ₹
+const percentEarnings = components.filter(c => c.Component_type === 1 && c.amount_type === 1); // % based
+
+// 🔹 Step 2: Total fixed earnings
+const total_fixed_earning = fixedEarnings.reduce((sum, c) => sum + c.Component_value, 0);
+
+// 🔹 Step 3: Validate % total and normalize
+const total_percent_value = percentEarnings.reduce((sum, c) => sum + c.Component_value, 0);
+
+if (Math.round(total_percent_value * 100) / 100 !== 100) {
+  throw new Error(`Earning percentage-based components must total 100%. Got: ${total_percent_value}%`);
+}
+
+// 🔹 Step 4: Remaining after fixed
+const remaining_earning_pool = gross_salary - total_fixed_earning;
+
+if (remaining_earning_pool < 0) {
+  throw new Error(`Fixed earnings exceed gross salary`);
+}
+
+// 🔹 Step 5: Compute each earning
+for (const comp of [...fixedEarnings, ...percentEarnings]) {
+  let amount = 0;
+  if (comp.amount_type === 1) { // percentage-based
+    amount = (remaining_earning_pool * comp.Component_value) / 100;
+  } else if (comp.amount_type === 2) { // fixed amount
+    amount = comp.Component_value;
   }
-  console.log("Total Earnings Percentage:", total_earning_percentage);
 
-  if (Math.round(total_earning_percentage * 100) / 100 !== 100) {
-    throw new Error(`Earning percentages must total 100%. Got: ${total_earning_percentage}%`);
-  }
+  earnings.push({
+    name: comp.Component_name,
+    component_value: comp.Component_value,
+    amount_type: comp.amount_type,
+    salary_amount: parseFloat(amount.toFixed(2))
+  });
+
+  earningsMap[comp.Component_name.toLowerCase()] = amount;
+}
+
+const gross_amount = earnings.reduce((sum, e) => sum + e.salary_amount, 0);
+
+console.log("Final Earnings Breakdown:", earnings);
+console.log(" Gross Amount:", gross_amount);
 
   // Deductions
   for (const comp of components) {
@@ -99,8 +120,14 @@ console.log("Employee Payslip Data:", result);
   const absent_days_deductions = per_day_amount * totalDaysAbsent;
 
   // Final calculations
-  const total_deductions_with_absent = total_deductions + absent_days_deductions;
-  const net_payment = gross_amount - total_deductions_with_absent;
+  let total_deductions_with_absent = total_deductions + absent_days_deductions;
+  
+  let net_payment = gross_amount - total_deductions_with_absent;
+
+if (net_payment < 0) {
+  total_deductions_with_absent = gross_amount;
+  net_payment = 0;
+}
 
   const finalComponents = [...earnings, ...deductions];
 
@@ -152,6 +179,9 @@ console.log("Employee Payslip Data:", result);
 }};
 
 module.exports = PayslipService;
+
+
+
 
 //   async genpaySlip(user_id, start_date, end_date) {
    
