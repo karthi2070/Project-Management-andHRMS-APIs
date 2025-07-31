@@ -12,12 +12,38 @@ const authController = {
       if (!result.success) {
         return res.status(result.status).json({ success: false, message: result.message });
       }
-      res.json(result);
+      console.log('Login successful:', result);
+      res.cookie('refreshToken', result.refreshToken, {
+        httpOnly: true,
+        secure: false, // only send over HTTPS
+        sameSite: 'Strict', // or 'Lax' for cross-site logins
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+      });
+      const { refreshToken, ...responseWithoutRefresh } = result;
+
+      res.json(responseWithoutRefresh);
     } catch (error) {
       console.error('Login error:', error.message);
-      next({ status: 500, message: 'Internal Server Error', error: error.message });
+      next();
     }
   },
+
+  refreshToken: async (req, res, next) => {
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) return res.status(401).json({ message: 'Refresh token required' });
+
+    try {
+      const newAccessToken = await authService.generateAccessFromRefresh(refreshToken);
+      res.json({ accessToken: newAccessToken });
+    } catch (err) {
+      next(err); // Pass error to centralized error handler
+    }
+  },
+  logout: async (req, res) => {
+    res.clearCookie('refreshToken');
+    res.json({ success: true, message: 'Logged out successfully' });
+  },
+
   googleAuth: passport.authenticate('google', { scope: ['profile', 'email'] }),
   googleCallback: passport.authenticate('google', { session: false }),
   issueToken: async (req, res, next) => {

@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger.js');
 require('../src/config/passport.js');
@@ -27,7 +28,7 @@ console.log('CORS Origin:', origin);
   },
   credentials: true,
 }));
-
+app.use(cookieParser());
 app.use(express.json());
 app.use(passport.initialize());
 app.use(express.urlencoded({ extended: true })); // Middleware to parse URL-encoded data    

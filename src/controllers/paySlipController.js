@@ -251,8 +251,8 @@ console.log("Mapped Components:", mappedComponents);
   },
     async getAllPayslip (req,res,next){
     try{
-      const {user_id } =req.query;
-     const formattedResponse = await paySlipModel.getpayslip(user_id);
+      
+     const formattedResponse = await paySlipModel.getpayslip();
       if (!formattedResponse) {
         return res.status(404).json({ success: false, message: "Data not found" });
       }

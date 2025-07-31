@@ -1,8 +1,47 @@
     /**
  * @swagger
  * tags:
- *   name: SalaryHistory
+ *   name: Salary Data
  *   description: Employee salary history management
+ */
+
+/**
+ * @swagger
+ * /payslip/get-all:
+ *   get:
+ *     summary: Get total working days per employee
+ *     tags: [Salary Data]
+ *     responses:
+ *       200:
+ *         description: A list of employees payslips
+ *       500:
+ *         description: Server error
+ */
+
+/**
+ * @swagger
+ * /payslip/get-by-userid-month:
+ *   get:
+ *     summary: Get total working days per employee
+ *     tags: [Salary Data]
+ *     parameters:
+ *       - in: query
+ *         name: user_id
+ *         schema:
+ *           type: number
+ *       - in: query
+ *         name: month
+ *         schema:
+ *           type: number
+ *       - in: query
+ *         name: year
+ *         schema:
+ *           type: number
+ *     responses:
+ *       200:
+ *         description: A list of employees payslip
+ *       500:
+ *         description: Server error
  */
 
  /**
@@ -10,7 +49,7 @@
  * /get-salary-history-user-id/{id}:
  *   get:
  *     summary: Get salary history by user id
- *     tags: [SalaryHistory]
+ *     tags: [Salary Data]
  *     parameters:
  *       - name: id
  *         in: path
@@ -30,7 +69,7 @@
  * /salary-history:
  *   post:
  *     summary: Create employee salary history
- *     tags: [SalaryHistory]
+ *     tags: [Salary Data]
  *     requestBody:
  *       required: true
  *       content:
@@ -102,7 +141,7 @@
  * /salary-history-update/{id}:
  *   put:
  *     summary: Update employee salary history
- *     tags: [SalaryHistory]
+ *     tags: [Salary Data]
  *     parameters:
  *       - in: path
  *         name: id

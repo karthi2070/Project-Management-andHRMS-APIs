@@ -44,53 +44,7 @@
  *       200:
  *         description: Payslip generated successfully
  *       500:
- *         description: Server error TypeError Cannot read properties of undefined (reading 'salary')  
- *                      if throw this error check you have uesr id and user id map in to employee_tbl and employee_tbl id shoud be map in to bank_details _tbl
- *                       if you follow the flow you wont get this error TypeError Cannot read properties of undefined (reading 'salary')  
- */
-
-/**
- * @swagger
- * /templates/payslip/get-by-userid:
- *   get:
- *     summary: Get total working days per employee
- *     tags: [Templates]
- *     parameters:
- *       - in: query
- *         name: user_id
- *         schema:
- *           type: number
- *     responses:
- *       200:
- *         description: A list of employees payslips
- *       500:
- *         description: Server error
- */
-
-/**
- * @swagger
- * /templates/payslip/get-by-userid-month:
- *   get:
- *     summary: Get total working days per employee
- *     tags: [Templates]
- *     parameters:
- *       - in: query
- *         name: user_id
- *         schema:
- *           type: number
- *       - in: query
- *         name: month
- *         schema:
- *           type: number
- *       - in: query
- *         name: year
- *         schema:
- *           type: number
- *     responses:
- *       200:
- *         description: A list of employees payslip
- *       500:
- *         description: Server error
+ *         description: Server error 
  */
 
 

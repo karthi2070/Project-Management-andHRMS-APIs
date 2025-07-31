@@ -82,7 +82,7 @@ async insertComponents(components) {
         amount_type: row.amount_type
       }))
     };
-    console.log(formattedResponse)
+    // console.log(formattedResponse)
     return rows.length > 0 ? formattedResponse : null;
   },
 
@@ -110,7 +110,7 @@ async insertComponents(components) {
     return { affectedRows: result.affectedRows };
   },
 
-
+ // gen payslip model code 
   async getEmployeePayslipData(user_id) {
     const sql = `
       SELECT 
@@ -137,7 +137,7 @@ async insertComponents(components) {
     await pool.query(query, values);
   },
   // get all payslilp 
-async getpayslip(user_id) {
+async getpayslip() {
     const sql = `SELECT 
 sh.user_id , e.employee_id,e.name, e.department,e.mail,e.designation,e.doj,e.pan,
 b.acc_holder_name, b.account_number,b.bank_name,b.pf_account_number,b.uan_number,t.template_name,
@@ -146,11 +146,11 @@ FROM emp_salary_history sh
 JOIN employee_tbl e on e.id =sh.employee_id
 JOIN bank_details_tbl b ON  b.id =sh.bank_details_id
 JOIN salary_templates t ON t.id = sh.salary_template_id 
-where sh.user_id = ?`;
+where sh.is_deleted = 0 ORDER BY sh.created_at DESC`;
 
-    const [result] = await pool.query(sql, [user_id]);
+    const [result] = await pool.query(sql);
 if (result.length === 0) {
-      return { message: 'No payslip found for the given user id.' };
+      return { message: 'No payslip found ' };
     }
     // Format each payslip using map
   const formattedPayslips = result.map(row => ({
@@ -188,7 +188,7 @@ if (result.length === 0) {
   //get payslilp by month and year
   async getpayslipByMonth(user_id,month,year) {
     const sql = `SELECT 
-sh.user_id , e.employee_id,e.name, e.department,e.mail,e.designation,e.doj,e.pan,
+sh.id as salary_id ,sh.user_id , e.employee_id,e.name, e.department,e.mail,e.designation,e.doj,e.pan,
 b.acc_holder_name, b.account_number,b.bank_name,b.pf_account_number,b.uan_number,t.template_name,
  sh.salary_date, sh.salary_template_id, sh.components, sh.total_salary, sh.gross_amount, sh.deductions_amount, sh.net_payment
 FROM emp_salary_history sh
@@ -203,37 +203,39 @@ AND MONTH(sh.salary_date) = ?
 if (result.length === 0) {
       return { message: 'No payslip found for the given month and year.' };
     }
-    console.log(result)
-    const formatedResponce = {
-      "Employee details": {
-        name: result[0].name,
-        employee_id: result[0].employee_id,
-        Date_of_Joining: result[0].doj,
-        department: result[0].department,
-        designation: result[0].designation,
-      }, "Account details": {
-        
-        acc_holder_name: result[0].acc_holder_name,
-        account_number: result[0].account_number,
-        bank_name: result[0].bank_name,
-        pan_number: result[0].pan,
-        pf_account_number: result[0].pf_account_number,
-        uan_number: result[0].uan_number
-      }, "payslip details": {
-    
-        template_name: result[0].template_name,
-        components: result[0].components,
-      }, "salary_details": {
-           salary_date: result[0].salary_date,
-        salary: result[0].total_salary,
-        gross_amount: result[0].gross_amount,
-        deductions_amount: result[0].deductions_amount,
-        net_payment: result[0].net_payment
+    // console.log("result",result)
+    const formattedResponse = result.map(row => ({
+  "Employee details": {
+    name: row.name,
+    employee_id: row.employee_id,
+    Date_of_Joining: row.doj,
+    department: row.department,
+    designation: row.designation,
+  },
+  "Account details": {
+    acc_holder_name: row.acc_holder_name,
+    account_number: row.account_number,
+    bank_name: row.bank_name,
+    pan_number: row.pan,
+    pf_account_number: row.pf_account_number,
+    uan_number: row.uan_number
+  },
+  "Payslip details": {
+    template_name: row.template_name,
+    components: row.components
+  },
+  "Salary details": {
+    salary_id: row.salary_id,
+    salary_date: row.salary_date,
+    salary: row.total_salary,
+    gross_amount: row.gross_amount,
+    deductions_amount: row.deductions_amount,
+    net_payment: row.net_payment
+  }
+}));
 
-      }
-    }
-    console.log(formatedResponce)
-    return formatedResponce;
+// console.log("formattedResponse", formattedResponse);
+return formattedResponse;
   },
 
   // create and update salary website
