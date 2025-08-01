@@ -1,5 +1,6 @@
 const serviceModel = require('../models/serviceModel');
 const service = require('../services/serviceService')
+const clientModel = require('../models/clientModel');
 
 const serviceController = {
     async createService(req, res, next) {
@@ -135,36 +136,37 @@ const serviceController = {
             if (!service_id) {
                 return res.status(400).json({ message: 'Service ID  required' });
             }
-            const { user_id, client_id, paid_amount, payment_date, payment_method, payment_status,  followup_date, notes } = req.body;
+            const { user_id, invoice_id, client_id, paid_amount, payment_date, payment_method, payment_status, followup_date, notes } = req.body;
             console.log("recordServiceEMIPayment", req.body)
+            if (!invoice_id ){
+                return res.status(400).json({ message: 'Invoice ID is required' });
+            }
+            if (!user_id || !client_id || !paid_amount || !payment_date || !payment_method || !payment_status) {
+                return res.status(400).json({ message: 'Required fields are missing' });
+            }
             const service = await serviceModel.getById(service_id);
             if (!service) {
                 return res.status(404).json({ message: 'service not found' });
             }
-// console.log(service)
+            const invoice = await clientModel.getInvoiceById(invoice_id) 
+            if (!invoice) {
+                return res.status(404).json({ message: 'Invoice not found' });
+            }
+            // Step 1: Calculate amounts
             const perviousPaid = Number(service.paid_amount);
             const paidAmount = paid_amount + perviousPaid;
             const balanceAmount = service.service_amount - paidAmount ;
     //         console.log(`Payment Details:
     // "perviousPaid": ${perviousPaid}, "service_balance_amount": ${service_balance_amount}, "paidAmount": ${paidAmount}, "balanceAmount": ${balanceAmount}`);
             // Step 2: Insert payment
-            await serviceModel.insertServicePayment({
-                user_id,
-                client_id,
-                service_id,
-                paid_amount,
-                payment_date,
-                payment_method,
-                payment_status,
-                followup_date,
-                notes
-            })
-           
+//id, user_id, client_id, invoice_id, paid_amount, payment_date, payment_method, payment_status, followup_date, notes, created_at, is_deleted
+await serviceModel.insertServicePayment({ user_id, client_id, service_id, paid_amount, payment_date, payment_method, payment_status, followup_date, notes })
+await clientModel.insertPayment({user_id, client_id, invoice_id, paid_amount, payment_date, payment_method, payment_status, followup_date, notes });
             if ([1, 2, 3].includes(Number(payment_status))) {
                 console.log(payment_status)
                // const newStatusId = paidAmount <= service.service_amount ? 2 : 3; //1 = unpaid, 2 = partial, 3 = paid
                 const newStatusId =paidAmount === 0 ? 1 : paidAmount < service.service_amount ? 2 : 3 ;
-// console.log(newStatusId)
+               // console.log(newStatusId)
 
                 const updateServiceData = {
                     user_id,
@@ -174,6 +176,14 @@ const serviceController = {
                     id: service_id
                 }
                 await serviceModel.updateServiceTotals(updateServiceData);
+
+                const updateInvoiseData = {
+                    paid_amount: paidAmount,
+                    balance_amount: balanceAmount,
+                    payment_status: newStatusId,
+                    id: invoice_id
+                }
+                await clientModel.updateInvoiceTotals(updateInvoiseData);
             }
             return res.status(200).json({
                 message: 'Payment recorded',

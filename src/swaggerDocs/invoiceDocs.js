@@ -72,6 +72,50 @@
 
 /**
  * @swagger
+ * /api/v1/invoice/get-invoices-between-dates:
+ *   get:
+ *     summary: Get invoices between start and end dates
+ *     tags: [Invoice]
+ *     parameters:
+ *       - in: query
+ *         name: start_date
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Start date (YYYY-MM-DD)
+ *       - in: query
+ *         name: end_date
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: End date (YYYY-MM-DD)
+ *     responses:
+ *       200:
+ *         description: List of invoices in date range
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   invoice_id:
+ *                     type: integer
+ *                   invoice_date:
+ *                     type: string
+ *                     format: date
+ *                   amount:
+ *                     type: number
+ *       400:
+ *         description: Missing or invalid start_date or end_date
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
  * /api/v1/invoice/create-invoice:
  *   post:
  *     summary: Create a new invoice

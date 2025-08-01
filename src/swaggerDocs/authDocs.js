@@ -55,6 +55,26 @@
 
 /**
  * @swagger
+ * /logout:
+ *   post:
+ *     summary: Logout the user by clearing the refresh token cookie
+ *     tags: [auth]
+ *     description: Clears the refresh token cookie and ends the user session.
+ *     responses:
+ *       200:
+ *         description: Successfully logged out
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Logged out successfully
+ */
+
+/**
+ * @swagger
  * /auth/create:
  *   post:
  *     summary: Register a new user
@@ -234,4 +254,51 @@
  *         description: Invalid or missing input
  *       500:
  *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /auth/update-password:
+ *   put:
+ *     summary: Update the current user's password
+ *     tags: [auth]
+ *     description: Allows a logged-in user to change their password by providing the current and new passwords.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - currentPassword
+ *               - newPassword
+ *             properties:
+ *               currentPassword:
+ *                 type: string
+ *                 example: oldpassword123
+ *               newPassword:
+ *                 type: string
+ *                 example: newSecurePassword456
+ *     responses:
+ *       200:
+ *         description: Password updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Password updated successfully
+ *       400:
+ *         description: Missing current or new password
+ *       401:
+ *         description: Current password is incorrect
+ *       500:
+ *         description: Internal Server Error
  */

@@ -150,6 +150,23 @@ const ClientController = {
             next(error);
         }
     },
+ async getInvoicesBetweenDates (req, res, next)  {
+  try {
+    const { start_date, end_date } = req.query;
+
+    if (!start_date || !end_date) {
+      return res.status(400).json({ message: 'Start date and end date are required' });
+    }
+
+    const result = await ClientModel.getInvoicesBetweenDates(start_date, end_date);
+    if (result.length === 0) {
+      return res.status(404).json({ message: 'No invoices found for the given date range' });
+    }
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+},
     async findInvoiceById(req, res, next) {
         try {
             const { client_id, invoice_id } = req.params

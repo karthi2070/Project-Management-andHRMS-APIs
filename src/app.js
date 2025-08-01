@@ -51,11 +51,10 @@ const comments = require('./routers/commentsRoute.js')
 const activityLog = require('./routers/activityLogRoutes.js')
 const openAi = require('./routers/openAiRute.js'); // OpenAI Routes
 const salarySlip =require('./routers/paySlipRoute.js')
-
-
 const authRoutes = require('./routers/authRoute');
 const adminRoutes = require('./routers/adminRoute');
 const attendanceRoutes = require('./routers/attendRoute');
+
 const authMiddleware = require('./middleware/authMiddleware');
 const adminMiddleware = require('./middleware/adminMiddleware.js');
 const checkModuleAccess = require('./middleware/rbacMiddleware');
@@ -63,13 +62,14 @@ const checkModuleAccess = require('./middleware/rbacMiddleware');
 app.use('/auth', authRoutes);
 app.use('/admin', adminRoutes);
 //app.use('/admin', authMiddleware, adminMiddleware, adminRoutes);
-app.use('/attendance', authMiddleware, checkModuleAccess('attendance'), attendanceRoutes);
+// app.use('/attendance', authMiddleware, checkModuleAccess('attendance'), attendanceRoutes);
+app.use('/attendance', attendanceRoutes);
 app.use('/api/v1', employee); // Employee Routes
 app.use('/api/v1', expense); // Bank Details Routes
 app.use('/api/v1', quotation); // Quotation Routes
 app.use('/api/v1', clientRoutes); // Client Routes
 app.use('/api/v1', service); // Service Routes
-app.use('/', nodemailer); // Nodemailer Routes
+app.use('/', nodemailer); // Nodemailer Routes~~
 app.use('/api/v1', attendance); // Attendance Routes
 app.use('/api/v1', project); // Project Routes
 app.use('/api/v1', sprint); // Sprint Routes

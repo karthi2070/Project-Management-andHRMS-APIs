@@ -11,9 +11,9 @@ router.get('/google/callback', googleCallback, issueToken);
 router.post('/create', createUser);
 router.get('/user/:email', getUserByEmail);
 router.put('/update-user',  updateUser);
-router.put('/reset-pass',resetPassword);
+router.put('/reset-password',resetPassword);
 router.post('/send-otp',sendOtp)
-router.put('/reset-password', updatePassword);
+router.put('/update-password', updatePassword);
 router.post('/generate-login',genLoginCrednitialsEmp);
 
 // router.get('/user/:email', authrouter.put('/update-pass',  updatePassword);Middleware, getUserByEmail);

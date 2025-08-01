@@ -194,9 +194,13 @@ FROM clients_renewal; `
     const [rows] = await pool.query(query);
     return rows;
   },
-
+getInvoicesBetweenDates: async (start_date, end_date) => {
+    
+     const query = 'SELECT * FROM invoice_tbl WHERE invoice_date BETWEEN ? AND ? AND is_deleted = 0';
+     const [rows] = await pool.query(query,[start_date, end_date] );
+    return rows;
+  },
   async findById(client_id, invoice_id) {
-    console.log(client_id, invoice_id)
     const query = `SELECT * FROM invoice_tbl WHERE client_id = ? AND id = ? AND is_deleted = 0 `
     const [rows] = await pool.query(query, [client_id, invoice_id]);
     return rows[0];
@@ -210,7 +214,6 @@ FROM clients_renewal; `
 
   async findByInvoiseclintId(clientId) {
     const query = `select * FROM invoice_tbl WHERE client_id=? AND is_deleted = 0 `
-    // const query = select * FROM invoice_tbl as i
     const [rows] = await pool.query(query, [clientId]);
     return rows;
   },
@@ -222,13 +225,12 @@ FROM clients_renewal; `
   // insert EMI payment
 
   async insertPayment(data) {
-    const { user_id, client_id, invoice_id, payment_amount, payment_date, payment_method, payment_status,followup_date, notes, extra_amount } = data;
-   
-     const query= `INSERT INTO invoice_payment_tbl 
-       (user_id,client_id, invoice_id, payment_amount,payment_date, payment_method, payment_status,followup_date, notes, extra_amount)
-       VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?)` 
+    const { user_id, client_id, invoice_id, paid_amount, payment_date, payment_method, payment_status,followup_date, notes  } = data;
+    const query= `INSERT INTO invoice_payment_tbl 
+       (user_id,client_id, invoice_id, paid_amount,payment_date, payment_method, payment_status,followup_date, notes)
+       VALUES (?,?, ?, ?, ?, ?, ?, ?, ?)` 
     const values = [
-      user_id, client_id, invoice_id, payment_amount, payment_date, payment_method, payment_status,followup_date, notes, extra_amount ];
+      user_id, client_id, invoice_id, paid_amount, payment_date, payment_method, payment_status,followup_date, notes,  ];
     const [result] = await pool.query(query,values);
     return result;
   },

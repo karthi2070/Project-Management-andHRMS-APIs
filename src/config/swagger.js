@@ -14,7 +14,8 @@ const options = {
         url:process.env.BASE_URL
 
       },
-    ],      components: {
+    ],
+          components: {
       securitySchemes: {
           BearerAuth: {
               type: 'http',

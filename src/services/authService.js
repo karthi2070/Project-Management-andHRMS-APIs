@@ -79,9 +79,9 @@ const authService = {
   },
   updatePassword: async (email, currentPassword, newPassword) => {
     const user = await User.getUserByEmail(email);
-    if (!user.password) {
-      return { success: false, status: 400, message: 'SSO users cannot update passwords' };
-    }
+    // if (!user.password) {
+    //   return { success: false, status: 400, message: 'SSO users cannot update passwords' };
+    // }
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
       return { success: false, status: 401, message: 'Current password is incorrect' };

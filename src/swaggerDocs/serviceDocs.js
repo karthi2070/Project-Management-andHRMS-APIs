@@ -226,6 +226,8 @@
  *           schema:
  *             type: object
  *             required:
+ *               - user_id
+ *               - invoice_id
  *               - client_id
  *               - paid_amount
  *               - payment_date
@@ -236,6 +238,9 @@
  *               user_id:
  *                 type: integer
  *                 example: 102
+ *               invoice_id:
+ *                 type: integer
+ *                 example: 5
  *               client_id:
  *                 type: integer
  *                 example: 24

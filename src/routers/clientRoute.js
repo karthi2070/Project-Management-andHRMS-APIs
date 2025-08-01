@@ -13,6 +13,7 @@ router.patch('/client/delete-client/:id', ClientController.softDeleteClient);
 router.get('/client/client-dashboard-clientId/:id', ClientController.getPerClientDashboardDetails);
 router.get('/client/client-dashboard', ClientController.getClientDashboard);
 // Invoice Routes
+router.get('/invoice/get-invoices-between-dates', ClientController.getInvoicesBetweenDates);
 router.get('/invoice/get-total-invoice', ClientController.getTotalInvoice);
 router.post('/invoice/create-invoice', ClientController.createInvoice);
 router.get('/invoice/get-invoices', ClientController.findAllInvoices);

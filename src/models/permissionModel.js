@@ -20,6 +20,7 @@ const Permission = {
                    JOIN module_tbl m ON mp.module_id = m.id
                         WHERE mp.role_id = ? AND mp.has_access = 1 AND m.module_name = ?`
         const [rows] = await db.execute(sql, [roleId, moduleName]);
+        console.log(rows)
     return rows[0]; 
   }
 }
