@@ -80,7 +80,7 @@
 
 /**
  * @swagger
- * /api/v1/tasks/create-task:
+ * /api/v1/task/create-task:
  *   post:
  *     summary: Create a new task
  *     tags: [Tasks]
@@ -184,7 +184,7 @@
 
 /**
  * @swagger
- * /api/v1/tasks/sprint-tasks/{sprint_id}:
+ * /api/v1/task/sprint-task/{sprint_id}:
  *   get:
  *     summary: Get all tasks by sprint ID
  *     tags: [Tasks]
@@ -201,7 +201,7 @@
  */
 /**
  * @swagger
- * /api/v1/tasks/get-all-task-by-project/{project_id}:
+ * /api/v1/task/get-all-task-by-project/{project_id}:
  *   get:
  *     summary: Get all tasks by project_id
  *     tags: [Tasks]
@@ -216,10 +216,10 @@
  *       200:
  *         description: List of tasks
  */
-// /tasks/get-by-task/:sprint_id/:task_id
+
 /**
  * @swagger
- * /api/v1/tasks/get-by-task/{sprint_id}/{task_id}:
+ * /api/v1/task/get-by-task/{sprint_id}/{task_id}:
  *   get:
  *     summary: Get a task by sprint ID and task ID
  *     tags: [Tasks]

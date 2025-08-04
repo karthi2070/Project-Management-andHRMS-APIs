@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /auth/login:
+ * /api/v1/auth/login:
  *   post:
  *     summary: User login with email and password
  *     description: Authenticates a user and returns a JWT token with user details.
@@ -55,7 +55,7 @@
 
 /**
  * @swagger
- * /logout:
+ * /api/v1/auth/logout:
  *   post:
  *     summary: Logout the user by clearing the refresh token cookie
  *     tags: [auth]
@@ -75,7 +75,7 @@
 
 /**
  * @swagger
- * /auth/create:
+ * /api/v1/auth/create:
  *   post:
  *     summary: Register a new user
  *     description: Creates a user with email, password, and role ID.
@@ -115,7 +115,7 @@
 
 /**
  * @swagger
- * /auth/generate-login:
+ * /api/v1/auth/generate-login:
  *   post:
  *     summary: Generate login credentials for an employee
  *     tags: [auth]
@@ -146,7 +146,7 @@
 
 /**
  * @swagger
- * /auth/user/{email}:
+ * /api/v1/auth/user/{email}:
  *   get:
  *     summary: Get user by email
  *     description: Retrieves user details for the specified email.
@@ -186,7 +186,7 @@
 
 /**
  * @swagger
- * /admin/users:
+ * /api/v1/admin/users:
  *   post:
  *     summary: Create a new user
  *     description: Creates a new user in the system. Requires admin privileges and JWT authentication.
@@ -226,7 +226,7 @@
 
 /**
  * @swagger
- * /auth/update-user:
+ * /api/v1/auth/update-user:
  *   put:
  *     summary: Update user information
  *     description: Updates the authenticated user's email and/or role ID.
@@ -258,7 +258,7 @@
 
 /**
  * @swagger
- * /auth/update-password:
+ * /api/v1/auth/update-password:
  *   put:
  *     summary: Update the current user's password
  *     tags: [auth]
@@ -284,17 +284,6 @@
  *     responses:
  *       200:
  *         description: Password updated successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: Password updated successfully
  *       400:
  *         description: Missing current or new password
  *       401:

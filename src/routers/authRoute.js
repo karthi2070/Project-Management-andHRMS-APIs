@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { googleAuth, googleCallback, issueToken,login,logout,refreshToken,
      createUser,updatePassword,updateUser,genLoginCrednitialsEmp,
      getUserByEmail ,resetPassword,sendOtp} = require('../controllers/authController');
+     
 //const authMiddleware = require('../middleware/authMiddleware');
 router.post('/login',login);
 router.post('/logout',logout);

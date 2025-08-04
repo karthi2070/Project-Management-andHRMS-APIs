@@ -7,7 +7,7 @@
 
 /**
  * @swagger
- * /payslip/genpayslip:
+ * /api/v1/payslip/genpayslip:
  *   post:
  *     summary: Generate payslip and update employee salary/template
  *     description: Receives salary, template_id, and user_id. Updates employee details and returns generated payslip.
@@ -50,7 +50,7 @@
 
 /**
  * @swagger
- * /templates/salary-template:
+ * /api/v1/payslip/templates/salary-template:
  *   post:
  *     summary: Create a salary template with components
  *     tags: [Templates]
@@ -101,20 +101,6 @@
  *     responses:
  *       201:
  *         description: Template and components created successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Template and components created successfully
- *                 template_id:
- *                   type: integer
- *                   example: 12
- *                 total_components:
- *                   type: integer
- *                   example: 2
  *       400:
  *         description: Invalid request structure
  *       500:
@@ -123,7 +109,7 @@
 
 /**
  * @swagger
- * /templates/get-all:
+ * /api/v1/payslip/templates/get-all:
  *   get:
  *     summary: Get template by ID
  *     tags: [Templates]
@@ -136,7 +122,7 @@
 
 /**
  * @swagger
- * /templates/get-by-id/{id}:
+ * /api/v1/payslip/templates/get-by-id/{id}:
  *   get:
  *     summary: Get template by ID
  *     tags: [Templates]
@@ -153,7 +139,7 @@
  */
 /**
  * @swagger
- * /templates/get-by-id-temp-comp/{id}:
+ * /api/v1/payslip/templates/get-by-id-temp-comp/{id}:
  *   get:
  *     summary: Get template by ID
  *     tags: [Templates]
@@ -170,7 +156,7 @@
  */
 /**
  * @swagger
- * /templates/create-template:
+ * /api/v1/payslip/templates/create-template:
  *   post:
  *     summary: Create a new template
  *     tags: [Templates]
@@ -190,7 +176,7 @@
 
 /**
  * @swagger
- * /templates/update-template/{id}:
+ * /api/v1/payslip/templates/update-template/{id}:
  *   put:
  *     summary: Update template
  *     tags: [Templates]
@@ -215,7 +201,7 @@
 
 /**
  * @swagger
- * /templates/delete-template/{id}:
+ * /api/v1/payslip/templates/delete-template/{id}:
  *   patch:
  *     summary: Soft delete a template
  *     tags: [Templates]
@@ -238,7 +224,7 @@
 
 /**
  * @swagger
- * /components/get-by-id/{template_id}:
+ * /api/v1/payslip/components/get-by-id/{template_id}:
  *   get:
  *     summary: Get components by template ID
  *     tags: [Components]
@@ -254,7 +240,7 @@
 
 /**
  * @swagger
- * /components/create-components:
+ * /api/v1/payslip/components/create-components:
  *   post:
  *     summary: Insert one or more salary components
  *     description: Insert a list of salary components (or a single component) associated with a salary template.
@@ -316,7 +302,7 @@
 
 /**
  * @swagger
- * /components/update-components/{id}:
+ * /api/v1/payslip/components/update-components/{id}:
  *   put:
  *     summary: Update a component
  *     tags: [Components]
@@ -343,7 +329,7 @@
 
 /**
  * @swagger
- * /components/delete-components/{id}:
+ * /api/v1/payslip/components/delete-components/{id}:
  *   patch:
  *     summary: Soft delete a component
  *     tags: [Components]

@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /send-email:
+ * /api/v1/mail/send-email:
  *   post:
  *     summary: Send an email with an optional PDF attachment
  *     tags: [Email]

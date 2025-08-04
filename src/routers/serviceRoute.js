@@ -2,21 +2,19 @@ const express = require('express');
 const router = express.Router();
 const serviceController = require('../controllers/serviceController');
 
-router.post('/service/create-service', serviceController.createService);
-router.put('/service/update-service/:id', serviceController.updateService);
-router.patch('/service/status-update/:id', serviceController.statusUpdate);
-router.get('/service/get-all-service', serviceController.getAllServices);
-router.get('/service/get-by-id/:id', serviceController.getServiceById);
-router.get('/service/get-by-client-id/:clientId', serviceController.getClientById);
-router.get('/service/payment-filter/:status', serviceController.paymentFilter);
-router.patch('/service/delete-service/:id', serviceController.deleteService);
-
-router.get('/service/get-service-payment-history-clientId-serviceId/:client_id/:service_id',serviceController.GetServicePaymentByClientIdServiceId);
-router.get('/service/get-service-payment-history-serviceId-id/:service_id/:id', serviceController.GetServicePaymentByServiceIdandId);
+router.post('/create-service', serviceController.createService);
+router.put('/update-service/:id', serviceController.updateService);
+router.patch('/status-update/:id', serviceController.statusUpdate);
+router.get('/get-all-service', serviceController.getAllServices);
+router.get('/get-by-id/:id', serviceController.getServiceById);
+router.get('/get-by-client-id/:clientId', serviceController.getClientById);
+router.get('/payment-filter/:status', serviceController.paymentFilter);
+router.patch('/delete-service/:id', serviceController.deleteService);
+router.get('/get-service-payment-history-clientId-serviceId/:client_id/:service_id',serviceController.GetServicePaymentByClientIdServiceId);
+router.get('/get-service-payment-history-serviceId-id/:service_id/:id', serviceController.GetServicePaymentByServiceIdandId);
 
 //
-router.get('/service/upcoming-payment-summary', serviceController.upcomingPaymentDue);
-
-router.post('/service/due-payment/:service_id', serviceController.recordServiceEMIPayment);
+router.get('/upcoming-payment-summary', serviceController.upcomingPaymentDue);
+router.post('/due-payment/:service_id', serviceController.recordServiceEMIPayment);
 
 module.exports = router;

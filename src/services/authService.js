@@ -29,20 +29,20 @@ const authService = {
   login: async (email, password) => {
     const user = await User.getUserByEmail(email);
     if (!user) {
-      return { success: false, status: 401, message: 'Invalid credentials' };
+      return { success: false, status: 401, message: 'user not found' };
     }
     if (!user.password) {
       return { success: false, status: 401, message: 'Invalid credentials or use SSO' };
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return { success: false, status: 401, message: 'Invalid credentials' };
+      return { success: false, status: 401, message: 'pass word is wrong Invalid credentials' };
     }
     const employee = await Employee.getEmployeeByUserId(user.id);
     const payload = { id: user.id, email: user.email, role_id: user.role_id };
     const accessToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
     const refreshToken = jwt.sign(payload, process.env.REFRESH_SECRET, { expiresIn: '7d' });
-
+ 
     return {
       success: true,
       accessToken,
@@ -59,6 +59,7 @@ const authService = {
   const decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET);
   return jwt.sign({ id: decoded.id }, process.env.JWT_SECRET, { expiresIn: '15m' });
 },
+
   issueToken: async (email) => {
     const user = await User.getUserByEmail(email);
     if (!user) {

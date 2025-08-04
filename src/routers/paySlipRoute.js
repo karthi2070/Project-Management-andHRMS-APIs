@@ -16,12 +16,12 @@ router.post('/components/create-components', controller.insertComponents);
 router.put('/components/update-components/:id', controller.updateComponent);
 router.patch('/components/delete-components/:id', controller.softDeleteComponent);
 
-router.get('/payslip/get-all', controller.getAllPayslip);
-router.get('/payslip/get-by-userid-month', controller.getpayslipByMonth);
+router.get('/get-all', controller.getAllPayslip);
+router.get('/get-by-userid-month', controller.getpayslipByMonth);
 router.post('/salary-history', controller.createSalaryHistory);
 router.put('/salary-history-update/:id',controller. updateSalaryHistory);
 router.get('/get-salary-history-user-id/:id',controller.getSalaryHistoryByUserId)
 
-router.post('/payslip/genpayslip',controller.genpayslip)
+router.post('/genpayslip',controller.genpayslip)
 
 module.exports = router;

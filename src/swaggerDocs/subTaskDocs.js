@@ -86,9 +86,9 @@
  
  /**
   * @swagger
-  * /api/v1/sub-tasks/create-task:
+  * /api/v1/sub-task/create-sub-task:
   *   post:
-  *     summary: Create a new task
+  *     summary: Create a new sub-task
   *     tags: [Sub Tasks]
   *     requestBody:
   *       required: true
@@ -105,7 +105,7 @@
  
  /**
   * @swagger
-  * /api/v1/sub-tasks/sprint-tasks/{id}:
+  * /api/v1/sub-task/sprint-task/{id}:
   *   get:
   *     summary: Get a task by sprintId
   *     tags: [Sub Tasks]
@@ -125,7 +125,7 @@
  
  /**
   * @swagger
-  * /api/v1/sub-tasks/get-subtasks-id/{id}:
+  * /api/v1/sub-task/get-subtask-id/{id}:
   *   get:
   *     summary: Get a sub task by ID
   *     tags: [Sub Tasks]
@@ -145,7 +145,7 @@
 
   /**
   * @swagger
-  * /api/v1/sub-tasks/get-subtasks-id/{parent_id}/{id}:
+  * /api/v1/sub-task/get-subtask-id/{parent_id}/{id}:
   *   get:
   *     summary: Get sub-tasks for a parent task
   *     tags: [Sub Tasks]
@@ -168,9 +168,9 @@
   */
  /**
   * @swagger
-  * /api/v1/sub-tasks/update-task/{id}:
+  * /api/v1/sub-task/update-sub-task/{id}:
   *   put:
-  *     summary: Update a task by ID
+  *     summary: Update a sub-task by ID
   *     tags: [Sub Tasks]
   *     parameters:
   *       - in: path
@@ -195,9 +195,9 @@
  
  /**
   * @swagger
-  * /api/v1/sub-tasks/delete-task/{id}:
+  * /api/v1/sub-task/delete-sub-task/{id}:
   *   patch:
-  *     summary: Soft delete a task by ID
+  *     summary: Soft delete a sub-task by ID
   *     tags: [Sub Tasks]
   *     parameters:
   *       - in: path

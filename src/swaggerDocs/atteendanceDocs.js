@@ -201,19 +201,6 @@
  *     responses:
  *       200:
  *         description: A list of employees with total working days
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   employee_id:
- *                     type: string
- *                   employee_name:
- *                     type: string
- *                   total_working_days:
- *                     type: integer
  *       500:
  *         description: Server error
  */

@@ -7,7 +7,7 @@
 
 /**
  * @swagger
- * /api/v1/employee-leave/create-leave:
+ * /api/v1/leave/create-leave:
  *   post:
  *     summary: Create a new leave record
  *     tags: [Employee Leave]
@@ -37,7 +37,7 @@
 
 /**
  * @swagger
- * /api/v1/employee-leave/get-all-leave:
+ * /api/v1/leave/get-all-leave:
  *   get:
  *     summary: Get all leave records
  *     tags: [Employee Leave]
@@ -48,7 +48,7 @@
 
 /**
  * @swagger
- * /api/v1/employee-leave/get-leave-id/{id}:
+ * /api/v1/leave/get-leave-id/{id}:
  *   get:
  *     summary: Get leave record by ID
  *     tags: [Employee Leave]
@@ -65,7 +65,7 @@
 
 /**
  * @swagger
- * /api/v1/employee-leave/update-leave/{id}:
+ * /api/v1/leave/update-leave/{id}:
  *   put:
  *     summary: Update a leave record by ID
  *     tags: [Employee Leave]
@@ -96,13 +96,12 @@
  *                 type: string
  *     responses:
  *       200:
- *         description: Leave record updated'start_date', 'date', 'YES', '', NULL, ''
-
+ *         description: Leave record updated
  */
 
 /**
  * @swagger
- * /api/v1/employee-leave/delete-leave/{id}:
+ * /api/v1/leave/delete-leave/{id}:
  *   patch:
  *     summary: Soft delete a leave record by ID
  *     tags: [Employee Leave]
@@ -119,7 +118,7 @@
 
 /**
  * @swagger
- * /api/v1/employee-leave/{id}/is_applicable:
+ * /api/v1/leave/{id}/is_applicable:
  *   patch:
  *     summary: Update is_applicable field
  *     tags: [Employee Leave]
@@ -147,7 +146,7 @@
 
 /**
  * @swagger
- * /api/v1/employee-leave/get-employee-leave/{id}/{is_applicable}:
+ * /api/v1/leave/get-employee-leave/{id}/{is_applicable}:
  *   get:
  *     summary: Get leave record by ID
  *     tags: [Employee Leave]
@@ -170,7 +169,7 @@
 
 /**
  * @swagger
- * /api/v1/employee-leave/create-leave-balance:
+ * /api/v1/leave/create-leave-balance:
  *   post:
  *     summary: Create a new leave balance entry
  *     tags:
@@ -199,7 +198,7 @@
 
 /**
  * @swagger
- * /api/v1/employee-leave/get-all-leave-balance:
+ * /api/v1/leave/get-all-leave-balance:
  *   get:
  *     summary: Get all leave balances
  *     tags:
@@ -211,7 +210,7 @@
 
 /**
  * @swagger
- * /api/v1/employee-leave/get-by-userId-leave-balance/{userId}:
+ * /api/v1/leave/get-by-userId-leave-balance/{userId}:
  *   get:
  *     summary: Get leave balance by user ID
  *     tags:
@@ -229,7 +228,7 @@
 
 /**
  * @swagger
- * /api/v1/employee-leave/update-leave-balance/{id}:
+ * /api/v1/leave/update-leave-balance/{id}:
  *   put:
  *     summary: Update leave balance by ID
  *     tags:
@@ -258,7 +257,7 @@
 
 /**
  * @swagger
- * /api/v1/employee-leave/summary/{userId}:
+ * /api/v1/leave/summary/{userId}:
  *   get:
  *     summary: Get leave summary by user ID
  *     tags:

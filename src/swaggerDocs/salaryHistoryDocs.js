@@ -7,7 +7,7 @@
 
 /**
  * @swagger
- * /payslip/get-all:
+ * /api/v1/payslip/get-all:
  *   get:
  *     summary: Get total working days per employee
  *     tags: [Salary Data]
@@ -20,7 +20,7 @@
 
 /**
  * @swagger
- * /payslip/get-by-userid-month:
+ * /api/v1/payslip/get-by-userid-month:
  *   get:
  *     summary: Get total working days per employee
  *     tags: [Salary Data]
@@ -46,7 +46,7 @@
 
  /**
  * @swagger
- * /get-salary-history-user-id/{id}:
+ * /api/v1/payslip/get-salary-history-user-id/{id}:
  *   get:
  *     summary: Get salary history by user id
  *     tags: [Salary Data]
@@ -66,7 +66,7 @@
 
 /**
  * @swagger
- * /salary-history:
+ * /api/v1/payslip/salary-history:
  *   post:
  *     summary: Create employee salary history
  *     tags: [Salary Data]
@@ -121,24 +121,13 @@
  *     responses:
  *       201:
  *         description: Salary history created successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                 message:
- *                   type: string
- *                 id:
- *                   type: integer
  *       500:
  *         description: Server error
  */
 
 /**
  * @swagger
- * /salary-history-update/{id}:
+ * /api/v1/payslip/salary-history-update/{id}:
  *   put:
  *     summary: Update employee salary history
  *     tags: [Salary Data]
@@ -189,18 +178,7 @@
  *                 type: number
  *     responses:
  *       200:
- *         description: Salary history updated successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                 message:
- *                   type: string
- *                 result:
- *                   type: object
+
  *       500:
  *         description: Server error
  */

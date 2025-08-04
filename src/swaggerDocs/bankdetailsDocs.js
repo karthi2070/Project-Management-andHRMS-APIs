@@ -38,7 +38,7 @@
 
 /**
  * @swagger
- * /api/v1/bank/create-acc:
+ * /api/v1/employee/bank/create-acc:
  *   post:
  *     summary: Create bank details
  *     tags: [BankDetails]
@@ -55,7 +55,7 @@
 
 /**
  * @swagger
- * /api/v1/bank/get-acc-list:
+ * /api/v1/employee/bank/get-acc-list:
  *   get:
  *     summary: Get all bank details
  *     tags: [BankDetails]
@@ -66,7 +66,7 @@
 
 /**
  * @swagger
- * /api/v1/bank/get-acc-emp-id/{id}:
+ * /api/v1/employee/bank/get-acc-emp-id/{id}:
  *   get:
  *     summary: Get bank details by ID
  *     tags: [BankDetails]
@@ -85,7 +85,7 @@
 
 /**
  * @swagger
- * /api/v1/bank/update-acc-emp-id/{employee_id}:
+ * /api/v1/employee/bank/update-acc-emp-id/{employee_id}:
  *   put:
  *     summary: Update bank details
  *     tags: [BankDetails]
@@ -108,7 +108,7 @@
 
 /**
  * @swagger
- * /api/v1/bank/update-acc-id/{id}:
+ * /api/v1/employee/bank/update-acc-id/{id}:
  *   put:
  *     summary: Update bank details
  *     tags: [BankDetails]
@@ -131,7 +131,7 @@
 
 /**
  * @swagger
- * /api/v1/bank/delete-acc-emp-id/{id}:
+ * /api/v1/employee/bank/delete-acc-emp-id/{id}:
  *   patch:
  *     summary: Soft delete bank details
  *     tags: [BankDetails]

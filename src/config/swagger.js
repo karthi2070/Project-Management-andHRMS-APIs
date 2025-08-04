@@ -7,7 +7,7 @@ const options = {
     info: {
       title: 'N1 SUITE APIs',
       version: '1.0.0',
-      description: 'API for managing employees',
+      description: 'API for managing N1 SUITE',
     },
     servers: [
       {

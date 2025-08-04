@@ -15,19 +15,17 @@ const authController = {
       console.log('Login successful:', result);
       res.cookie('refreshToken', result.refreshToken, {
         httpOnly: true,
-        secure: false, // only send over HTTPS
+        secure: false, // only send over HTTPS 
         sameSite: 'Strict', // or 'Lax' for cross-site logins
         maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
       });
       const { refreshToken, ...responseWithoutRefresh } = result;
-
-      res.json(responseWithoutRefresh);
+      res.json(result);
     } catch (error) {
       console.error('Login error:', error.message);
       next();
     }
   },
-
   refreshToken: async (req, res, next) => {
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) return res.status(401).json({ message: 'Refresh token required' });

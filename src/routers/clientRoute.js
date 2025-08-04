@@ -3,15 +3,15 @@ const ClientController = require('../controllers/clientController');
 
 const router = express.Router();
 
-router.post('/client/create-client', ClientController.createClient);
-router.get('/client/get-clients-list', ClientController.getAllClients);
-router.get('/client/get-client-id/:id', ClientController.getClientById);
-router.put('/client/update-client/:id', ClientController.updateClient);
-router.patch('/client/delete-client/:id', ClientController.softDeleteClient);   
+router.post('/create-client', ClientController.createClient);
+router.get('/get-clients-list', ClientController.getAllClients);
+router.get('/get-client-id/:id', ClientController.getClientById);
+router.put('/update-client/:id', ClientController.updateClient);
+router.patch('/delete-client/:id', ClientController.softDeleteClient);   
 
 // Client Dashboard
-router.get('/client/client-dashboard-clientId/:id', ClientController.getPerClientDashboardDetails);
-router.get('/client/client-dashboard', ClientController.getClientDashboard);
+router.get('/client-dashboard-clientId/:id', ClientController.getPerClientDashboardDetails);
+router.get('/client-dashboard', ClientController.getClientDashboard);
 // Invoice Routes
 router.get('/invoice/get-invoices-between-dates', ClientController.getInvoicesBetweenDates);
 router.get('/invoice/get-total-invoice', ClientController.getTotalInvoice);

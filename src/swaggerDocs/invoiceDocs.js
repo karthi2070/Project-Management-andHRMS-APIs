@@ -61,7 +61,7 @@
 
 /**
  * @swagger
- * /api/v1/invoice/get-total-invoice:
+ * /api/v1/client/invoice/get-total-invoice:
  *   get:
  *     summary: Get all total invoices
  *     tags: [Invoice]
@@ -72,7 +72,7 @@
 
 /**
  * @swagger
- * /api/v1/invoice/get-invoices-between-dates:
+ * /api/v1/client/invoice/get-invoices-between-dates:
  *   get:
  *     summary: Get invoices between start and end dates
  *     tags: [Invoice]
@@ -94,20 +94,6 @@
  *     responses:
  *       200:
  *         description: List of invoices in date range
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   invoice_id:
- *                     type: integer
- *                   invoice_date:
- *                     type: string
- *                     format: date
- *                   amount:
- *                     type: number
  *       400:
  *         description: Missing or invalid start_date or end_date
  *       500:
@@ -116,7 +102,7 @@
 
 /**
  * @swagger
- * /api/v1/invoice/create-invoice:
+ * /api/v1/client/invoice/create-invoice:
  *   post:
  *     summary: Create a new invoice
  *     description: Creates a new invoice with optional advance/initial payment. Calculates balance and extra amount.
@@ -139,7 +125,7 @@
 
 /**
  * @swagger
- * /api/v1/invoice/get-invoices:
+ * /api/v1/client/invoice/get-invoices:
  *   get:
  *     summary: Get all invoices
  *     tags: [Invoice]
@@ -150,7 +136,7 @@
 
 /**
  * @swagger
- * /api/v1/invoice/get-invoice/{client_id}/{invoice_id}:
+ * /api/v1/client/invoice/get-invoice/{client_id}/{invoice_id}:
  *   get:
  *     summary: Get invoice by ID
  *     tags: [Invoice]
@@ -176,7 +162,7 @@
 
 /**
  * @swagger
- * /api/v1/invoice/get-invoice-by-client/{clientId}:
+ * /api/v1/client/invoice/get-invoice-by-client/{clientId}:
  *   get:
  *     summary: Get invoices by client ID
  *     tags: [Invoice]
@@ -196,7 +182,7 @@
 
 /**
  * @swagger
- * /api/v1/invoice/get-invoice-by-number/{invoiceNumber}:
+ * /api/v1/client/invoice/get-invoice-by-number/{invoiceNumber}:
  *   get:
  *     summary: Get invoice by invoice number
  *     tags: [Invoice]
@@ -216,7 +202,7 @@
 
 /**
  * @swagger
- * /api/v1/invoice/update-invoice/{id}:
+ * /api/v1/client/invoice/update-invoice/{id}:
  *   put:
  *     summary: Update an invoice
  *     tags: [Invoice]
@@ -244,7 +230,7 @@
 
 /**
  * @swagger
- * /api/v1/invoice/delete-invoice/{id}:
+ * /api/v1/client/invoice/delete-invoice/{id}:
  *   patch:
  *     summary: Soft delete an invoice
  *     tags: [Invoice]
@@ -265,7 +251,7 @@
 
 /**
  * @swagger
- * /api/v1/invoices/emi-payment/{invoice_id}:
+ * /api/v1/client/invoices/emi-payment/{invoice_id}:
  *   post:
  *     summary: Record an EMI payment for an invoice
  *     description: Adds a new EMI payment entry for a specific invoice. Updates invoice totals only if payment is marked as successful.
@@ -296,7 +282,7 @@
  *               client_id:
  *                 type: integer
  *                 example: 45
- *               payment_amount:
+ *               paid_amount:
  *                 type: number
  *                 format: float
  *                 example: 2000.00
@@ -329,7 +315,7 @@
 
 /**
  * @swagger
- * /api/v1/invoice/get-invoices:
+ * /api/v1/client/invoice/get-invoices:
  *   get:
  *     summary: Get all invoices
  *     tags: [Invoice]
@@ -340,7 +326,7 @@
 
 /**
  * @swagger
- * /api/v1/invoice/get-invoice-EMI-payment/{client_id}/{invoice_id}:
+ * /api/v1/client/invoice/get-invoice-EMI-payment/{client_id}/{invoice_id}:
  *   get:
  *     summary: Get invoice by ID
  *     tags: [Invoice]
@@ -366,7 +352,7 @@
 
 /**
  * @swagger
- * /api/v1/invoice/get-invoice-EMI-payment-id/{invoice_id}/{id}:
+ * /api/v1/client/invoice/get-invoice-EMI-payment-id/{invoice_id}/{id}:
  *   get:
  *     summary: Get invoice by ID
  *     tags: [Invoice]

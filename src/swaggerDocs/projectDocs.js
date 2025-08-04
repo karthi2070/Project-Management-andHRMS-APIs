@@ -9,7 +9,7 @@
 
 /**
  * @swagger
- * /api/v1/projects/create-project:
+ * /api/v1/project/create-project:
  *   post:
  *     summary: Create a new project
  *     tags: [Projects]
@@ -53,7 +53,7 @@
 
 /**
  * @swagger
- * /api/v1/projects/update-project/{id}:
+ * /api/v1/project/update-project/{id}:
  *   put:
  *     summary: Update an existing project by ID
  *     tags: [Projects]
@@ -115,16 +115,6 @@
  *     responses:
  *       200:
  *         description: Project updated successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Project updated successfully
- *                 result:
- *                   type: object
  *       404:
  *         description: Project not found
  *       500:
@@ -135,7 +125,7 @@
 
 /**
  * @swagger
- * /api/v1/projects/get-all-projects:
+ * /api/v1/project/get-all-projects:
  *   get:
  *     summary: Get all projects
  *     tags: [Projects]
@@ -149,7 +139,7 @@
 
 /**
  * @swagger
- * /api/v1/projects/get-by-id/{project_id}:
+ * /api/v1/project/get-by-id/{project_id}:
  *   get:
  *     summary: Get a project by ID
  *     tags: [Projects]

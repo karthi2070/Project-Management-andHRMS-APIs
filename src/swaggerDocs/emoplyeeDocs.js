@@ -127,7 +127,7 @@
 
 /**
  * @swagger
- * /api/v1/employees/create-empolyee :
+ * /api/v1/employee/create-empolyee :
  *   post:
  *     summary: Create a new employee
  *     tags: [Employee]
@@ -145,7 +145,7 @@
 
 /**
  * @swagger
- * /api/v1/employees/update-empolyee/{id}:
+ * /api/v1/employee/update-empolyee/{id}:
  *   put:
  *     summary: Update an employee
  *     tags: [Employee]
@@ -172,7 +172,7 @@
 
 /**
  * @swagger
- * /api/v1/employees/relieving-empolyee/{id}:
+ * /api/v1/employee/relieving-empolyee/{id}:
  *   put:
  *     summary: Relieve an employee by user id
  *     tags: [Employee]
@@ -210,7 +210,7 @@
 
 /**
  * @swagger
- * /api/v1/employees/get-empolyee-list :
+ * /api/v1/employee/get-empolyee-list :
  *   get:
  *     summary: Get all employees
  *     tags: [Employee]
@@ -245,7 +245,7 @@
 
 /**
  * @swagger
- * /api/v1/employees/get-empolyee-pkid/{id}:
+ * /api/v1/employee/get-empolyee-pkid/{id}:
  *   get:
  *     summary: Get employee by ID
  *     tags: [Employee]
@@ -262,7 +262,7 @@
 
 /**
  * @swagger
- * /api/v1/employees/get-empolyee-user-id/{user_id}:
+ * /api/v1/employee/get-empolyee-user-id/{user_id}:
  *   get:
  *     summary: Get employee by user ID
  *     tags: [Employee]
@@ -279,7 +279,7 @@
 
 /**
  * @swagger
- * /api/v1/employees/delete-empolyee/{id}:
+ * /api/v1/employee/delete-empolyee/{id}:
  *   patch:
  *     summary: Soft delete an employee
  *     tags: [Employee]
@@ -297,7 +297,7 @@
 
 /**
  * @swagger
- * /api/v1/employees/get-filtered-department:
+ * /api/v1/employee/get-filtered-department:
  *   get:
  *     summary: Get employees by department
  *     tags: [Employee]
@@ -314,7 +314,7 @@
 
 /**
  * @swagger
- * /api/v1/employees/search-empolyee:
+ * /api/v1/employee/search-empolyee:
  *   get:
  *     summary: Search employees by name
  *     tags: [Employee]
@@ -331,7 +331,7 @@
 
 /**
  * @swagger
- * /api/v1/employees/get-empolyee-sort:
+ * /api/v1/employee/get-empolyee-sort:
  *   get:
  *     summary: Retrieve a list of employees sorted by a specified field.
  *     description: Returns all non-deleted employees sorted in ascending order by the given field.
@@ -354,7 +354,7 @@
 
 /**
  * @swagger
- * /api/v1/employees/update-empolyee-status/{id} :
+ * /api/v1/employee/update-empolyee-status/{id} :
  *   patch:
  *     summary: Update the status of an employee
  *     description: Updates the status of an employee by their ID, only if the employee is not deleted.

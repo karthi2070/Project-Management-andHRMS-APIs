@@ -281,7 +281,7 @@ const ClientController = {
     async recordEMIPayment(req, res, next) {
         try {
             const invoice_id = parseInt(req.params.invoice_id);
-            const { user_id, client_id, payment_amount, payment_date, payment_method, payment_status,followup_date, notes } = req.body;
+            const { user_id, client_id, paid_amount, payment_date, payment_method, payment_status,followup_date, notes } = req.body;
             // Step 1: Fetch invoice
             const invoice = await ClientModel.getInvoiceById(invoice_id);
             console.log("invoice", invoice)
@@ -290,8 +290,8 @@ const ClientController = {
             }
             const invoiceAmount = Number(invoice.invoice_amount);
             const currentPaid = Number(invoice.paid_amount);
-            const newTotalPaid = currentPaid + Number(payment_amount);
-            const balanceAmount = invoice.balance_amount - payment_amount;
+            const newTotalPaid = currentPaid + Number(paid_amount);
+            const balanceAmount = invoice.balance_amount - paid_amount;
 console.log({"invoiceAmount" :invoiceAmount, "currentPaid": currentPaid, "newTotalPaid": newTotalPaid, "balanceAmount": balanceAmount})
             // let extra_amount = 0;
             // if (balanceAmount < 0) {
@@ -304,7 +304,7 @@ console.log({"invoiceAmount" :invoiceAmount, "currentPaid": currentPaid, "newTot
                 user_id,
                 client_id,
                 invoice_id,
-                payment_amount,
+                paid_amount,
                 payment_date,
                 payment_method,
                 payment_status,

@@ -5,14 +5,14 @@ const {
     getAllAttendance,getAttendanceById,getAttendanceByUserId,getAttendanceSummary,getAttendanceByDate,getTotalWorkingDays
 } = require('../controllers/attendanceController');
 
-router.post('/attendance/create-attendance',createAttendance);
-router.put('/attendance/update-attendance/:id',updateAttendance);
-router.get('/attendance/get-attendance-list', getAllAttendance);
-router.get('/attendance/get-attendance-id/:id', getAttendanceById);
-router.get('/attendance/get-attendance-user-id/:userId',getAttendanceByUserId);
-router.get('/attendance/filter-by-date', getAttendanceByDate);
-router.get('/attendance/working-days-count', getTotalWorkingDays);
-router.get('/attendance/attendance-summary',getAttendanceSummary);
+router.post('/create-attendance',createAttendance);
+router.put('/update-attendance/:id',updateAttendance);
+router.get('/get-attendance-list', getAllAttendance);
+router.get('/get-attendance-id/:id', getAttendanceById);
+router.get('/get-attendance-user-id/:userId',getAttendanceByUserId);
+router.get('/filter-by-date', getAttendanceByDate);
+router.get('/working-days-count', getTotalWorkingDays);
+router.get('/attendance-summary',getAttendanceSummary);
 
 module.exports = router;
 
