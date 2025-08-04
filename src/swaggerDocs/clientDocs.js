@@ -54,6 +54,25 @@
 
 /**
  * @swagger
+ * /api/v1/client/get-all-clients-details/{client_id}:
+ *   get:
+ *     summary: Get a client's dashboard details by ID
+ *     tags: [Client]
+ *     parameters:
+ *       - in: path
+ *         name: client_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Client found
+ *       404:
+ *         description: Client not found
+ */
+
+/**
+ * @swagger
  * /api/v1/client/create-client:
  *   post:
  *     summary: Create a new client
@@ -98,6 +117,7 @@
  *       404:
  *         description: Client not found
  */
+
 /**
  * @swagger
  * /api/v1/client/client-dashboard:

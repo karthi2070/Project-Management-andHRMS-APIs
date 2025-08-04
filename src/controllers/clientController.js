@@ -1,5 +1,6 @@
 const ClientModel = require('../models/clientModel');
-const service =require('../services/serviceService');
+const service = require('../services/serviceService');
+const  ServiceModel  = require('../models/serviceModel');
 
 const ClientController = {
     async createClient(req, res, next) {
@@ -76,6 +77,37 @@ const ClientController = {
             next(error);
         }
     },
+
+    async getAllClientDetailsById(req, res, next) {
+        try {
+            const clientId = req.params.client_id;
+            if (!clientId) {
+                return res.status(400).json({ message: 'Client ID is required' });
+            }
+            const clientDashboard = await ClientModel.perClientDashBoard(clientId);
+            const invoices = await ClientModel.findByInvoiseclintId(clientId);
+            const service = await ServiceModel.getByClientId(clientId);
+            
+            const clientDashboardDetails = {
+                total_invoice_amount: clientDashboard[0]['SUM(invoice_amount)'] || 0,
+                total_paid_amount: clientDashboard[0]['sum(paid_amount)'] || 0,
+                total_balance_amount: clientDashboard[0]['sum(balance_amount)'] || 0
+
+            }
+            const clientDetails = {
+                success: true,
+                message: 'Client details retrieved successfully',
+                client_id: clientId,
+                dashboard: clientDashboardDetails,
+                invoices: invoices || [],
+                services: service || []
+            };
+            res.status(200).json(clientDetails);
+        } catch (error) {
+            next(error);
+        }
+    },
+
     async getPerClientDashboardDetails(req, res, next) {
         try {
             const clientId = req.params.id;

@@ -2,7 +2,8 @@ const express = require('express');
 const ClientController = require('../controllers/clientController');
 
 const router = express.Router();
-
+// Client Routes
+router.get ('/get-all-clients-details/:client_id', ClientController.getAllClientDetailsById);
 router.post('/create-client', ClientController.createClient);
 router.get('/get-clients-list', ClientController.getAllClients);
 router.get('/get-client-id/:id', ClientController.getClientById);
