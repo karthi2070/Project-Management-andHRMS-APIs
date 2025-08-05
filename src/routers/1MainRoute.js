@@ -25,7 +25,7 @@ app.use('/activity-log', ActivityLogs);
 app.use('/admin', admin);
 app.use('/auth', auth);
 app.use('/attendance', attendance);
-app.use('/client',authMiddleware, client);
+app.use('/client', client);
 app.use('/comments', comments);
 app.use('/employee', employee);
 app.use('/expense', expense);
