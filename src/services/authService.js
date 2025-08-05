@@ -40,12 +40,12 @@ const authService = {
     }
     const employee = await Employee.getEmployeeByUserId(user.id);
     const payload = { id: user.id, email: user.email, role_id: user.role_id };
-    const accessToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
     const refreshToken = jwt.sign(payload, process.env.REFRESH_SECRET, { expiresIn: '7d' });
  
     return {
       success: true,
-      accessToken,
+      token,
       refreshToken,
       userId: user.id,
       user_name: employee.name,

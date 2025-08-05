@@ -195,7 +195,7 @@ FROM emp_salary_history sh
 JOIN employee_tbl e on e.id =sh.employee_id
 JOIN bank_details_tbl b ON  b.id =sh.bank_details_id
 JOIN salary_templates t ON t.id = sh.salary_template_id 
-where sh.user_id = ?
+where sh.user_id = ? AND sh.is_deleted = 0
 AND MONTH(sh.salary_date) = ?
       AND YEAR(sh.salary_date) = ?;`
 

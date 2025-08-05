@@ -12,7 +12,7 @@ const authController = {
       if (!result.success) {
         return res.status(result.status).json({ success: false, message: result.message });
       }
-      console.log('Login successful:', result);
+      // console.log('Login successful:', result);
       res.cookie('refreshToken', result.refreshToken, {
         httpOnly: true,
         secure: false, // only send over HTTPS 
