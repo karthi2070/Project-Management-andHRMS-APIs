@@ -226,7 +226,7 @@ console.log("Mapped Components:", mappedComponents);
   //genrate payslip 
    async genpayslip (req,res,next){
     try{
-      const { user_id,salary, salary_template_id,start_date, end_date } =req.body;
+      const { user_id,salary, salary_template_id,start_date, end_date,forceRegenerate = false } =req.body;
       if (!salary && !salary_template_id && !user_id){
         return res.status(400).json({message:'requried folleing fileds salary, template_id, user_id '})
 
@@ -235,12 +235,21 @@ console.log("Mapped Components:", mappedComponents);
       if(! user){
         return res.status(400).json({message:'user not found or user deleted'})
       }
-      const updateSalaryDetails = await EmployeeModel.updateSalaryDetails(user_id,salary, salary_template_id)
+      console.log("checking existing payslip for user:", user_id, "from", start_date, "to", end_date);
+      const existing = await paySlipModel.checkSalaryHistory(user_id, start_date, end_date);
+      console.log("Existing Payslip Check Result:", existing);
+    if (existing && !forceRegenerate) {
+      return res.status(409).json({
+        success: false,
+        message: 'Payslip already exists. Set forceRegenerate to true to overwrite.'
+      });
+    }
+      const updateSalaryDetails = await EmployeeModel.updateSalaryDetails(user_id,salary, salary_template_id,)
       if(! updateSalaryDetails ){
         return res.status(400).json({message:'salary and template_id not update'})
       } 
 
-     const formattedResponse = await PayslipService.genpaySlip(user_id,start_date, end_date)
+     const formattedResponse = await PayslipService.genpaySlip(user_id,start_date, end_date,forceRegenerate)
       if (!formattedResponse) {
         return res.status(404).json({ success: false, message: "Data not found" });
       }

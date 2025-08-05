@@ -239,6 +239,21 @@ return formattedResponse;
   },
 
   // create and update salary website
+async checkSalaryHistory(user_id, start_date, end_date) {
+  const sql = `
+    SELECT * FROM emp_salary_history 
+    WHERE user_id = ? AND is_deleted = 0 AND  salary_date BETWEEN ? AND ?
+  `;
+  const [rows] = await pool.query(sql, [user_id, start_date, end_date]);
+  return rows.length > 0 ? rows[0] : null;
+},
+
+async deleteSalaryHistory(user_id, start_date, end_date) {
+  const sql = `
+    UPDATE emp_salary_history SET is_deleted = 1
+    WHERE user_id = ?  AND salary_date BETWEEN ? AND ? `;
+  await pool.query(sql, [user_id, start_date, end_date]);
+},
 
   async createSalaryHistory(data) {
     const { user_id,

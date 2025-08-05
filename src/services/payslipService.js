@@ -4,8 +4,17 @@ const leaveModel = require("../models/leaveModel");
 
 const PayslipService = {
 
-  async  genpaySlip(user_id, start_date, end_date) {
+  async  genpaySlip(user_id, start_date, end_date, forceRegenerate = false) {
     console.log("Generating payslip for user:", user_id, "from", start_date, "to", end_date);
+
+        const existingPayslip = await PayslipModel.checkSalaryHistory(user_id, start_date, end_date);
+    // if (existingPayslip && !forceRegenerate) {
+    //   throw new Error("Payslip already exists for the given period. Use forceRegenerate to overwrite.");
+    // }
+
+    if (existingPayslip && forceRegenerate) {
+      await PayslipModel.deleteSalaryHistory(user_id, start_date, end_date);
+    }
 
     const result = await PayslipModel.getEmployeePayslipData(user_id);
 if (!result || result.length === 0) throw new Error("No data found for user");

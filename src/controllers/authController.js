@@ -20,7 +20,7 @@ const authController = {
         maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
       });
       const { refreshToken, ...responseWithoutRefresh } = result;
-      res.json(result);
+      res.json(responseWithoutRefresh);
     } catch (error) {
       console.error('Login error:', error.message);
       next();

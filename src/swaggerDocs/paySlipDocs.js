@@ -40,6 +40,9 @@
  *                  type: string
  *                  format: date
  *                  example: 2025-06-30
+ *               forceRegenerate:
+ *                  type: boolean
+ *                  example: false
  *     responses:
  *       200:
  *         description: Payslip generated successfully

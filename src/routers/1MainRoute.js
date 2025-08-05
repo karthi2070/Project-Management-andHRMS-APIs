@@ -19,13 +19,13 @@ const service = require('../routers/serviceRoute');
 const sprint = require('../routers/sprintRoute');
 const subTask = require('../routers/subTaskRoute');
 const task = require('../routers/taskRoute');
-
+const authMiddleware = require('../middleware/authMiddleware');
 
 app.use('/activity-log', ActivityLogs);
 app.use('/admin', admin);
 app.use('/auth', auth);
 app.use('/attendance', attendance);
-app.use('/client', client);
+app.use('/client',authMiddleware, client);
 app.use('/comments', comments);
 app.use('/employee', employee);
 app.use('/expense', expense);
