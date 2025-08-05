@@ -195,8 +195,10 @@ FROM clients_renewal; `
     return rows;
   },
 getInvoicesBetweenDates: async (start_date, end_date) => {
-    
-     const query = 'SELECT * FROM invoice_tbl WHERE invoice_date BETWEEN ? AND ? AND is_deleted = 0';
+     const query = ` SELECT i.*, c.name AS client_name, c.company_name
+    FROM invoice_tbl i
+    JOIN client_tbl c ON i.client_id = c.id
+      WHERE invoice_date BETWEEN ? AND ? AND is_deleted = 0`;
      const [rows] = await pool.query(query,[start_date, end_date] );
     return rows;
   },

@@ -15,7 +15,6 @@ const salarySlipsModel = {
 async insertComponents(components) {
   const sql = `INSERT INTO salary_components 
     (template_id, component_name, component_type, component_value, amount_type) VALUES ?`;
-  // Map into array of arrays  id, template_id, component_name, component_type, component_value, amount_type, is_deleted, created_at, updated_at
   const values = components.map(c => [
     c.template_id,c.component_name,c.component_type,c.component_value,c.amount_type ]);
 
@@ -128,11 +127,12 @@ async insertComponents(components) {
   },
 
   async insertSalaryHistory(values) {
+    //id, user_id, employee_id, bank_details_id, salary_date, salary_template_id, components, working_days, absent_days, leave_days, attendance_deduction_amount, total_salary, gross_amount, deductions_amount, net_payment, is_deleted, created_at
     const query = `
       INSERT INTO emp_salary_history (
         user_id, employee_id, bank_details_id, salary_date, salary_template_id,
-        components, total_salary, gross_amount, deductions_amount, net_payment
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        components, working_days, absent_days, leave_days, attendance_deduction_amount, total_salary, gross_amount, deductions_amount, net_payment
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
     await pool.query(query, values);
   },
@@ -187,7 +187,7 @@ if (result.length === 0) {
 
   //get payslilp by month and year
   async getpayslipByMonth(user_id,month,year) {
-    const sql = `SELECT 
+    let sql = `SELECT 
 sh.id as salary_id ,sh.user_id , e.employee_id,e.name, e.department,e.mail,e.designation,e.doj,e.pan,
 b.acc_holder_name, b.account_number,b.bank_name,b.pf_account_number,b.uan_number,t.template_name,
  sh.salary_date, sh.salary_template_id, sh.components, sh.total_salary, sh.gross_amount, sh.deductions_amount, sh.net_payment
@@ -195,11 +195,17 @@ FROM emp_salary_history sh
 JOIN employee_tbl e on e.id =sh.employee_id
 JOIN bank_details_tbl b ON  b.id =sh.bank_details_id
 JOIN salary_templates t ON t.id = sh.salary_template_id 
-where sh.user_id = ? AND sh.is_deleted = 0
+where  sh.is_deleted = 0
 AND MONTH(sh.salary_date) = ?
-      AND YEAR(sh.salary_date) = ?;`
+      AND YEAR(sh.salary_date) = ?`
 
-    const [result] = await pool.query(sql, [user_id,month,year]);
+    const params = [month, year];
+    if(user_id){
+       sql += ` AND sh.user_id = ?`;
+       params.push(user_id);
+    }
+
+    const [result] = await pool.query(sql, params);
 if (result.length === 0) {
       return { message: 'No payslip found for the given month and year.' };
     }
@@ -233,8 +239,6 @@ if (result.length === 0) {
     net_payment: row.net_payment
   }
 }));
-
-// console.log("formattedResponse", formattedResponse);
 return formattedResponse;
   },
 
