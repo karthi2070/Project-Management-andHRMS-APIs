@@ -3,9 +3,9 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger.js');
+const passport = require('passport');
 require('../src/config/passport.js');
 const errorHandler = require('./middleware/errorHandler');
-const passport = require('passport');
 const app = express();
 const allowedOrigins = [
   'https://www.n1suite.namuvi.com',

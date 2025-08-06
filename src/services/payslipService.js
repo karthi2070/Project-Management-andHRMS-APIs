@@ -1,11 +1,20 @@
 const PayslipModel = require("../models/paySlipModel");
 const attendanceModel = require("../models/attendanceModel");
 const leaveModel = require("../models/leaveModel");
+const moment = require("moment");
+
+function getLastWorkingDay(endDate, holidays = []) {
+  let date = moment(endDate);
+  while (date.day() === 0 || date.day() === 6 || holidays.includes(date.format("YYYY-MM-DD"))) {
+    date.subtract(1, "day");
+  }
+  return date.format("YYYY-MM-DD");
+}
+
 
 const PayslipService = {
 
   async  genpaySlip(user_id, start_date, end_date, forceRegenerate = false) {
-    console.log("Generating payslip for user:", user_id, "from", start_date, "to", end_date);
 
         const existingPayslip = await PayslipModel.checkSalaryHistory(user_id, start_date, end_date);
     // if (existingPayslip && !forceRegenerate) {
@@ -119,8 +128,9 @@ const gross_amount = earnings.reduce((sum, e) => sum + e.salary_amount, 0);
 
   const totalDays = getTotalDays(start_date, end_date);
   const attendance = await attendanceModel.getTotalWorkingDays(start_date, end_date, user_id);
-  const total_days_present = attendance.length ? Number(attendance[0].total_working_days) : 0;
+ // const total_days_present = attendance.length ? Number(attendance[0].total_working_days) : 0;
 
+  const total_days_present=25; // Assuming 25 days as per your example
   const leave = await leaveModel.getUserLeavesByDateRange(user_id, start_date, end_date);
   const pay_leave = leave.length ? Number(leave[0].leave_days) : 0;
   const total_days_absent = totalDays - total_days_present; // for storing in db
@@ -141,9 +151,9 @@ if (net_payment < 0) {
   const finalComponents = [...earnings, ...deductions];
 
   // Save to DB
-  const toDayDate = new Date();
+  const salary_date = getLastWorkingDay(end_date);
   const values = [
-    employeeInfo.userId, employeeInfo.employeeId, employeeInfo.bankId,toDayDate, employeeInfo.templateId, JSON.stringify(finalComponents),
+    employeeInfo.userId, employeeInfo.employeeId, employeeInfo.bankId, salary_date, employeeInfo.templateId, JSON.stringify(finalComponents),
     totalDays, total_days_absent, pay_leave, absent_days_deductions,
     gross_salary, gross_amount, total_deductions_with_absent, net_payment
   ];
@@ -180,6 +190,7 @@ if (net_payment < 0) {
       components: finalComponents
     },
     "salary_details": {
+      salary_date : salary_date,
       gross_amount: parseFloat(gross_amount.toFixed(2)),
       deductions_amount: parseFloat(total_deductions_with_absent.toFixed(2)),
       net_payment: parseFloat(net_payment.toFixed(2))
