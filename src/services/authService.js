@@ -95,9 +95,20 @@ const authService = {
     if (existingUser) {
       return { success: false, status: 409, message: 'Email already exists' };
     }
-    const userId = await User.createUser(email, password, role_id);
-    await Employee.insertUserId(employee_id, userId);
-    return { success: true, userId };
+    const genUserId = await User.createUser(email, password, role_id);
+    if (!genUserId) {
+      return { success: false, status: 500, message: 'Failed to create user' };
+    }
+    
+    const update =await Employee.insertUserId(employee_id, genUserId);
+
+  
+    const ifuseridInsert = await Employee.getEmployeeByUserId(genUserId);
+    if (!ifuseridInsert) {
+      return { success: false, status: 500, message: 'Failed to link user with employee' };
+    }
+
+    return { success: true, status :201, message: 'User created and linked successfully', name :ifuseridInsert.name, user_id :genUserId };
   },
   getUserByEmail: async (email) => {
     const user = await User.getUserByEmail(email);
@@ -116,13 +127,16 @@ const authService = {
   },
   genLoginCrednitialsEmp: async (employee_id) => {
     const EmployeeData = await Employee.getEmpDataLoginGenerate(employee_id);
-    if (!EmployeeData || EmployeeData == null) {
+    if (!EmployeeData || EmployeeData == null  ) {
       return { success: false, status: 404, message: 'data not found given employee id' };
     }
     const password = generatePassword();
     const data = { email: EmployeeData.mail, password, employee_id: EmployeeData.id, role_id: EmployeeData.emp_role_id };
+
     const genLogin = await authService.createUser(data.email, data.password, data.employee_id, data.role_id);
-    return { success: true, genLogin };
+
+    return { success: true,    status: 201, message: 'User created and linked successfully',
+ data: {name: genLogin.name, email: data.email, password: data.password, userId: genLogin.user_id } };
   },
   sendOtp: async (email) => {
     const user = await User.getUserByEmail(email);
@@ -134,8 +148,19 @@ const authService = {
     await transporter.sendMail({
       from: process.env.SMTP_MAIL,
       to: email,
-      subject: 'password reset',
-      text: `Your OTP is: ${otp}. It is valid for 5 minute.`
+      subject: ' Confirmation code to change your password ',
+      text: `
+      One more step to change your password
+ 
+Hi ${user.name},
+We received your request to change your password. Enter this code in N1 suite:
+${otp}
+Don't share this code with anyone.
+
+Thanks,
+From
+
+Team NAMUVI Technology  `
     });
     return { success: true };
   },
