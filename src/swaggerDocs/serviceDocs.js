@@ -38,6 +38,9 @@
  *         payment_status:
  *           type: integer
  *           default: 1
+ *         followup_date:
+ *           type: string
+ *           format: date
  *         notes:
  *           type: string
  *           example: "Service notes"

@@ -1,6 +1,6 @@
 const ClientModel = require('../models/clientModel');
 const service = require('../services/serviceService');
-const  ServiceModel  = require('../models/serviceModel');
+const ServiceModel = require('../models/serviceModel');
 
 const ClientController = {
     async createClient(req, res, next) {
@@ -8,7 +8,7 @@ const ClientController = {
             const { user_id, name, company_name, mail, phone1, phone2, phone3, gst_num, address, city, state, pincode } = req.body
 
             const count = await ClientModel.getTotalClients()
-           // console.log("count", count)
+            // console.log("count", count)
             const client_id = `CLI000${count + 1}`
             const client_data = { user_id, user_id, name, company_name, client_id, mail, phone1, phone2, phone3, gst_num, address, city, state, pincode }
             const client = await ClientModel.createClient(client_data);
@@ -87,7 +87,7 @@ const ClientController = {
             const clientDashboard = await ClientModel.perClientDashBoard(clientId);
             const invoices = await ClientModel.findByInvoiseclintId(clientId);
             const service = await ServiceModel.getByClientId(clientId);
-            
+
             const clientDashboardDetails = {
                 total_invoice_amount: clientDashboard[0]['SUM(invoice_amount)'] || 0,
                 total_paid_amount: clientDashboard[0]['sum(paid_amount)'] || 0,
@@ -129,14 +129,33 @@ const ClientController = {
             const totalClients = await ClientModel.getTotalClients();
             const pendingPayments = await ClientModel.getPendingPaymentsValue();
             const renewalClients = await service.getUpcomingPayments(30);
+            const upcominngInvoicesFromInvoice = await ClientModel.getUpcomingInvoicesFromInvoice(30);
+            const upcominngInvoicesFromInvoicePayment = await ClientModel.getUpcomingInvoicesfromInvoicePaymentTable(30);
 
-            // const upcomingClientsCount = await ClientModel.upcomingDueClients();
-            // const getRenewalClients = await ClientModel.getRenewalClients();
+            const getUpcomingFollowupFromService = await ServiceModel.getUpcomingFollowupFromService(30);
+            const getUpcomingFollowupFromServicePaymentTable = await ServiceModel.getUpcomingFollowupFromServicePaymentTable(30);
 
+
+            const totalUpcomingInvoiceCount = upcominngInvoicesFromInvoice.invoice_count + upcominngInvoicesFromInvoicePayment.invoice_count;
+            const allUpcomingInvoices = [
+                ...upcominngInvoicesFromInvoice.invoice_details,
+                ...upcominngInvoicesFromInvoicePayment.invoice_details ];
+
+            const upcomingFollowupCount = getUpcomingFollowupFromService.service_count + getUpcomingFollowupFromServicePaymentTable.service_count;
+            const allUpcomingFollowups = [
+                ...getUpcomingFollowupFromService.service_details,
+                ...getUpcomingFollowupFromServicePaymentTable.service_details
+            ];
+            console.log("allUpcomingInvoices", upcomingFollowupCount);
+            console.log("allUpcomingFollowups", allUpcomingFollowups);
             res.status(200).json({
-                total_clients: totalClients ? totalClients : 0,
-                total_pending_payment: pendingPayments.total_pending_payment ? pendingPayments.total_pending_payment : 0,
-                renewal_clients: renewalClients ? renewalClients : 0,
+                Total_clients: totalClients ? totalClients : 0,
+                Total_pending_payment: pendingPayments.total_pending_payment ? pendingPayments.total_pending_payment : 0,
+                Renewal_clients: renewalClients ? renewalClients : 0,
+                Total_upcoming_invoice_count: totalUpcomingInvoiceCount,
+                Upcoming_invoice_details: allUpcomingInvoices,
+                Total_upcoming_followup_count: upcomingFollowupCount,
+                Upcoming_followup_details: allUpcomingFollowups,
                 // upcoming_due_clients: Array.isArray(upcomingClientsCount?.clients) ? upcomingClientsCount.clients.length : 0,
                 // renewalClientsCount: Array.isArray(getRenewalClients?.clients) ? getRenewalClients.clients.length : 0
             });
@@ -146,7 +165,7 @@ const ClientController = {
     },
 
     // Invoice Methods
-// id, user_id, service_name, client_id, invoice_number, invoice_amount, paid_amount, balance_amount, extra_amount, payment_status, payment_method, invoice_date, followup_date, due_date, notes, is_deleted, created_at, updated_at
+    // id, user_id, service_name, client_id, invoice_number, invoice_amount, paid_amount, balance_amount, extra_amount, payment_status, payment_method, invoice_date, followup_date, due_date, notes, is_deleted, created_at, updated_at
     async getTotalInvoice(req, res, next) {
         try {
             const totalInvoice = await ClientModel.getTotalInvoice();
@@ -159,7 +178,7 @@ const ClientController = {
     async createInvoice(req, res, next) {
         try {
             const { user_id, service_name, client_id, invoice_amount, paid_amount,
-                balance_amount, extra_amount, payment_status, payment_method, invoice_date, followup_date, due_date, notes} = req.body;
+                balance_amount, extra_amount, payment_status, payment_method, invoice_date, followup_date, due_date, notes } = req.body;
 
             const count = await ClientModel.getTotalInvoice()
             const invoice_number = `INC000${count + 1}`
@@ -182,23 +201,23 @@ const ClientController = {
             next(error);
         }
     },
- async getInvoicesBetweenDates (req, res, next)  {
-  try {
-    const { start_date, end_date } = req.query;
+    async getInvoicesBetweenDates(req, res, next) {
+        try {
+            const { start_date, end_date } = req.query;
 
-    if (!start_date || !end_date) {
-      return res.status(400).json({ message: 'Start date and end date are required' });
-    }
+            if (!start_date || !end_date) {
+                return res.status(400).json({ message: 'Start date and end date are required' });
+            }
 
-    const result = await ClientModel.getInvoicesBetweenDates(start_date, end_date);
-    if (result.length === 0) {
-      return res.status(404).json({ message: 'No invoices found for the given date range' });
-    }
-    res.status(200).json(result);
-  } catch (error) {
-    next(error);
-  }
-},
+            const result = await ClientModel.getInvoicesBetweenDates(start_date, end_date);
+            if (result.length === 0) {
+                return res.status(404).json({ message: 'No invoices found for the given date range' });
+            }
+            res.status(200).json(result);
+        } catch (error) {
+            next(error);
+        }
+    },
     async findInvoiceById(req, res, next) {
         try {
             const { client_id, invoice_id } = req.params
@@ -242,27 +261,28 @@ const ClientController = {
                 return res.status(404).json({ message: 'Invoice not found' });
             }
             const inoviceAmount = Math.round(invoice_amount * 1.18 * 100) / 100;
-        
-        // const newBalanceAmount = existingInvoice.balance_amount === 0 || existingInvoice.balance_amount === null ? Math.round(invoice_amount * 1.18 * 100) / 100 
-        // : existingInvoice.balance_amount ;
-        // const paidAmount = existingInvoice.paid_amount === 0 || existingInvoice.paid_amount === null ? Math.round(invoice_amount * 1.18 * 100) / 100 
-        // : existingInvoice.paid_amount ;
-    const updatedPayload = { 
-        user_id: user_id,
-        service_name: service_name,
-        client_id: client_id,
-        invoice_amount: inoviceAmount,
-        paid_amount: paid_amount,
-        balance_amount: balance_amount,
-        extra_amount: extra_amount,
-        payment_status: payment_status,
-        payment_method: payment_method,
-        invoice_date: invoice_date,
-        followup_date: followup_date,
-        due_date: due_date,
-        notes: notes };
-        console.log("updatedPayload", updatedPayload)
-            const affectedRows = await ClientModel.update(req.params.id,updatedPayload);
+
+            // const newBalanceAmount = existingInvoice.balance_amount === 0 || existingInvoice.balance_amount === null ? Math.round(invoice_amount * 1.18 * 100) / 100 
+            // : existingInvoice.balance_amount ;
+            // const paidAmount = existingInvoice.paid_amount === 0 || existingInvoice.paid_amount === null ? Math.round(invoice_amount * 1.18 * 100) / 100 
+            // : existingInvoice.paid_amount ;
+            const updatedPayload = {
+                user_id: user_id,
+                service_name: service_name,
+                client_id: client_id,
+                invoice_amount: inoviceAmount,
+                paid_amount: paid_amount,
+                balance_amount: balance_amount,
+                extra_amount: extra_amount,
+                payment_status: payment_status,
+                payment_method: payment_method,
+                invoice_date: invoice_date,
+                followup_date: followup_date,
+                due_date: due_date,
+                notes: notes
+            };
+            console.log("updatedPayload", updatedPayload)
+            const affectedRows = await ClientModel.update(req.params.id, updatedPayload);
             if (affectedRows === 0) {
                 return res.status(404).json({ message: 'Invoice not found or no changes made' });
             }
@@ -313,7 +333,7 @@ const ClientController = {
     async recordEMIPayment(req, res, next) {
         try {
             const invoice_id = parseInt(req.params.invoice_id);
-            const { user_id, client_id, paid_amount, payment_date, payment_method, payment_status,followup_date, notes } = req.body;
+            const { user_id, client_id, paid_amount, payment_date, payment_method, payment_status, followup_date, notes } = req.body;
             // Step 1: Fetch invoice
             const invoice = await ClientModel.getInvoiceById(invoice_id);
             console.log("invoice", invoice)
@@ -324,7 +344,7 @@ const ClientController = {
             const currentPaid = Number(invoice.paid_amount);
             const newTotalPaid = currentPaid + Number(paid_amount);
             const balanceAmount = invoice.balance_amount - paid_amount;
-console.log({"invoiceAmount" :invoiceAmount, "currentPaid": currentPaid, "newTotalPaid": newTotalPaid, "balanceAmount": balanceAmount})
+            console.log({ "invoiceAmount": invoiceAmount, "currentPaid": currentPaid, "newTotalPaid": newTotalPaid, "balanceAmount": balanceAmount })
             // let extra_amount = 0;
             // if (balanceAmount < 0) {
             //     extra_amount = Math.abs(balanceAmount);
@@ -346,9 +366,9 @@ console.log({"invoiceAmount" :invoiceAmount, "currentPaid": currentPaid, "newTot
 
             if ([1, 2, 3].includes(Number(payment_status))) {
                 console.log(payment_status)
-               // const newStatusId = paidAmount <= service.service_amount ? 2 : 3; //1 = unpaid, 2 = partial, 3 = paid
-                const newStatusId =newTotalPaid === 0 ? 1 : newTotalPaid < invoice.invoice_amount ? 2 : 3 ;
-console.log(newStatusId)
+                // const newStatusId = paidAmount <= service.service_amount ? 2 : 3; //1 = unpaid, 2 = partial, 3 = paid
+                const newStatusId = newTotalPaid === 0 ? 1 : newTotalPaid < invoice.invoice_amount ? 2 : 3;
+                console.log(newStatusId)
                 const updateInvoiseData = {
                     paid_amount: newTotalPaid,
                     balance_amount: balanceAmount,

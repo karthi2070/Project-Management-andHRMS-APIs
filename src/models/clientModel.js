@@ -24,28 +24,28 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     const [clients] = await pool.query(sql, [id]);
     return clients[0] || null;
   },
-    async perClientDashBoard(id) {
+  async perClientDashBoard(id) {
     const sql = `SELECT SUM(invoice_amount),sum(balance_amount),sum(paid_amount) FROM invoice_tbl where client_id = ?`;
     const [clients] = await pool.query(sql, [id]);
     return clients;
   },
-async updateClient(
-  id , user_id, name, company_name, mail,
-  phone1, phone2, phone3, gst_num,
-  address, city, state, pincode
-) {
-  const sql = `UPDATE client_tbl 
+  async updateClient(
+    id, user_id, name, company_name, mail,
+    phone1, phone2, phone3, gst_num,
+    address, city, state, pincode
+  ) {
+    const sql = `UPDATE client_tbl 
     SET user_id=?, name=?, company_name=?, mail=?, phone1=?, phone2=?, phone3=?, 
         gst_num=?, address=?, city=?, state=?, pincode=?, updated_at = NOW()
     WHERE id=? AND is_deleted = 0  `;
 
-  const [result] = await pool.query(sql, [
-    user_id, name, company_name, mail,
-    phone1, phone2, phone3, gst_num,
-    address, city, state, pincode, id 
-  ]);
-  return result.affectedRows > 0;
-},
+    const [result] = await pool.query(sql, [
+      user_id, name, company_name, mail,
+      phone1, phone2, phone3, gst_num,
+      address, city, state, pincode, id
+    ]);
+    return result.affectedRows > 0;
+  },
 
   async softDeleteClient(id) {
     const sql = `UPDATE client_tbl SET is_deleted = 1 WHERE id = ?`;
@@ -59,7 +59,7 @@ async updateClient(
     return rows[0].count;
   },
 
-  // 2. Total pending payments (balance > 0)
+  // ******************************** client payments filtering and operations  ********************************
   async getPendingPaymentsValue() {
     const sql = ` SELECT SUM(balance_amount) AS total_pending_payment
       FROM invoice_tbl
@@ -68,78 +68,87 @@ async updateClient(
     return rows[0];
   },
 
-  async upcomingDueClients() {
-    const sql = ` WITH upcoming_clients AS (
-  SELECT DISTINCT client_id
+  async getUpcomingInvoicesFromInvoice(days = 30) {
+    const sql = `WITH upcoming_invoices AS (
+  SELECT id
   FROM invoice_tbl
-  WHERE is_deleted = 0
-    AND balance_amount <> 0
-    AND due_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + INTERVAL 30 DAY
-)
-
-SELECT 
-  COUNT(*) AS upcoming_due_clients_count,
-  JSON_ARRAYAGG(client_id) AS upcoming_due_clients_ids
-FROM upcoming_clients; `
-    const [rows] = await pool.query(sql);
-    // console.log("upcoming due clients", rows[0])
-    const upcoming_due_clients_count = rows[0].upcoming_due_clients_count;
-    const client_ids = rows[0].upcoming_due_clients_ids;
-  // If no clients found, return empty
-  if (!client_ids || client_ids.length === 0) {
-    return [];
-  }
-
-  // Query client details for the given IDs
-  const clientQuery = ` SELECT service_name, client_id, invoice_number, invoice_amount, paid_amount, balance_amount,followup_date FROM invoice_tbl 
-   WHERE id IN (${client_ids.map(() => '?').join(',')})    AND is_deleted = 0 `;
-  const [clients] = await pool.query(clientQuery, client_ids);
-  // console.log(upcoming_due_clients_count, clients)
-  return { upcoming_due_clients_count, clients };
-  },
-
-  async getRenewalClients() {
-    const sql = `WITH clients_renewal AS (
-  SELECT DISTINCT client_id
-  FROM invoice_tbl
-  WHERE is_deleted = 0
-    AND followup_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + INTERVAL 30 DAY
+  WHERE is_deleted = 0 AND paid_amount = 0
+    AND followup_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + INTERVAL ? DAY
 )
 SELECT 
-  COUNT(*) AS renewal_clients_count,
-  JSON_ARRAYAGG(client_id) AS clients_renewal_id
-FROM clients_renewal; `
-    const [rows] = await pool.query(sql);
-    // console.log("clients_renewal ", rows[0])
-    const  renewal_clients_count = rows[0]. renewal_clients_count;
-    const client_ids = rows[0].clients_renewal_id;
-  // If no clients found, return empty
-  if (!client_ids || client_ids.length === 0) {
-    return [];
-  }
-//id, user_id, service_name, client_id, invoice_number, invoice_amount, paid_amount, balance_amount, extra_amount, status_id, invoice_date, followup_date, service_renewal_date, payment_method, notes, is_deleted, created_at, updated_at
-  // Query client details for the given IDs
-  const clientQuery = ` SELECT service_name, client_id, invoice_number, service_renewal_date
-   FROM invoice_tbl  WHERE balance_amount <> 0 AND client_id  IN (${client_ids.map(() => '?').join(',')})    AND is_deleted = 0 `;
-  const [clients] = await pool.query(clientQuery, client_ids);
-  // console.log(renewal_clients_count, clients)
-  return { renewal_clients_count, clients };
+  COUNT(*) AS upcoming_invoice_count,
+  JSON_ARRAYAGG(id) AS upcoming_invoice_ids
+FROM upcoming_invoices;`
+    const [rows] = await pool.query(sql, [days]);
+    console.log("upcoming_invoice", rows[0])
+    const upcoming_invoice_count = rows[0].upcoming_invoice_count;
+    const upcoming_invoice_ids = rows[0].upcoming_invoice_ids;
+    // If no clients found, return empty
+    if (!upcoming_invoice_ids || upcoming_invoice_ids.length === 0) {
+      return [];
+    }
+    const clientQuery = ` SELECT i.id,c.name AS client_name,c.client_id, c.company_name, i.service_name, i.client_id, i.invoice_number,
+     i.invoice_amount, i.paid_amount, i.balance_amount, i.payment_status
+   FROM invoice_tbl as i
+   join client_tbl as c on i.client_id = c.id
+   WHERE i.id IN (${upcoming_invoice_ids.map(() => '?').join(',')}) AND i.is_deleted = 0
+ `;
+    const [invoiceDetails] = await pool.query(clientQuery, upcoming_invoice_ids);
+      return {
+    source: 'invoice_tbl',
+    invoice_count: upcoming_invoice_count,
+    invoice_details: invoiceDetails
+  };
   },
 
-  async getTotalInvoice() {
-    const sql = `SELECT COUNT(*) AS count FROM invoice_tbl  WHERE is_deleted = 0 `
-    const [rows] = await pool.query(sql);
-    return rows[0].count;
+  async getUpcomingInvoicesfromInvoicePaymentTable(days =30) {
+    const sql = `WITH upcoming_invoices AS (
+  SELECT id
+  FROM invoice_payment_tbl
+  WHERE is_deleted = 0
+    AND followup_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + INTERVAL ? DAY
+)
+SELECT 
+  COUNT(*) AS upcoming_invoice_count,
+  JSON_ARRAYAGG(id) AS upcoming_invoice_ids
+FROM upcoming_invoices;`
+    const [rows] = await pool.query(sql,[days]);
+    console.log("upcoming_invoice", rows[0])
+    const upcoming_invoice_count = rows[0].upcoming_invoice_count;
+    const upcoming_invoice_ids = rows[0].upcoming_invoice_ids;
+    // If no clients found, return empty
+    if (!upcoming_invoice_ids || upcoming_invoice_ids.length === 0) {
+      return [];
+    }
+    const clientQuery = ` SELECT c.name AS client_name,c.client_id, c.company_name,
+    i.id, i.service_name, i.client_id, i.invoice_number,i.invoice_amount, i.paid_amount, i.balance_amount, i.payment_status,
+    ip.id as invoice_payment_id, ip.client_id, ip.invoice_id,ip.followup_date
+
+   FROM invoice_payment_tbl as ip
+   join invoice_tbl as i on ip.invoice_id = i.id
+   join client_tbl as c on ip.client_id = c.id
+   WHERE ip.id IN (${upcoming_invoice_ids.map(() => '?').join(',')}) AND ip.is_deleted = 0
+ `;
+    const [invoiceDetails] = await pool.query(clientQuery, upcoming_invoice_ids);
+
+      return {
+    source: 'invoice_payment_tbl',
+    invoice_count: upcoming_invoice_count,
+    invoice_details: invoiceDetails
+  };
   },
 
+
+
+  // invoice operations
   async createInvoice(invoice) {
-// id, user_id, service_name, client_id, invoice_number, invoice_amount, paid_amount, balance_amount, extra_amount, payment_status, payment_method, invoice_date, followup_date, due_date, notes, is_deleted, created_at, updated_at
+    // id, user_id, service_name, client_id, invoice_number, invoice_amount, paid_amount, balance_amount, extra_amount, payment_status, payment_method, invoice_date, followup_date, due_date, notes, is_deleted, created_at, updated_at
     const query = `
     INSERT INTO invoice_tbl
     (user_id,service_name,client_id, invoice_number, invoice_amount, paid_amount, balance_amount,  extra_amount, payment_status, payment_method,  invoice_date, followup_date,due_date, notes)
     VALUES ( ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?);`;
     const invoiceAmount = Math.round(invoice.invoice_amount * 1.18 * 100) / 100;
-    const balanceAmount =  Math.round(invoice.invoice_amount * 1.18 * 100) / 100;
+    const balanceAmount = Math.round(invoice.invoice_amount * 1.18 * 100) / 100;
 
     const values = [
       invoice.user_id, invoice.service_name, invoice.client_id,
@@ -152,7 +161,7 @@ FROM clients_renewal; `
       invoice.payment_method,
       invoice.invoice_date,
       invoice.followup_date,
-      invoice.due_date ,
+      invoice.due_date,
       invoice.notes
     ];
 
@@ -172,7 +181,7 @@ FROM clients_renewal; `
       invoice.user_id,
       invoice.service_name,
       invoice.client_id,
-      invoice.invoice_amount ,
+      invoice.invoice_amount,
       invoice.paid_amount,
       invoice.balance_amount,
       invoice.extra_amount,
@@ -194,16 +203,18 @@ FROM clients_renewal; `
     const [rows] = await pool.query(query);
     return rows;
   },
-getInvoicesBetweenDates: async (start_date, end_date) => {
-     const query = ` SELECT i.*, c.name AS client_name, c.company_name
+  getInvoicesBetweenDates: async (start_date, end_date) => {
+    const query = ` SELECT i.*, c.name AS client_name, c.company_name
     FROM invoice_tbl i
     JOIN client_tbl c ON i.client_id = c.id
-      WHERE invoice_date BETWEEN ? AND ? AND i.
-      
-      
-      is_deleted = 0`;
-     const [rows] = await pool.query(query,[start_date, end_date] );
+      WHERE invoice_date BETWEEN ? AND ? AND i.is_deleted = 0`;
+    const [rows] = await pool.query(query, [start_date, end_date]);
     return rows;
+  },
+  async getTotalInvoice() {
+    const sql = `SELECT COUNT(*) AS count FROM invoice_tbl  WHERE is_deleted = 0 `
+    const [rows] = await pool.query(sql);
+    return rows[0].count;
   },
   async findById(client_id, invoice_id) {
     const query = `SELECT * FROM invoice_tbl WHERE client_id = ? AND id = ? AND is_deleted = 0 `
@@ -227,16 +238,17 @@ getInvoicesBetweenDates: async (start_date, end_date) => {
     const [result] = await pool.query(query, [id]);
     return result.affectedRows;
   },
+
   // insert EMI payment
 
   async insertPayment(data) {
-    const { user_id, client_id, invoice_id, paid_amount, payment_date, payment_method, payment_status,followup_date, notes  } = data;
-    const query= `INSERT INTO invoice_payment_tbl 
+    const { user_id, client_id, invoice_id, paid_amount, payment_date, payment_method, payment_status, followup_date, notes } = data;
+    const query = `INSERT INTO invoice_payment_tbl 
        (user_id,client_id, invoice_id, paid_amount,payment_date, payment_method, payment_status,followup_date, notes)
-       VALUES (?,?, ?, ?, ?, ?, ?, ?, ?)` 
+       VALUES (?,?, ?, ?, ?, ?, ?, ?, ?)`
     const values = [
-      user_id, client_id, invoice_id, paid_amount, payment_date, payment_method, payment_status,followup_date, notes,  ];
-    const [result] = await pool.query(query,values);
+      user_id, client_id, invoice_id, paid_amount, payment_date, payment_method, payment_status, followup_date, notes,];
+    const [result] = await pool.query(query, values);
     return result;
   },
 
@@ -264,12 +276,12 @@ getInvoicesBetweenDates: async (start_date, end_date) => {
 
   async updateInvoiceTotals(updateInvoiseData) {
 
-    const {  paid_amount, balance_amount, payment_status, id } = updateInvoiseData
+    const { paid_amount, balance_amount, payment_status, id } = updateInvoiseData
 
     const query = `UPDATE invoice_tbl 
        SET paid_amount = ?, balance_amount = ?,  payment_status = ?
        WHERE id = ? AND is_deleted = 0`
-    const [result] = await pool.query(query, [ paid_amount, balance_amount, payment_status, id]
+    const [result] = await pool.query(query, [paid_amount, balance_amount, payment_status, id]
     );
     return result;
   }

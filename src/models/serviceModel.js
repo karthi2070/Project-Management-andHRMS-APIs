@@ -5,8 +5,8 @@ const serviceModel = {
 
     //id, user_id, client_id, service_name, from_date, to_date, service_amount, paid_amount, balance_amount, payment_status, notes
     const sql = `INSERT INTO service_tbl 
-      (user_id ,client_id, service_name, from_date, to_date,service_amount, paid_amount, balance_amount, payment_status,notes) 
-      VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+      (user_id ,client_id, service_name, from_date, to_date,service_amount, paid_amount, balance_amount, payment_status, followup_date,notes) 
+      VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
       
     const serviceAmountWithTax = data.service_amount * 1.18;
     const balanceAmount= data.service_amount * 1.18 - data.paid_amount;
@@ -22,6 +22,7 @@ const serviceModel = {
       data.paid_amount,
       balanceAmount,
       data.payment_status || 1,
+      data.followup_date,
       data.notes ]);
     console.log(result);
     return { id: result.insertId };
@@ -38,7 +39,7 @@ console.log(updateServiceData)
   },
   async update(id, data) {
     const sql = `UPDATE service_tbl SET 
-      user_id = ?, client_id = ?, service_name = ?, from_date = ?, to_date = ?,service_amount=?, paid_amount=?, balance_amount=?, payment_status = ? ,notes = ?
+      user_id = ?, client_id = ?, service_name = ?, from_date = ?, to_date = ?,service_amount=?, paid_amount=?, balance_amount=?, payment_status = ? ,followup_date = ?, notes = ?
       WHERE id = ? AND is_deleted = 0`;
       const serviceAmountWithTax = data.service_amount * 1.18;
       const balanceAmount= data.service_amount * 1.18 - data.paid_amount;
@@ -53,6 +54,7 @@ console.log(updateServiceData)
       data.paid_amount,
       balanceAmount,
       data.payment_status,
+      data.followup_date,
       data.notes ,
       id
     ]);
@@ -80,14 +82,7 @@ console.log(updateServiceData)
     const [rows] = await db.execute(sql, [clientId]);
     return rows;
   },
-  //  async getInvoiceById(invoice_id) {
-  //   const [rows] = await pool.query(
-  //     `SELECT id, invoice_amount, paid_amount FROM invoice_tbl 
-  //      WHERE id = ? AND is_deleted = 0`,
-  //     [invoice_id]
-  //   );
-  //   return rows[0];
-  // },
+
   async getById(id) {
     const sql = `SELECT * FROM service_tbl WHERE id = ? AND is_deleted = 0`;
     const [rows] = await db.execute(sql, [id]);
@@ -143,6 +138,85 @@ async getUpcomingServiceDetails (days) {
   return rows;
 },
 
+ async getUpcomingFollowupFromService(days = 30) {
+    const sql = `WITH upcoming_followups AS (
+  SELECT id
+  FROM service_tbl
+  WHERE is_deleted = 0 AND paid_amount = 0
+    AND followup_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + INTERVAL ? DAY
+)
+SELECT 
+  COUNT(*) AS upcoming_followup_count,
+  JSON_ARRAYAGG(id) AS upcoming_followup_ids
+FROM upcoming_followups;`
+    const [rows] = await db.query(sql, [days]);
+    console.log("upcoming_followup", rows[0])
+    const upcoming_followup_count = rows[0].upcoming_followup_count;
+    const upcoming_followup_ids = rows[0].upcoming_followup_ids;
+    // If no clients found, return empty
+    if (!upcoming_followup_ids || upcoming_followup_ids.length === 0) {
+      return {
+        source: 'service_tbl',
+        service_count: 0,
+        service_details: []
+      };
+    }
+
+    const clientQuery = ` SELECT c.id,c.name AS client_name,c.client_id, c.company_name,
+    s.id, s.service_name, s.client_id, s.from_date, s.to_date, s.service_amount,s.paid_amount, s.balance_amount, s.payment_status,s.followup_date
+   FROM service_tbl as s
+   join client_tbl as c on s.client_id = c.id
+   WHERE s.id IN (${upcoming_followup_ids.map(() => '?').join(',')})
+ `;
+    const [serviceDetails] = await db.query(clientQuery, upcoming_followup_ids);
+      return {
+    source: 'service_tbl',
+    service_count: upcoming_followup_count,
+    service_details: serviceDetails
+  };
+  },
+
+  async getUpcomingFollowupFromServicePaymentTable(days =30) {
+  
+    const sql = `WITH upcoming_followups AS (
+  SELECT id
+  FROM service_payment_tbl
+  WHERE is_deleted = 0 
+    AND followup_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + INTERVAL ? DAY
+)
+SELECT 
+  COUNT(*) AS upcoming_followup_count,
+  JSON_ARRAYAGG(id) AS upcoming_followup_ids
+FROM upcoming_followups`
+    const [rows] = await db.query(sql,[days]);
+    console.log("upcoming_followup", rows[0])
+    const upcoming_followup_count = rows[0].upcoming_followup_count;
+    const upcoming_followup_ids = rows[0].upcoming_followup_ids;
+    // If no clients found, return empty
+    if (!upcoming_followup_ids || upcoming_followup_ids.length === 0) {
+      return {
+          source: 'service_payment_tbl',
+          service_count: 0,
+          service_details: []
+        };
+    }
+    const clientQuery = ` SELECT c.id as client_id, c.name AS client_name,c.client_id, c.company_name,
+    s.id as service_id , s.service_name, s.client_id,s.service_amount, s.paid_amount, s.balance_amount, s.payment_status,
+    sp.id as service_payment_id, sp.client_id, sp.followup_date
+
+   FROM service_payment_tbl as sp
+   join service_tbl as s on sp.service_id = s.id
+   join client_tbl as c on sp.client_id = c.id
+   WHERE sp.id IN (${upcoming_followup_ids.map(() => '?').join(',')}) 
+ `;
+    const [serviceDetails] = await db.query(clientQuery, upcoming_followup_ids);
+
+      return {
+    source: 'service_payment_tbl',
+    service_count: upcoming_followup_count,
+    service_details: serviceDetails
+  };
+  },
 
 //
   async insertServicePayment(data) {
