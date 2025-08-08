@@ -32,7 +32,7 @@ const employeeInfo = result[0];
 const gross_salary = Number(employeeInfo.salary);
 
 // Map components
-const components = result.map(row => ({
+const component = result.map(row => ({
   component_id: row.component_id,
   Component_name: row.component_name,
   Component_type: row.component_type,
@@ -40,6 +40,10 @@ const components = result.map(row => ({
   amount_type: row.amount_type
 }));
 
+const components = Array.from(
+  new Map(component.map(c => [c.component_id, c])).values()
+);
+// console.log("Unique Components:", components);
 const earnings = [];
 const deductions = [];
 const earningsMap = {};
@@ -48,13 +52,15 @@ let total_deductions = 0;
 // 🔹 Step 1: Split earnings
 const fixedEarnings = components.filter(c => c.Component_type === 1 && c.amount_type === 2); // fixed ₹
 const percentEarnings = components.filter(c => c.Component_type === 1 && c.amount_type === 1); // % based
+console.log("Fixed Earnings:", fixedEarnings);
+console.log("Percentage Earnings:", percentEarnings);
 
 // 🔹 Step 2: Total fixed earnings
 const total_fixed_earning = fixedEarnings.reduce((sum, c) => sum + c.Component_value, 0);
 
 // 🔹 Step 3: Validate % total and normalize
 const total_percent_value = percentEarnings.reduce((sum, c) => sum + c.Component_value, 0);
-
+console.log("Total Percentage Value:", total_percent_value);
 if (Math.round(total_percent_value * 100) / 100 !== 100) {
   throw new Error(`Earning percentage-based components must total 100%. Got: ${total_percent_value}%`);
 }
