@@ -146,8 +146,6 @@ const ClientController = {
                 ...getUpcomingFollowupFromService.service_details,
                 ...getUpcomingFollowupFromServicePaymentTable.service_details
             ];
-            console.log("allUpcomingInvoices", upcomingFollowupCount);
-            console.log("allUpcomingFollowups", allUpcomingFollowups);
             res.status(200).json({
                 Total_clients: totalClients ? totalClients : 0,
                 Total_pending_payment: pendingPayments.total_pending_payment ? pendingPayments.total_pending_payment : 0,
@@ -155,9 +153,7 @@ const ClientController = {
                 Total_upcoming_invoice_count: totalUpcomingInvoiceCount,
                 Upcoming_invoice_details: allUpcomingInvoices,
                 Total_upcoming_followup_count: upcomingFollowupCount,
-                Upcoming_followup_details: allUpcomingFollowups,
-                // upcoming_due_clients: Array.isArray(upcomingClientsCount?.clients) ? upcomingClientsCount.clients.length : 0,
-                // renewalClientsCount: Array.isArray(getRenewalClients?.clients) ? getRenewalClients.clients.length : 0
+                Upcoming_followup_details: allUpcomingFollowups, 
             });
         } catch (error) {
             next(error);

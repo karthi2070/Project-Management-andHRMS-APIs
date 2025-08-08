@@ -129,7 +129,6 @@ async getUpcomingServiceDetails (days) {
     JOIN service_tbl s ON sp.service_id = s.id
     JOIN client_tbl c ON sp.client_id = c.id
     WHERE sp.is_deleted = 0
-      AND sp.payment_status = 2
       AND sp.followup_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + INTERVAL ? DAY
       ORDER BY sp.followup_date ASC;
   `;
@@ -167,6 +166,7 @@ FROM upcoming_followups;`
    FROM service_tbl as s
    join client_tbl as c on s.client_id = c.id
    WHERE s.id IN (${upcoming_followup_ids.map(() => '?').join(',')})
+   ORDER BY s.followup_date ASC
  `;
     const [serviceDetails] = await db.query(clientQuery, upcoming_followup_ids);
       return {
@@ -208,6 +208,7 @@ FROM upcoming_followups`
    join service_tbl as s on sp.service_id = s.id
    join client_tbl as c on sp.client_id = c.id
    WHERE sp.id IN (${upcoming_followup_ids.map(() => '?').join(',')}) 
+   ORDER BY sp.followup_date ASC
  `;
     const [serviceDetails] = await db.query(clientQuery, upcoming_followup_ids);
 
