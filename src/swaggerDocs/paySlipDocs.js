@@ -112,6 +112,94 @@
 
 /**
  * @swagger
+ * /api/v1/payslip/templates/update-salary-template/{template_id}:
+ *   put:
+ *     summary: Update a salary template with components
+ *     description: Updates a salary template and its associated components by template ID.
+ *     tags:
+ *       - Templates
+ *     parameters:
+ *       - in: path
+ *         name: template_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID of the salary template to update
+ *         example: 1
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - template
+ *               - components
+ *             properties:
+ *               template:
+ *                 type: object
+ *                 required:
+ *                   - template_name
+ *                   - total_percentage
+ *                 properties:
+ *                   template_name:
+ *                     type: string
+ *                     example: Software Engineer
+ *                   total_percentage:
+ *                     type: number
+ *                     example: 100
+ *               components:
+ *                 type: array
+ *                 description: List of earnings and deduction components
+ *                 items:
+ *                   type: object
+ *                   required:
+ *                     - component_name
+ *                     - component_type
+ *                     - component_value
+ *                     - amount_type
+ *                   properties:
+ *                     component_name:
+ *                       type: string
+ *                       example: Basic
+ *                     component_type:
+ *                       type: integer
+ *                       enum: [1, 2]
+ *                       description: "1 = Earning, 2 = Deduction"
+ *                       example: 1
+ *                     component_value:
+ *                       type: number
+ *                       example: 40
+ *                     amount_type:
+ *                       type: integer
+ *                       enum: [1, 2]
+ *                       description: "1 = Percentage, 2 = Fixed amount"
+ *                       example: 1
+ *     responses:
+ *       200:
+ *         description: Template updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Template updated successfully
+ *       400:
+ *         description: Invalid request data
+ *       404:
+ *         description: Template not found
+ *       500:
+ *         description: Internal server error
+ */
+
+
+/**
+ * @swagger
  * /api/v1/payslip/templates/get-all:
  *   get:
  *     summary: Get template by ID

@@ -7,7 +7,6 @@ const ClientModel = {
     const sql = `INSERT INTO client_tbl 
 (user_id, name, company_name, client_id, mail, phone1, phone2, phone3, gst_num, address, city, state, pincode) 
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    console.log(data)
     const values = [user_id, name, company_name, client_id, mail, phone1, phone2, phone3, gst_num, address, city, state, pincode]
     const [result] = await pool.query(sql, values);
     return { id: result.insertId, ...data };
@@ -80,7 +79,7 @@ SELECT
   JSON_ARRAYAGG(id) AS upcoming_invoice_ids
 FROM upcoming_invoices;`
     const [rows] = await pool.query(sql, [days]);
-    console.log("upcoming_invoice", rows[0])
+    // console.log("upcoming_invoice", rows[0])
     const upcoming_invoice_count = rows[0].upcoming_invoice_count;
     const upcoming_invoice_ids = rows[0].upcoming_invoice_ids;
     // If no clients found, return empty
@@ -114,7 +113,7 @@ SELECT
   JSON_ARRAYAGG(id) AS upcoming_invoice_ids
 FROM upcoming_invoices;`
     const [rows] = await pool.query(sql,[days]);
-    console.log("upcoming_invoice", rows[0])
+    // console.log("upcoming_invoice", rows[0])
     const upcoming_invoice_count = rows[0].upcoming_invoice_count;
     const upcoming_invoice_ids = rows[0].upcoming_invoice_ids;
     // If no clients found, return empty
@@ -171,7 +170,7 @@ FROM upcoming_invoices;`
     return result.insertId;
   },
   async update(id, invoice) {
-    console.log("update invoice", invoice)
+    // console.log("update invoice", invoice)
     const query = `
     UPDATE invoice_tbl 
     SET user_id=?,service_name=?, client_id=?, invoice_amount=?, paid_amount=?, balance_amount=?, extra_amount=?,

@@ -124,6 +124,11 @@
  *   get:
  *     summary: Get  clients dash board
  *     tags: [Client]
+ *     parameters:
+ *       - in: query
+ *         name: days
+ *         schema:
+ *           type: integer
  *     responses:
  *       200:
  *         description: Client dashboard data

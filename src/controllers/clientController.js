@@ -126,14 +126,15 @@ const ClientController = {
 
     async getClientDashboard(req, res, next) {
         try {
+            const days = req.query.days || 30; // Default to 30 days if not provided
             const totalClients = await ClientModel.getTotalClients();
             const pendingPayments = await ClientModel.getPendingPaymentsValue();
-            const renewalClients = await service.getUpcomingPayments(30);
-            const upcominngInvoicesFromInvoice = await ClientModel.getUpcomingInvoicesFromInvoice(30);
-            const upcominngInvoicesFromInvoicePayment = await ClientModel.getUpcomingInvoicesfromInvoicePaymentTable(30);
+            const renewalClients = await service.getUpcomingPayments(days);
+            const upcominngInvoicesFromInvoice = await ClientModel.getUpcomingInvoicesFromInvoice(days);
+            const upcominngInvoicesFromInvoicePayment = await ClientModel.getUpcomingInvoicesfromInvoicePaymentTable(days);
 
-            const getUpcomingFollowupFromService = await ServiceModel.getUpcomingFollowupFromService(30);
-            const getUpcomingFollowupFromServicePaymentTable = await ServiceModel.getUpcomingFollowupFromServicePaymentTable(30);
+            const getUpcomingFollowupFromService = await ServiceModel.getUpcomingFollowupFromService(days);
+            const getUpcomingFollowupFromServicePaymentTable = await ServiceModel.getUpcomingFollowupFromServicePaymentTable(days);
 
 
             const totalUpcomingInvoiceCount = upcominngInvoicesFromInvoice.invoice_count + upcominngInvoicesFromInvoicePayment.invoice_count;

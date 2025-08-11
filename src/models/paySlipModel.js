@@ -1,14 +1,12 @@
 const pool = require('../config/db');
-const attendanceModel = require('../models/attendanceModel');
-const leaveModel = require('../models/leaveModel')
 
 const salarySlipsModel = {
 
-  async getAllComponentsByTemplateId(template_id) {
+  async getAllComponentsByTemplateId(template_id,conn =pool) {
     const sql = `SELECT id, template_id, component_name, component_type, component_value, amount_type
                  FROM salary_components 
                  WHERE template_id = ? AND is_deleted = 0`;
-    const [result] = await pool.query(sql, [template_id]);
+    const [result] = await conn.query(sql, [template_id]);
     return result;
   },
 
@@ -22,7 +20,7 @@ async insertComponents(components) {
   return { insert_id: result.insertId };
 },
 
-  async updateComponent(id, data) {
+  async updateComponent(id, data, conn = pool) {
     const sql = `UPDATE salary_components
                  SET component_name =? , component_type = ?, component_value= ?, amount_type = ?
                  WHERE id = ? AND is_deleted = 0`;
@@ -33,16 +31,69 @@ async insertComponents(components) {
       data.amount_type,
       id
     ];
-    const [result] = await pool.query(sql, values);
+    const [result] = await conn.query(sql, values);
     return { changedRows: result.changedRows };
   },
 
-  async softDeleteComponent(id) {
+  async softDeleteComponent(id, conn = pool) {
     const sql = `UPDATE salary_components SET is_deleted = 1, updated_at = CURRENT_TIMESTAMP WHERE id = ?`;
     const values = [id];
-    const [result] = await pool.query(sql, values);
+    const [result] = await conn.query(sql, values);
     return { affectedRows: result.affectedRows };
   },
+
+  updateComponent: async (conn, comp) => {
+  const sql = `
+    UPDATE salary_components
+    SET component_name = ?, 
+        component_type = ?, 
+        component_value = ?, 
+        amount_type = ?, 
+        updated_at = CURRENT_TIMESTAMP
+    WHERE id = ? AND is_deleted = 0
+  `;
+
+  const values = [
+    comp.component_name,
+    comp.component_type,
+    comp.component_value,
+    comp.amount_type,
+    comp.id
+  ];
+
+  const [result] = await conn.query(sql, values);
+  return { changedRows: result.changedRows };
+},
+async insertComponent (conn, comp)  {
+  const sql = `
+    INSERT INTO salary_components
+    (template_id, component_name, component_type, component_value, amount_type)
+    VALUES (?, ?, ?, ?, ?)  `;
+
+  const values = [
+    comp.template_id,
+    comp.component_name,
+    comp.component_type,
+    comp.component_value,
+    comp.amount_type
+  ];
+
+  const [result] = await conn.query(sql, values);
+  return { insertId: result.insertId };
+},
+
+async softDeleteComponent (conn, compId)  {
+  const sql = `
+    UPDATE salary_components
+    SET is_deleted = 1, updated_at = CURRENT_TIMESTAMP
+    WHERE id = ?
+  `;
+
+  const values = [compId];
+  const [result] = await conn.query(sql, values);
+  return { changedRows: result.changedRows };
+},
+
 
   //templates
   async getAllTemplates() {
@@ -65,7 +116,7 @@ async insertComponents(components) {
     const sql = `select t.id,t.template_name,t.total_percentage, c.id, c.template_id, c.component_name, c.component_type, c.component_value, c.amount_type
     from salary_templates as t
     left join salary_components as c on t.id = c.template_id
-    where t.id = ? ;`;
+    where t.id = ? and c.is_deleted = 0;`;
     const values = [id];
     const [rows] = await pool.query(sql, values);
 
@@ -94,18 +145,19 @@ async insertComponents(components) {
     return { id: result.insertId, template_name, total_percentage };
   }
   ,
-  async updateTemplate(id, data) {
+  async updateTemplate(id, data, conn=pool) {
     const sql = `UPDATE salary_templates
                  SET template_name = ?, total_percentage = ?, updated_at = CURRENT_TIMESTAMP
-                 WHERE id = ? AND is_deleted = 0`;
+                 WHERE id = ? AND is_deleted = 0    `;
+
     const values = [data.template_name, data.total_percentage, id];
-    const [result] = await pool.query(sql, values);
+    const [result] = await conn.query(sql, values);
     return { changedRows: result.changedRows };
   },
 
-  async softDeleteTemplate(id) {
+  async softDeleteTemplate(id, conn = pool) {
     const sql = `UPDATE salary_templates SET is_deleted = 1, updated_at = CURRENT_TIMESTAMP WHERE id = ?`;
-    const [result] = await pool.query(sql, [id]);
+    const [result] = await conn.query(sql, [id]);
     return { affectedRows: result.affectedRows };
   },
 

@@ -1,12 +1,12 @@
 const EmployeeModel = require('../models/empolyeeModel');
 const paySlipModel = require('../models/paySlipModel');
 const PayslipService =require('../services/payslipService')
-
+const db = require('../config/db');
 const PayslipController = {
 
   async createPayslipTemplateWithComponents(req, res) {
     try {
-      const { template, components } = req.body;
+      const { id, template, components } = req.body;
 
       // Validate
       if (!template || !components || !Array.isArray(components)) {
@@ -51,10 +51,27 @@ const PayslipController = {
     }
   },
 
+async updateTemplateWithComponents  (req, res) {
+  try {
+    const { template_id } = req.params;
+    const { template, components } = req.body;
+    // console.log("Updating Template ID:", template_id, "with components:", components, template, req.body);
+    if (!template_id) {
+      return res.status(400).json({ success: false, message: "Template ID required" });
+    }
+
+    const result = await PayslipService.updateTemplateWithComponents(template_id,template, components);
+
+    res.json({ success: true, message: "Template updated successfully", result });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+},
 async listAllTemplates(req, res,next) {
     try {
       const templates = await paySlipModel.getAllTemplates();
-console.log(templates)
+// console.log(templates)
          res.status(200).json(templates);
     } catch (err) {
       next(err)
@@ -103,7 +120,7 @@ console.log(templates)
     try {
       const { id } = req.params;
       const template = await paySlipModel.getTemplateByIdWithComponents(id);
-      console.log(template)
+      // console.log(template)
       if (!template) 
         return res.status(404).json({ error: 'Template not found' })
 
@@ -174,7 +191,7 @@ async insertComponents(req, res, next) {
       component_value: c.Component_value,
       amount_type: c.amount_type
     }));
-console.log("Mapped Components:", mappedComponents);
+// console.log("Mapped Components:", mappedComponents);
     // Validate
     for (const c of mappedComponents) {
       if (
@@ -235,9 +252,9 @@ console.log("Mapped Components:", mappedComponents);
       if(! user){
         return res.status(400).json({message:'user not found or user deleted'})
       }
-      console.log("checking existing payslip for user:", user_id, "from", start_date, "to", end_date);
+    //  console.log("checking existing payslip for user:", user_id, "from", start_date, "to", end_date);
       const existing = await paySlipModel.checkSalaryHistory(user_id, start_date, end_date);
-      console.log("Existing Payslip Check Result:", existing);
+    //  console.log("Existing Payslip Check Result:", existing);
     if (existing && !forceRegenerate) {
       return res.status(409).json({
         success: false,
