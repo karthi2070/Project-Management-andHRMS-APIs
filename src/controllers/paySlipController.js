@@ -1,12 +1,12 @@
 const EmployeeModel = require('../models/empolyeeModel');
 const paySlipModel = require('../models/paySlipModel');
 const PayslipService =require('../services/payslipService')
-const db = require('../config/db');
+
 const PayslipController = {
 
   async createPayslipTemplateWithComponents(req, res) {
     try {
-      const { id, template, components } = req.body;
+      const {  template, components } = req.body;
 
       // Validate
       if (!template || !components || !Array.isArray(components)) {
@@ -55,7 +55,6 @@ async updateTemplateWithComponents  (req, res) {
   try {
     const { template_id } = req.params;
     const { template, components } = req.body;
-    // console.log("Updating Template ID:", template_id, "with components:", components, template, req.body);
     if (!template_id) {
       return res.status(400).json({ success: false, message: "Template ID required" });
     }
@@ -252,9 +251,8 @@ async insertComponents(req, res, next) {
       if(! user){
         return res.status(400).json({message:'user not found or user deleted'})
       }
-    //  console.log("checking existing payslip for user:", user_id, "from", start_date, "to", end_date);
       const existing = await paySlipModel.checkSalaryHistory(user_id, start_date, end_date);
-    //  console.log("Existing Payslip Check Result:", existing);
+
     if (existing && !forceRegenerate) {
       return res.status(409).json({
         success: false,
@@ -275,6 +273,40 @@ async insertComponents(req, res, next) {
       next(err)
     }
   },
+  //    async genpayslipManual (req,res,next){
+  //   try{
+  //     // const { user_id,salary, salary_template_id,start_date, end_date,forceRegenerate = false } =req.body;
+  //     const {user_id,salary,salary_template_id,start_date , end_date,present_days,absent_days,paid_leave_days,holiday_count} = req.body;
+
+  //     // if (!salary && !salary_template_id && !user_id){
+  //     //   return res.status(400).json({message:'requried folleing fileds salary, template_id, user_id '})
+  //     // }
+  //     const user = await EmployeeModel.getEmployeeByUserId(user_id)
+  //     if(! user){
+  //       return res.status(400).json({message:'user not found or user deleted'})
+  //     }
+  //     const existing = await paySlipModel.checkSalaryHistory(user_id, start_date, end_date);
+
+  //   if (existing && !forceRegenerate) {
+  //     return res.status(409).json({
+  //       success: false,
+  //       message: 'Payslip already exists. Set forceRegenerate to true to overwrite.'
+  //     });
+  //   }
+  //     const updateSalaryDetails = await EmployeeModel.updateSalaryDetails(user_id,salary, salary_template_id,)
+  //     if(! updateSalaryDetails ){
+  //       return res.status(400).json({message:'salary and template_id not update'})
+  //     } 
+
+  //    const formattedResponse = await PayslipService.genpaySlipManual(user_id,start_date, end_date,forceRegenerate)
+  //     if (!formattedResponse) {
+  //       return res.status(404).json({ success: false, message: "Data not found" });
+  //     }
+  //     res.status(200).json({ success: true, data: formattedResponse });
+  //   }catch(err){
+  //     next(err)
+  //   }
+  // },
     async getAllPayslip (req,res,next){
     try{
       

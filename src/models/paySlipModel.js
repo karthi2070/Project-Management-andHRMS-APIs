@@ -173,7 +173,7 @@ async softDeleteComponent (conn, compId)  {
       JOIN bank_details_tbl b ON e.id = b.employee_id
       JOIN salary_templates t ON e.salary_template_id = t.id
       JOIN salary_components c ON t.id = c.template_id 
-      WHERE u.id = ?; `;
+      WHERE u.id = ? and t.is_deleted = 0 and c.is_deleted =0; `;
     const [result] = await pool.query(sql, [user_id]);
     return result;
   },
