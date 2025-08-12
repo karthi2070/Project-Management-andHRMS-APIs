@@ -67,18 +67,18 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     return rows[0];
   },
 
-  async getUpcomingInvoicesFromInvoice(days = 30) {
+  async getUpcomingInvoicesFromInvoice(start_date, end_date){
     const sql = `WITH upcoming_invoices AS (
   SELECT id
   FROM invoice_tbl
   WHERE is_deleted = 0 AND paid_amount = 0
-    AND followup_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + INTERVAL ? DAY
+    AND followup_date BETWEEN ? AND ? 
 )
 SELECT 
   COUNT(*) AS upcoming_invoice_count,
   JSON_ARRAYAGG(id) AS upcoming_invoice_ids
 FROM upcoming_invoices;`
-    const [rows] = await pool.query(sql, [days]);
+    const [rows] = await pool.query(sql, [start_date,end_date]);
     // console.log("upcoming_invoice", rows[0])
     const upcoming_invoice_count = rows[0].upcoming_invoice_count;
     const upcoming_invoice_ids = rows[0].upcoming_invoice_ids;
@@ -101,18 +101,18 @@ FROM upcoming_invoices;`
   };
   },
 
-  async getUpcomingInvoicesfromInvoicePaymentTable(days =30) {
+  async getUpcomingInvoicesfromInvoicePaymentTable(start_date,end_date) {
     const sql = `WITH upcoming_invoices AS (
   SELECT id
   FROM invoice_payment_tbl
   WHERE is_deleted = 0
-    AND followup_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + INTERVAL ? DAY
+    AND followup_date BETWEEN ? AND ? 
 )
 SELECT 
   COUNT(*) AS upcoming_invoice_count,
   JSON_ARRAYAGG(id) AS upcoming_invoice_ids
 FROM upcoming_invoices;`
-    const [rows] = await pool.query(sql,[days]);
+    const [rows] = await pool.query(sql,[start_date,end_date]);
     // console.log("upcoming_invoice", rows[0])
     const upcoming_invoice_count = rows[0].upcoming_invoice_count;
     const upcoming_invoice_ids = rows[0].upcoming_invoice_ids;
@@ -131,7 +131,6 @@ FROM upcoming_invoices;`
    ORDER BY ip.followup_date ASC
  `;
     const [invoiceDetails] = await pool.query(clientQuery, upcoming_invoice_ids);
-
       return {
     source: 'invoice_payment_tbl',
     invoice_count: upcoming_invoice_count,

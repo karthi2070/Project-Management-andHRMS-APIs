@@ -126,35 +126,36 @@ const ClientController = {
 
     async getClientDashboard(req, res, next) {
         try {
-            const days = req.query.days || 30; // Default to 30 days if not provided
+            const { start_date, end_date } = req.query; // Default to 30 days if not provided
+            console.log(start_date, end_date);
             const totalClients = await ClientModel.getTotalClients();
             const pendingPayments = await ClientModel.getPendingPaymentsValue();
-            const renewalClients = await service.getUpcomingPayments(days);
-            const upcominngInvoicesFromInvoice = await ClientModel.getUpcomingInvoicesFromInvoice(days);
-            const upcominngInvoicesFromInvoicePayment = await ClientModel.getUpcomingInvoicesfromInvoicePaymentTable(days);
+            // const renewalClients = await service.getUpcomingPayments(start_date, end_date);
+            const upcominngInvoicesFromInvoice = await ClientModel.getUpcomingInvoicesFromInvoice(start_date, end_date);
+            const upcominngInvoicesFromInvoicePayment = await ClientModel.getUpcomingInvoicesfromInvoicePaymentTable(start_date, end_date);
 
-            const getUpcomingFollowupFromService = await ServiceModel.getUpcomingFollowupFromService(days);
-            const getUpcomingFollowupFromServicePaymentTable = await ServiceModel.getUpcomingFollowupFromServicePaymentTable(days);
+            const getUpcomingFollowupFromService = await ServiceModel.getUpcomingFollowupFromService(start_date, end_date);
+            const getUpcomingFollowupFromServicePaymentTable = await ServiceModel.getUpcomingFollowupFromServicePaymentTable(start_date, end_date);
+            
+            const totalUpcomingInvoiceCount = upcominngInvoicesFromInvoice.invoice_count + upcominngInvoicesFromInvoicePayment.invoice_count ;
 
+                const allUpcomingInvoices = [
+                    ...upcominngInvoicesFromInvoice.invoice_details ?? [],
+                    ...upcominngInvoicesFromInvoicePayment.invoice_details??[] ];
 
-            const totalUpcomingInvoiceCount = upcominngInvoicesFromInvoice.invoice_count + upcominngInvoicesFromInvoicePayment.invoice_count;
-            const allUpcomingInvoices = [
-                ...upcominngInvoicesFromInvoice.invoice_details,
-                ...upcominngInvoicesFromInvoicePayment.invoice_details ];
-
-            const upcomingFollowupCount = getUpcomingFollowupFromService.service_count + getUpcomingFollowupFromServicePaymentTable.service_count;
+            const upcomingFollowupCount = getUpcomingFollowupFromService.service_count + getUpcomingFollowupFromServicePaymentTable.service_count ;
             const allUpcomingFollowups = [
-                ...getUpcomingFollowupFromService.service_details,
-                ...getUpcomingFollowupFromServicePaymentTable.service_details
+                ...getUpcomingFollowupFromService.service_details ?? [],
+                ...getUpcomingFollowupFromServicePaymentTable.service_details?? []
             ];
             res.status(200).json({
                 Total_clients: totalClients ? totalClients : 0,
                 Total_pending_payment: pendingPayments.total_pending_payment ? pendingPayments.total_pending_payment : 0,
-                Renewal_clients: renewalClients ? renewalClients : 0,
-                Total_upcoming_invoice_count: totalUpcomingInvoiceCount,
+                // Renewal_clients: renewalClients ? renewalClients : 0,
+                Total_upcoming_invoice_count: totalUpcomingInvoiceCount ? totalUpcomingInvoiceCount : 0,
                 Upcoming_invoice_details: allUpcomingInvoices,
-                Total_upcoming_followup_count: upcomingFollowupCount,
-                Upcoming_followup_details: allUpcomingFollowups, 
+                Total_upcoming_followup_count: upcomingFollowupCount ? upcomingFollowupCount : 0,
+                Upcoming_followup_details: allUpcomingFollowups,
             });
         } catch (error) {
             next(error);

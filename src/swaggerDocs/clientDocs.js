@@ -126,9 +126,15 @@
  *     tags: [Client]
  *     parameters:
  *       - in: query
- *         name: days
+ *         name: start_date
  *         schema:
- *           type: integer
+ *           type: string
+ *           format: date
+ *       - in: query
+ *         name: end_date
+ *         schema:
+ *           type: string
+ *           format: date
  *     responses:
  *       200:
  *         description: Client dashboard data

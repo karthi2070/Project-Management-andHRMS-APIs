@@ -137,19 +137,19 @@ async getUpcomingServiceDetails (days) {
   return rows;
 },
 
- async getUpcomingFollowupFromService(days = 30) {
+ async getUpcomingFollowupFromService(start_date, end_date) {
     const sql = `WITH upcoming_followups AS (
   SELECT id
   FROM service_tbl
   WHERE is_deleted = 0 AND paid_amount = 0
-    AND followup_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + INTERVAL ? DAY
+    AND followup_date BETWEEN ? AND ? 
 )
 SELECT 
   COUNT(*) AS upcoming_followup_count,
   JSON_ARRAYAGG(id) AS upcoming_followup_ids
 FROM upcoming_followups;`
-    const [rows] = await db.query(sql, [days]);
-    console.log("upcoming_followup", rows[0])
+    const [rows] = await db.query(sql, [start_date, end_date]);
+    // console.log("upcoming_followup", rows[0])
     const upcoming_followup_count = rows[0].upcoming_followup_count;
     const upcoming_followup_ids = rows[0].upcoming_followup_ids;
     // If no clients found, return empty
@@ -176,20 +176,20 @@ FROM upcoming_followups;`
   };
   },
 
-  async getUpcomingFollowupFromServicePaymentTable(days =30) {
+  async getUpcomingFollowupFromServicePaymentTable(start_date, end_date) {
   
     const sql = `WITH upcoming_followups AS (
   SELECT id
   FROM service_payment_tbl
   WHERE is_deleted = 0 
-    AND followup_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + INTERVAL ? DAY
+    AND followup_date BETWEEN ? AND ? 
 )
 SELECT 
   COUNT(*) AS upcoming_followup_count,
   JSON_ARRAYAGG(id) AS upcoming_followup_ids
 FROM upcoming_followups`
-    const [rows] = await db.query(sql,[days]);
-    console.log("upcoming_followup", rows[0])
+    const [rows] = await db.query(sql,[start_date, end_date]);
+    // console.log("upcoming_followup", rows[0])
     const upcoming_followup_count = rows[0].upcoming_followup_count;
     const upcoming_followup_ids = rows[0].upcoming_followup_ids;
     // If no clients found, return empty
