@@ -84,7 +84,11 @@ FROM upcoming_invoices;`
     const upcoming_invoice_ids = rows[0].upcoming_invoice_ids;
     // If no clients found, return empty
     if (!upcoming_invoice_ids || upcoming_invoice_ids.length === 0) {
-      return [];
+      return {
+        source: 'invoice_tbl',
+        invoice_count: 0,
+        invoice_details: []
+      };
     }
     const clientQuery = ` SELECT i.id,c.name AS client_name,c.client_id, c.company_name, i.service_name, i.client_id, i.invoice_number,
      i.invoice_amount, i.paid_amount, i.balance_amount, i.payment_status
@@ -96,7 +100,7 @@ FROM upcoming_invoices;`
     const [invoiceDetails] = await pool.query(clientQuery, upcoming_invoice_ids);
       return {
     source: 'invoice_tbl',
-    invoice_count: upcoming_invoice_count,
+    invoice_count: upcoming_invoice_count ,
     invoice_details: invoiceDetails
   };
   },
@@ -118,7 +122,11 @@ FROM upcoming_invoices;`
     const upcoming_invoice_ids = rows[0].upcoming_invoice_ids;
     // If no clients found, return empty
     if (!upcoming_invoice_ids || upcoming_invoice_ids.length === 0) {
-      return [];
+      return {
+        source: 'invoice_payment_tbl',
+        invoice_count: 0,
+        invoice_details: []
+      };
     }
     const clientQuery = ` SELECT c.name AS client_name,c.client_id, c.company_name,
     i.id, i.service_name, i.client_id, i.invoice_number,i.invoice_amount, i.paid_amount, i.balance_amount, i.payment_status,
@@ -133,7 +141,7 @@ FROM upcoming_invoices;`
     const [invoiceDetails] = await pool.query(clientQuery, upcoming_invoice_ids);
       return {
     source: 'invoice_payment_tbl',
-    invoice_count: upcoming_invoice_count,
+    invoice_count: upcoming_invoice_count ,
     invoice_details: invoiceDetails
   };
   },

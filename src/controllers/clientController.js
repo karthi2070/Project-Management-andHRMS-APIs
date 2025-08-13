@@ -151,7 +151,6 @@ const ClientController = {
             res.status(200).json({
                 Total_clients: totalClients ? totalClients : 0,
                 Total_pending_payment: pendingPayments.total_pending_payment ? pendingPayments.total_pending_payment : 0,
-                // Renewal_clients: renewalClients ? renewalClients : 0,
                 Total_upcoming_invoice_count: totalUpcomingInvoiceCount ? totalUpcomingInvoiceCount : 0,
                 Upcoming_invoice_details: allUpcomingInvoices,
                 Total_upcoming_followup_count: upcomingFollowupCount ? upcomingFollowupCount : 0,
