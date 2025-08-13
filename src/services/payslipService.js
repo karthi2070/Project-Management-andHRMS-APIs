@@ -127,7 +127,8 @@ const PayslipService = {
       }
 
       earnings.push({
-        name: comp.Component_name,
+        component_name: comp.Component_name,
+        component_type: comp.Component_type,
         component_value: comp.Component_value,
         amount_type: comp.amount_type,
         salary_amount: parseFloat(amount.toFixed(2))
@@ -162,7 +163,8 @@ const PayslipService = {
         total_deductions += amount;
 
         deductions.push({
-          name: comp.Component_name,
+          component_name: comp.Component_name,
+          component_type: comp.Component_type,
           component_value: comp.Component_value,
           amount_type: comp.amount_type,
           salary_amount: parseFloat(amount.toFixed(2))
