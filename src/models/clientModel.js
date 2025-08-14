@@ -147,19 +147,18 @@ FROM upcoming_invoices;`
   },
 
 
-
   // invoice operations
   async createInvoice(invoice) {
-    // id, user_id, service_name, client_id, invoice_number, invoice_amount, paid_amount, balance_amount, extra_amount, payment_status, payment_method, invoice_date, followup_date, due_date, notes, is_deleted, created_at, updated_at
+    // id, user_id, invoice_details, client_id, invoice_number, invoice_amount, paid_amount, balance_amount, extra_amount, payment_status, payment_method, invoice_date, followup_date, due_date, notes, is_deleted, created_at, updated_at
     const query = `
     INSERT INTO invoice_tbl
-    (user_id,service_name,client_id, invoice_number, invoice_amount, paid_amount, balance_amount,  extra_amount, payment_status, payment_method,  invoice_date, followup_date,due_date, notes)
-    VALUES ( ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?);`;
+    (user_id,invoice_details,client_id, invoice_number, invoice_amount, paid_amount, balance_amount,  extra_amount, payment_status, payment_method,  invoice_date, followup_date,due_date, notes)
+    VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
     const invoiceAmount = Math.round(invoice.invoice_amount * 1.18 * 100) / 100;
     const balanceAmount = Math.round(invoice.invoice_amount * 1.18 * 100) / 100;
 
     const values = [
-      invoice.user_id, invoice.service_name, invoice.client_id,
+      invoice.user_id, JSON.stringify(invoice.invoice_details), invoice.client_id,
       invoice.invoice_number,
       invoiceAmount,
       invoice.paid_amount || 0.00,
@@ -180,14 +179,14 @@ FROM upcoming_invoices;`
     // console.log("update invoice", invoice)
     const query = `
     UPDATE invoice_tbl 
-    SET user_id=?,service_name=?, client_id=?, invoice_amount=?, paid_amount=?, balance_amount=?, extra_amount=?,
+    SET user_id=?,invoice_details=?, client_id=?, invoice_amount=?, paid_amount=?, balance_amount=?, extra_amount=?,
         payment_status=?,payment_method=?, invoice_date=?,followup_date=?,due_date=?,  notes=? 
     WHERE id = ?;
   `;
 
     const values = [
       invoice.user_id,
-      invoice.service_name,
+      JSON.stringify(invoice.invoice_details),
       invoice.client_id,
       invoice.invoice_amount,
       invoice.paid_amount,

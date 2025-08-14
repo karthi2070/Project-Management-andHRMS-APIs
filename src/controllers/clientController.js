@@ -174,14 +174,14 @@ const ClientController = {
 
     async createInvoice(req, res, next) {
         try {
-            const { user_id, service_name, client_id, invoice_amount, paid_amount,
+            const { user_id, invoice_details, client_id, invoice_amount, paid_amount,
                 balance_amount, extra_amount, payment_status, payment_method, invoice_date, followup_date, due_date, notes } = req.body;
 
             const count = await ClientModel.getTotalInvoice()
             const invoice_number = `INC000${count + 1}`
 
             const invoiceData = {
-                user_id, service_name, client_id, invoice_number, invoice_amount, paid_amount,
+                user_id, invoice_details, client_id, invoice_number, invoice_amount, paid_amount,
                 balance_amount, extra_amount, payment_status, payment_method, invoice_date, followup_date, due_date, notes
             }
             const invoiceId = await ClientModel.createInvoice(invoiceData);
@@ -250,7 +250,7 @@ const ClientController = {
 
     async updateInvoice(req, res, next) {
         try {
-            const { user_id, service_name, client_id, invoice_amount, paid_amount, balance_amount, extra_amount,
+            const { user_id, invoice_details, client_id, invoice_amount, paid_amount, balance_amount, extra_amount,
                 payment_status, payment_method, invoice_date, followup_date, due_date, notes } = req.body;
             const existingInvoice = await ClientModel.getInvoiceById(req.params.id);
             console.log("existingInvoice", existingInvoice)
@@ -265,7 +265,7 @@ const ClientController = {
             // : existingInvoice.paid_amount ;
             const updatedPayload = {
                 user_id: user_id,
-                service_name: service_name,
+                invoice_details: invoice_details,
                 client_id: client_id,
                 invoice_amount: inoviceAmount,
                 paid_amount: paid_amount,

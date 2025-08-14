@@ -16,48 +16,82 @@
  *           type: number
  *           example: 2
  *           description: Unique identifier for the user creating the invoice
- *         service_name:
- *           type: string
+ *         invoice_details:
+ *           type: array
+ *           description: Detailed information about the invoice services
+ *           items:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: integer
+ *                 example: 1
+ *               service_name:
+ *                 type: string
+ *                 example: Web Development
+ *               hsn:
+ *                 type: string
+ *                 example: "998631"
+ *               amount:
+ *                 type: number
+ *                 example: 500000
+ *           example:
+ *             - id: 1
+ *               service_name: Web Development
+ *               hsn: "998631"
+ *               amount: 500000
+ *             - id: 2
+ *               service_name: App Development
+ *               hsn: "998632"
+ *               amount: 500000
  *         client_id:
  *           type: number
  *           example: 23
  *           description: Unique identifier for the client
  *         invoice_amount:
  *           type: number
+ *           example: 1000000
  *           description: Total amount of the invoice
  *         paid_amount:
  *           type: number
+ *           example: 0
  *           description: Amount that has been paid
  *         balance_amount:
  *           type: number
+ *           example: 1000000
  *           description: Remaining balance amount
  *         extra_amount:
  *           type: number
+ *           example: 0
  *           description: Any additional charges or fees
  *         payment_status:
  *           type: number
  *           example: 1
- *           description: Status of the payment 
+ *           description: Status of the payment (e.g., 0 = Pending, 1 = Paid)
  *         payment_method:
  *           type: string
- *           example: "UPI"
- *           description: Method of payment 
+ *           example: UPI
+ *           description: Method of payment
  *         invoice_date:
  *           type: string
  *           format: date
+ *           example: "2025-08-14"
  *           description: Date when the invoice was issued
  *         followup_date:
  *           type: string
  *           format: date
- *           description: Due date for the invoice payment
+ *           example: "2025-08-14"
+ *           description: Follow-up date for payment reminders
  *         due_date:
  *           type: string
  *           format: date
- *           description: ue date for the invoice payment
+ *           example: "2025-08-14"
+ *           description: Due date for the invoice payment
  *         notes:
  *           type: string
+ *           example: "This is a sample note for the invoice."
  *           description: Additional notes or comments about the invoice
  */
+
 
 /**
  * @swagger
