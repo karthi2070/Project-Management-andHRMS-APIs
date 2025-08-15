@@ -90,7 +90,7 @@ FROM upcoming_invoices;`
         invoice_details: []
       };
     }
-    const clientQuery = ` SELECT i.id,c.name AS client_name,c.client_id, c.company_name, i.service_name, i.client_id, i.invoice_number,
+    const clientQuery = ` SELECT i.id,c.name AS client_name,c.client_id,i.invoice_details, c.company_name, i.client_id, i.invoice_number,
      i.invoice_amount, i.paid_amount, i.balance_amount, i.payment_status
    FROM invoice_tbl as i
    join client_tbl as c on i.client_id = c.id
@@ -129,7 +129,7 @@ FROM upcoming_invoices;`
       };
     }
     const clientQuery = ` SELECT c.name AS client_name,c.client_id, c.company_name,
-    i.id, i.service_name, i.client_id, i.invoice_number,i.invoice_amount, i.paid_amount, i.balance_amount, i.payment_status,
+    i.id, i.invoice_details, i.client_id, i.invoice_number,i.invoice_amount, i.paid_amount, i.balance_amount, i.payment_status,
     ip.id as invoice_payment_id, ip.client_id, ip.invoice_id,ip.followup_date
 
    FROM invoice_payment_tbl as ip
