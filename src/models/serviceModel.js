@@ -165,7 +165,7 @@ FROM upcoming_followups;`
     s.id, s.service_name, s.client_id, s.from_date, s.to_date, s.service_amount,s.paid_amount, s.balance_amount, s.payment_status,s.followup_date
    FROM service_tbl as s
    join client_tbl as c on s.client_id = c.id
-   WHERE s.id IN (${upcoming_followup_ids.map(() => '?').join(',')})
+   WHERE s.payment_status IN (1,2) AND s.id IN (${upcoming_followup_ids.map(() => '?').join(',')})
    ORDER BY s.followup_date ASC
  `;
     const [serviceDetails] = await db.query(clientQuery, upcoming_followup_ids);
@@ -207,7 +207,7 @@ FROM upcoming_followups`
    FROM service_payment_tbl as sp
    join service_tbl as s on sp.service_id = s.id
    join client_tbl as c on sp.client_id = c.id
-   WHERE sp.id IN (${upcoming_followup_ids.map(() => '?').join(',')}) 
+   WHERE s.payment_status IN (1,2) AND sp.id IN (${upcoming_followup_ids.map(() => '?').join(',')})
    ORDER BY sp.followup_date ASC
  `;
     const [serviceDetails] = await db.query(clientQuery, upcoming_followup_ids);

@@ -94,7 +94,7 @@ FROM upcoming_invoices;`
      i.invoice_amount, i.paid_amount, i.balance_amount, i.payment_status
    FROM invoice_tbl as i
    join client_tbl as c on i.client_id = c.id
-   WHERE i.id IN (${upcoming_invoice_ids.map(() => '?').join(',')}) AND i.is_deleted = 0
+   WHERE i.payment_status IN (1,2) AND i.id IN (${upcoming_invoice_ids.map(() => '?').join(',')}) AND i.is_deleted = 0
    ORDER BY i.followup_date ASC
  `;
     const [invoiceDetails] = await pool.query(clientQuery, upcoming_invoice_ids);
@@ -109,7 +109,7 @@ FROM upcoming_invoices;`
     const sql = `WITH upcoming_invoices AS (
   SELECT id
   FROM invoice_payment_tbl
-  WHERE is_deleted = 0
+  WHERE is_deleted = 0 
     AND followup_date BETWEEN ? AND ? 
 )
 SELECT 
@@ -135,7 +135,7 @@ FROM upcoming_invoices;`
    FROM invoice_payment_tbl as ip
    join invoice_tbl as i on ip.invoice_id = i.id
    join client_tbl as c on ip.client_id = c.id
-   WHERE ip.id IN (${upcoming_invoice_ids.map(() => '?').join(',')}) AND ip.is_deleted = 0 
+   WHERE i.payment_status IN (1,2) AND ip.id IN (${upcoming_invoice_ids.map(() => '?').join(',')}) AND ip.is_deleted = 0 
    ORDER BY ip.followup_date ASC
  `;
     const [invoiceDetails] = await pool.query(clientQuery, upcoming_invoice_ids);
