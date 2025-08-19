@@ -162,7 +162,8 @@ FROM upcoming_followups;`
     }
 
     const clientQuery = ` SELECT c.id,c.name AS client_name,c.client_id, c.company_name,
-    s.id, s.service_name, s.client_id, s.from_date, s.to_date, s.service_amount,s.paid_amount, s.balance_amount, s.payment_status,s.followup_date
+    s.id, s.service_name, s.client_id, s.from_date, s.to_date, s.service_amount,s.paid_amount, s.balance_amount,
+     s.payment_status,s.followup_date,DATEDIFF(s.followup_date, CURDATE()) AS remain_days
    FROM service_tbl as s
    join client_tbl as c on s.client_id = c.id
    WHERE s.payment_status IN (1,2) AND s.id IN (${upcoming_followup_ids.map(() => '?').join(',')})
@@ -202,7 +203,7 @@ FROM upcoming_followups`
     }
     const clientQuery = ` SELECT c.id as client_id, c.name AS client_name,c.client_id, c.company_name,
     s.id as service_id , s.service_name, s.client_id,s.service_amount, s.paid_amount, s.balance_amount, s.payment_status,
-    sp.id as service_payment_id, sp.client_id, sp.followup_date
+    sp.id as service_payment_id, sp.client_id, sp.followup_date,DATEDIFF(sp.followup_date, CURDATE()) AS remain_days
 
    FROM service_payment_tbl as sp
    join service_tbl as s on sp.service_id = s.id

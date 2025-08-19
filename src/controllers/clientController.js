@@ -131,17 +131,17 @@ const ClientController = {
             const totalClients = await ClientModel.getTotalClients();
             const pendingPayments = await ClientModel.getPendingPaymentsValue();
             // const renewalClients = await service.getUpcomingPayments(start_date, end_date);
-            const upcominngInvoicesFromInvoice = await ClientModel.getUpcomingInvoicesFromInvoice(start_date, end_date);
-            const upcominngInvoicesFromInvoicePayment = await ClientModel.getUpcomingInvoicesfromInvoicePaymentTable(start_date, end_date);
+            const upcomingInvoicesFromInvoice = await ClientModel.getUpcomingInvoicesFromInvoice(start_date, end_date);
+            const upcomingInvoicesFromInvoicePayment = await ClientModel.getUpcomingInvoicesFromInvoicePaymentTable(start_date, end_date);
 
             const getUpcomingFollowupFromService = await ServiceModel.getUpcomingFollowupFromService(start_date, end_date);
             const getUpcomingFollowupFromServicePaymentTable = await ServiceModel.getUpcomingFollowupFromServicePaymentTable(start_date, end_date);
             
-            const totalUpcomingInvoiceCount = upcominngInvoicesFromInvoice.invoice_count + upcominngInvoicesFromInvoicePayment.invoice_count ;
+            const totalUpcomingInvoiceCount = upcomingInvoicesFromInvoice.invoice_count + upcomingInvoicesFromInvoicePayment.invoice_count ;
 
                 const allUpcomingInvoices = [
-                    ...upcominngInvoicesFromInvoice.invoice_details ?? [],
-                    ...upcominngInvoicesFromInvoicePayment.invoice_details??[] ];
+                    ...upcomingInvoicesFromInvoice.invoice_details ?? [],
+                    ...upcomingInvoicesFromInvoicePayment.invoice_details??[] ];
 
             const upcomingFollowupCount = getUpcomingFollowupFromService.service_count + getUpcomingFollowupFromServicePaymentTable.service_count ;
             const allUpcomingFollowups = [

@@ -91,7 +91,7 @@ FROM upcoming_invoices;`
       };
     }
     const clientQuery = ` SELECT i.id,c.name AS client_name,c.client_id,i.invoice_details, c.company_name, i.client_id, i.invoice_number,
-     i.invoice_amount, i.paid_amount, i.balance_amount, i.payment_status
+     i.invoice_amount, i.paid_amount, i.balance_amount, i.payment_status, DATEDIFF(i.followup_date, CURDATE()) AS remain_days
    FROM invoice_tbl as i
    join client_tbl as c on i.client_id = c.id
    WHERE i.payment_status IN (1,2) AND i.id IN (${upcoming_invoice_ids.map(() => '?').join(',')}) AND i.is_deleted = 0
@@ -105,7 +105,7 @@ FROM upcoming_invoices;`
   };
   },
 
-  async getUpcomingInvoicesfromInvoicePaymentTable(start_date,end_date) {
+  async getUpcomingInvoicesFromInvoicePaymentTable(start_date,end_date) {
     const sql = `WITH upcoming_invoices AS (
   SELECT id
   FROM invoice_payment_tbl
@@ -130,7 +130,7 @@ FROM upcoming_invoices;`
     }
     const clientQuery = ` SELECT c.name AS client_name,c.client_id, c.company_name,
     i.id, i.invoice_details, i.client_id, i.invoice_number,i.invoice_amount, i.paid_amount, i.balance_amount, i.payment_status,
-    ip.id as invoice_payment_id, ip.client_id, ip.invoice_id,ip.followup_date
+    ip.id as invoice_payment_id, ip.client_id, ip.invoice_id,ip.followup_date,DATEDIFF(ip.followup_date, CURDATE()) AS remain_days
 
    FROM invoice_payment_tbl as ip
    join invoice_tbl as i on ip.invoice_id = i.id

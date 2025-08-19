@@ -188,7 +188,7 @@ async softDeleteComponent (conn, compId)  {
     `;
     await pool.query(query, values);
   },
-  // get all payslilp 
+  // get all paySlip
 async getpayslip() {
     const sql = `SELECT 
 sh.user_id , e.employee_id,e.name, e.department,e.mail,e.designation,e.doj,e.pan,

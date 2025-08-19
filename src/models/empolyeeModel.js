@@ -44,6 +44,20 @@ const EmployeeModel = {
             throw error;
         }
     },
+    async getEmployeeBasedDOB(start_date,end_date){
+        const sql = `SELECT id,employee_id, name,mail,designation, dob
+        FROM employee_tbl
+        WHERE is_deleted = 0
+          AND (
+              (MONTH(dob) = MONTH(?) AND DAY(dob) >= DAY(?))
+              OR (MONTH(dob) = MONTH(?) AND DAY(dob) <= DAY(?))
+          )`;
+        const [rows] = await pool.query(sql,[start_date, start_date, end_date, end_date]);
+        console.log(rows);
+        return rows;
+
+
+    },
     async getEmpDataLoginGenerate(id){
         const sql = `SELECT id, emp_role_id, mail FROM employee_tbl WHERE is_deleted = 0 AND id =? `;
             const [rows] = await pool.query(sql,[id]);

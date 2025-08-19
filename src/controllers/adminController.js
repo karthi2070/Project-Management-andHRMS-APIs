@@ -1,29 +1,40 @@
 const User = require('../models/authModel');
 const Permission = require('../models/permissionModel');
 const clientModel =require('../models/clientModel')
-const service = require('../services/serviceService')
+const ServiceModel = require('../models/serviceModel')
 const employeeModel =require('../models/empolyeeModel')
 const projectModel =require ('../models/projectModel')
 const { getAttendanceSummaryData } = require ('../helper/attedanceDashboard')
 
 const adminController = {
 dashboardCount: async (req, res, next) => {
+
   try {
-    const date = req.body || new Date();
-    const [employeeCount, clientCount, serviceRenewall, projectCount, attendance] = await Promise.all([
-      employeeModel.getEmployeeCount(),
-      clientModel.getTotalClients(),
-      service.getUpcomingPayments(30),
-      projectModel.projectCount(),
-      getAttendanceSummaryData(date)
-    ]);
+    const date = new Date();
+    const end_date = new Date();
+end_date.setDate(date.getDate() + 30);
+
+    const employeeCount=  await employeeModel.getEmployeeCount()
+    const  clientCount= await clientModel.getTotalClients()
+    const getUpcomingFollowupFromService = await ServiceModel.getUpcomingFollowupFromService(date, end_date);
+     const getUpcomingFollowupFromServicePaymentTable = await ServiceModel.getUpcomingFollowupFromServicePaymentTable(date, end_date);
+    const  projectCount =await projectModel.projectCount()
+     const attendance = await getAttendanceSummaryData(date)
+     const ServiceFollowups = [
+                ...getUpcomingFollowupFromService.service_details ?? [],
+                ...getUpcomingFollowupFromServicePaymentTable.service_details?? []
+            ];
+    const dobList = await employeeModel.getEmployeeBasedDOB(date, end_date);
+
 
     res.status(200).json({
-      client: clientCount,
-      employee: employeeCount,
-      project: projectCount,
-      serviceRenewall,
-      attendance
+      
+      total_employee: employeeCount ? employeeCount : 0,
+      total_client: clientCount ? clientCount : 0,
+      total_project: projectCount ? projectCount : 0,
+      service_followup_details: ServiceFollowups,
+      attendance_status: attendance,
+      upcoming_dob_list: dobList
     });
   } catch (error) {
     next(error);
