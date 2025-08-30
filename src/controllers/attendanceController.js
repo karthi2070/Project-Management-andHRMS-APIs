@@ -18,7 +18,13 @@ async  getAttendanceSummary(req, res, next) {
 
 async createAttendance (req, res, next)  {
     try {
-        const result = await attendanceModel.createAttendance(req.body);
+        const { user_id,employee_name, department,date, login, logout } = req.body;
+        const employee = await employeeModel.getEmployeeByUserId(user_id);
+        if (!employee) {
+            return res.status(404).json({ success: false, message: 'Employee not found' });
+        }
+        const payload = { user_id, employee_name: employee.name, department, date, login, logout };
+        const result = await attendanceModel.createAttendance(payload);
         res.status(201).json({ message: 'Attendance created successfully', data: result });
     } catch (error) {
         next(error);

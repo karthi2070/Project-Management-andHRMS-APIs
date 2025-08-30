@@ -70,6 +70,26 @@ const authController = {
       next({ status: 500, message: 'Internal Server Error', error: error.message });
     }
   },
+    createUserManual: async (req, res, next) => {
+    try {
+      const { email, password, role_id } = req.body;
+      if (!email || !password || !role_id) {
+        return res.status(400).json({ success: false, message: 'Email, password, and role_id required' });
+      }
+      const result = await authService.createUserManual(email, password, role_id);
+      if (!result.success) {
+        return res.status(result.status).json({ success: false, message: result.message });
+      }
+      res.status(201).json({
+        success: true,
+        email,
+        roleId: role_id,
+        message: 'User created successfully'
+      });
+    } catch (error) {
+      next({ status: 500, message: 'Internal Server Error', error: error.message });
+    }
+  },
   createUser: async (req, res, next) => {
     try {
       const { email, password, employee_id, role_id } = req.body;
@@ -137,7 +157,7 @@ const authController = {
         return res.status(400).json({ message: 'employee id required' });
       }
       const result = await authService.genLoginCrednitialsEmp(employee_id);
-      console.log('genLoginCrednitialsEmp result:', result);
+     
 
       if (!result.success) {
         return res.status(result.status).json({ message: result.message });

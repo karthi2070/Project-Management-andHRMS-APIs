@@ -18,7 +18,7 @@
  *               email:
  *                 type: string
  *                 format: email
- *                 example: user@example.com
+ *                 example: user@namuvi.com
  *               password:
  *                 type: string
  *                 example: userPassword123
@@ -41,7 +41,7 @@
  *                       example: USER123
  *                     email:
  *                       type: string
- *                       example: user@example.com
+ *                       example: user@namuvi.com
  *                     role_id:
  *                       type: integer
  *                       example: 2
@@ -94,13 +94,50 @@
  *               email:
  *                 type: string
  *                 format: email
- *                 example: newuser@example.com
+ *                 example: newuser@namuvi.com
  *               password:
  *                 type: string
  *                 example: NewUser@123
  *               employee_id:
  *                 type: integer
  *                 example: 3 
+ *               role_id:
+ *                 type: integer
+ *                 example: 2
+ *     responses:
+ *       201:
+ *         description: User created successfully
+ *       400:
+ *         description: Missing or invalid input
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/v1/auth/create-user-manual:
+ *   post:
+ *     summary: Register a new user
+ *     description: Creates a user with email, password, and role ID.
+ *     tags: [auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *               - role_id
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: newuser@namuvi.com
+ *               password:
+ *                 type: string
+ *                 example: NewUser@123
  *               role_id:
  *                 type: integer
  *                 example: 2

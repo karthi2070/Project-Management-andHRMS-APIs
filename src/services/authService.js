@@ -35,8 +35,12 @@ const authService = {
       return { success: false, status: 401, message: 'Invalid credentials or use SSO' };
     }
     const isMatch = await bcrypt.compare(password, user.password);
+    console.log(password, user.password)
+    console.log("Plain:", password); 
+
+console.log("Match?", isMatch);
     if (!isMatch) {
-      return { success: false, status: 401, message: 'pass word is wrong Invalid credentials' };
+      return { success: false, status: 401, message: 'password is wrong Invalid credentials' };
     }
     const employee = await Employee.getEmployeeByUserId(user.id);
     const payload = { id: user.id, email: user.email, role_id: user.role_id };
@@ -90,12 +94,25 @@ const authService = {
     await User.updatePassword(user.id, newPassword);
     return { success: true };
   },
+  createUserManual: async (email, password, role_id) => {
+    const existingUser = await User.getUserByEmail(email);
+    if (existingUser) {
+      return { success: false, status: 409, message: 'Email already exists' };
+    }
+    const genUserId = await User.createUser(email, password, role_id);
+    if (!genUserId) {
+      return { success: false, status: 500, message: 'Failed to create user' };
+    }
+
+    return { success: true, status :201, message: 'User created successfully'};
+  },
   createUser: async (email, password, employee_id, role_id) => {
     const existingUser = await User.getUserByEmail(email);
     if (existingUser) {
       return { success: false, status: 409, message: 'Email already exists' };
     }
     const genUserId = await User.createUser(email, password, role_id);
+    console.log("Generated User ID:", genUserId);
     if (!genUserId) {
       return { success: false, status: 500, message: 'Failed to create user' };
     }
@@ -134,7 +151,7 @@ const authService = {
     const data = { email: EmployeeData.mail, password, employee_id: EmployeeData.id, role_id: EmployeeData.emp_role_id };
 
     const genLogin = await authService.createUser(data.email, data.password, data.employee_id, data.role_id);
-
+console.log("create user ",genLogin)
     return { success: true,    status: 201, message: 'User created and linked successfully',
  data: {name: genLogin.name, email: data.email, password: data.password, userId: genLogin.user_id } };
   },
